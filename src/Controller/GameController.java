@@ -79,9 +79,9 @@ public class GameController {
         //gestione azioni
 
         if (keyController.attack) {
-            //qui si richiama il metodo per attaccare
-            System.out.print("spadata");
-            keyController.attack = false; //si resetta
+
+            model.playerAttack();
+            keyController.attack = false; //si resetta in automatico per evitare spam
         }
 
         //gestione oggetti

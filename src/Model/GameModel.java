@@ -222,8 +222,57 @@ public class GameModel extends Observable {
         notifyObservers("GAME_UPDATE");
     }
 
+    public void playerAttack() {
 
+        if (currentState != GameState.PLAYING) return;
 
+        //1. calcolo hitbox spada
+        int swordLength = 25;
+        int playerWidth = player.getHitbox().width;
+        int playerHeight = player.getHitbox().height;
+        int px = (int) player.getX();
+        int py = (int) player.getY();
+
+        Rectangle swordHitbox;
+
+        //troviamo direzione dominante
+        if (Math.abs(player.getLastDx()) > Math.abs(player.getLastDy())) {
+            // attacco orizzontale
+            if (player.getLastDx() > 0) {
+                //guarda a destra
+                swordHitbox = new Rectangle(px + playerWidth, py, swordLength, playerHeight);
+            } else {
+                //guarda a sinistra
+                swordHitbox = new Rectangle(px - swordLength, py, swordLength, playerHeight);
+            }
+            } else {
+            //attacco verticale
+            if (player.getLastDy() > 0) {
+                //guarda in basso
+                swordHitbox = new Rectangle(px, py + playerHeight, playerWidth, swordLength);
+            } else {
+                //guarda in alto
+                swordHitbox = new Rectangle(px, py - swordLength, playerWidth, swordLength);
+            }
+        }
+
+        //  2. controllo collisioni
+        enemies.stream()
+                .filter(enemy -> enemy.getHitbox().intersects(swordHitbox))
+                .forEach(enemy -> {
+                    int swordDamage = 1; //danno base della spada
+                    enemy.takeDamage(swordDamage);
+
+                    //se il nemico muore, aggiorniamo il punteggio
+                    if (!enemy.isAlive()) {
+                        score += 100;
+                    }
+
+                });
+                setChanged();
+                //il messaggio serve la view che deve disegnare l'animazione della spada per qualche frame
+                notifyObservers("PLAYER_ATTACK");
+            }
 
 
     // --  getter --

@@ -18,6 +18,9 @@ public class Player extends Entity implements Damageable{
     //frame di invulnerabilità dopo aver subito un danno
     private int invulnerabilityTimer;
 
+    //variabili per memorizzare dove guarda link in un certo momento
+    private double lastDx, lastDy;
+
 
     public Player(double x, double y) {
         super(x, y, 32, 32, 4.0);
@@ -26,6 +29,21 @@ public class Player extends Entity implements Damageable{
         this.rupees = 0;
         this.inventory = new ArrayList<Item>();
         this.invulnerabilityTimer = 0;
+        this.lastDx = 0;
+        this.lastDy = 1;
+
+    }
+
+    // sovrascriviamo il metodo di Entity
+    @Override
+    public void setDirection(double dx, double dy) {
+        super.setDirection(dx, dy);
+
+        // Se si sta muovendo, memorizza la direzione
+        if (dx != 0 || dy != 0) {
+            this.lastDx = dx;
+            this.lastDy = dy;
+        }
     }
 
 
@@ -65,14 +83,6 @@ public class Player extends Entity implements Damageable{
         this.hp = Math.min(this.hp + amount, this.maxHp);
     }
 
-    // -- getter --
-    public boolean isInvulnerable() {
-        return invulnerabilityTimer > 0;
-    }
-    @Override public int getHp() { return hp; }
-    public int getMaxHp() { return maxHp; }
-    public int getRupees() { return rupees; }
-    public List<Item> getInventory() { return inventory; }
 
     // -- gestione rupie --
 
@@ -112,4 +122,16 @@ public class Player extends Entity implements Damageable{
             inventory.remove(item); //solo se oggetto consumabile, analizzare oggetti*
         });
     }
+
+    // -- getter --
+    public boolean isInvulnerable() {
+        return invulnerabilityTimer > 0;
+    }
+    @Override public int getHp() { return hp; }
+    public int getMaxHp() { return maxHp; }
+    public int getRupees() { return rupees; }
+    public List<Item> getInventory() { return inventory; }
+    public double getLastDx() { return lastDx; }
+    public double getLastDy() { return lastDy; }
+
 }
