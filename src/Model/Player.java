@@ -1,5 +1,7 @@
 package Model;
 
+import View.AudioManager;
+
 import java.util.*;
 
 public class Player extends Entity implements Damageable{
@@ -13,6 +15,9 @@ public class Player extends Entity implements Damageable{
     private List <Item> inventory;
     private static final int MAX_ITEMS = 3;
 
+    private int bombs;
+    private int potions;
+
     //movimento ereditato dalla classe entity
 
     //frame di invulnerabilità dopo aver subito un danno
@@ -20,6 +25,8 @@ public class Player extends Entity implements Damageable{
 
     //variabili per memorizzare dove guarda link in un certo momento
     private double lastDx, lastDy;
+
+    public AudioManager audioManager;
 
 
     public Player(double x, double y) {
@@ -31,6 +38,9 @@ public class Player extends Entity implements Damageable{
         this.invulnerabilityTimer = 0;
         this.lastDx = 0;
         this.lastDy = 1;
+        this.bombs = 1;
+        this.potions = 1;
+        audioManager = AudioManager.getInstance();
 
     }
 
@@ -46,9 +56,15 @@ public class Player extends Entity implements Damageable{
         }
     }
 
-
-
-
+    // --- LOGICA POZIONE ---
+    // La pozione si usa istantaneamente, ripristina la vita e si consuma.
+    public void usePotion() {
+        if (potions > 0 && hp < maxHp) {
+            heal(maxHp); // Ripristina tutti i cuori
+            potions--;
+            audioManager.getInstance().play(/**/);
+        }
+    }
 
     @Override
     public void update() {
@@ -136,4 +152,10 @@ public class Player extends Entity implements Damageable{
     public double setX(double coordX) { return this.x = coordX;}
     public double setY(double coordY) { return this.y = coordY;}
 
+    public int getBombs() { return bombs; }
+    public void addBombs(int amount) { this.bombs += amount; }
+    public void consumeBomb() { if (bombs > 0) bombs--; }
+
+    public int getPotions() { return potions; }
+    public void addPotions(int amount) { this.potions += amount; }
 }

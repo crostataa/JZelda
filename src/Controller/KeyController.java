@@ -7,7 +7,10 @@ public class KeyController implements KeyListener {
 
     public boolean up, down, left, right;
 
-    public boolean attack, useItem, pause;
+    public boolean attack, pause;
+
+    //public boolean useItem;
+    public boolean keyBomb, keyPotion, keyBow;
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -21,8 +24,10 @@ public class KeyController implements KeyListener {
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) up = true;
         // per le azioni
         if (code == KeyEvent.VK_SPACE) attack = true;
-        if (code == KeyEvent.VK_X) useItem = true;
         if (code == KeyEvent.VK_P) pause = true;
+        if (code == KeyEvent.VK_B) keyBomb = true;
+        if (code == KeyEvent.VK_P) keyPotion = true;
+        if (code == KeyEvent.VK_K) keyBow = true;
     }
 
     @Override
@@ -34,11 +39,13 @@ public class KeyController implements KeyListener {
         if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = false;
         if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = false;
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) up = false;
-
+        if (code == KeyEvent.VK_B) keyBomb = false;
+        if (code == KeyEvent.VK_P) keyPotion = false;
+        if (code == KeyEvent.VK_K) keyBow = false;
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-
+        //non usato
     }
 }

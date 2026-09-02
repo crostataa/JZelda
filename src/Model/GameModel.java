@@ -1,5 +1,7 @@
 package Model;
 
+import View.AudioManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -17,6 +19,7 @@ public class GameModel extends Observable {
     private List<Enemy> enemies;
     List<Projectile> projectiles;
     List<Rupee> rupees;
+    private List<BombEntity activeBombs;
 
     //shop
     private ShopModel shop;
@@ -42,9 +45,12 @@ public class GameModel extends Observable {
     //inizializza o resetta una partita
 
     public void initGame() {
+
+        activeBombs = new ArrayList<>();
         this.currentState = GameState.PLAYING;
         this.currentLevel = 1;
         this.score = 0;
+
 
         //posizione iniziale del giocatore, al centro dello schermo *
         this.player = new Player(100, 100);
@@ -87,6 +93,20 @@ public class GameModel extends Observable {
         //svuota proiettili e carica i nuovi nemici specifici del livello
         this.projectiles.clear();
         loadLevelEntities(newLevelId);
+    }
+
+    // Metodo chiamato dal Controller quando il giocatore preme il tasto della bomba
+    public void placeBomb() {
+        if (currentState != GameState.PLAYING) return;
+
+        if (player.getBombs() > 0) {
+            player.consumeBomb();
+            // Piazza la bomba esattamente al centro del giocatore
+            activeBombs.add(new BombEntity(player.getX() + 8, player.getY() + 8));
+
+            setChanged();
+            notifyObservers("BOMB_PLACED");
+        }
     }
 
 
@@ -151,6 +171,27 @@ public class GameModel extends Observable {
 
         //1. aggiorna il giocatore
         //player.update();
+
+        // aggiorna timer bombe
+        activeBombs.forEach(BombEntity::update);
+
+        //calcola danni bombe appena esplose
+        activeBombs.stream()
+                        .filter(BombEntity::hasExploded)
+                                .forEach(bomb -> {
+                                    Rectangle blastRadius = bomb.getExplosionHitbox();
+
+                                    //nemici coinvolti nell'esplosione
+                                    enemies.stream()
+                                            .filter(enemy -> enemy.getHitbox().intersects(blastRadius))
+                                            .forEach(enemy -> enemy.takeDamage(bomb.getDamage()));
+                                    //le bombe danneggiano anche link
+                                    if (player.getHitbox().intersects(blastRadius)) {
+                                        player.takeDamage(1);
+                                    }
+                                    AudioManager.getInstance().play(/**/);
+                                });
+        activeBombs.removeIf(bomb -> !bomb.isAlive());
 
         currentLevelMap.getTiles().stream()
                 .filter(tile -> tile.getType() == TileType.DOOR)
@@ -320,6 +361,6 @@ public class GameModel extends Observable {
     public int getScore() { return score; }
     public int getCurrentLevel() { return currentLevel;}
     public ShopModel getShop() { return shop; }
-
+    public List<BombEntity> getActiveBombs() { return activeBombs; }
 }
 

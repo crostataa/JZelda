@@ -13,12 +13,13 @@ public class AudioManager {
     float currentVolume = 0;
     static FloatControl fc;
     boolean mute = false;
+    static AudioManager instance;
 
 
-    public AudioManager() {
+    private AudioManager() {
 
-        //soundURL[0] = getClass().getResource("/media/LuigiCasinoSoundtrack.wav");
-        //soundURL[1] = getClass().getResource("/media/smb_coin.wav");
+        soundURL[0] = getClass().getResource("");
+        soundURL[1] = getClass().getResource("");
     }
 
     public static void setFile(int i) {
@@ -76,6 +77,15 @@ public class AudioManager {
         }
 
     }
+
+    public static AudioManager getInstance() {
+
+        if (instance == null)  {
+            instance = new AudioManager();
+        }
+        return instance;
+    }
+
 }
 
 

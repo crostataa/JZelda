@@ -83,13 +83,13 @@ public class HUDPanel extends JPanel implements Observer {
         BufferedImage bombSprite = SpriteManager.getInstance().getSubSprite(
                 HUD_SPRITE_FILE, ICON_BOMB[0], ICON_BOMB[1], ICON_BOMB[2], ICON_BOMB[3]);
         g.drawImage(bombSprite, 50, 60, 16, 32, null);
-        g.drawString("X 5", 80, 82); // Sostituisci con player.getBombs()
+        player.getBombs();
 
         // Disegna Pozioni
         BufferedImage potionSprite = SpriteManager.getInstance().getSubSprite(
                 HUD_SPRITE_FILE, ICON_POTION[0], ICON_POTION[1], ICON_POTION[2], ICON_POTION[3]);
         g.drawImage(potionSprite, 150, 60, 16, 32, null);
-        g.drawString("X 1", 180, 82); // Sostituisci con player.getPotions()*
+        player.getPotions();
     }
 
     private void drawEquipment(Graphics2D g) {
@@ -130,8 +130,7 @@ public class HUDPanel extends JPanel implements Observer {
         BufferedImage emptyHeart = SpriteManager.getInstance().getSubSprite(
                 HUD_SPRITE_FILE, HEART_EMPTY[0], HEART_EMPTY[1], HEART_EMPTY[2], HEART_EMPTY[3]);
 
-        // Nel gioco originale i cuori vanno a capo dopo 8,
-        // ma per semplicità li stampiamo in linea retta per ora
+        // nel gioco originale i cuori vanno a capo dopo 8
         for (int i = 0; i < maxHp; i++) {
             int xPos = startX + (i % 8) * heartSpacing;
             int yPos = startY + (i / 8) * heartSpacing; // Va a capo se superano gli 8 cuori

@@ -86,12 +86,22 @@ public class GameController {
 
         //gestione oggetti
 
-        if (keyController.useItem) {
-            if (!player.getInventory().isEmpty()) {
-                String itemName = player.getInventory().getFirst().getName();
-                player.useItem(itemName);
-            }
-            keyController.useItem = false;
+//        if (keyController.useItem) {
+//            if (!player.getInventory().isEmpty()) {
+//                String itemName = player.getInventory().getFirst().getName();
+//                player.useItem(itemName);
+//            }
+//            keyController.useItem = false;
+//            }
+
+        if (keyController.keyPotion) {
+            model.getPlayer().usePotion();
+            keyController.keyPotion = false;
+        }
+
+        if (keyController.keyBomb) {
+            model.placeBomb();
+            keyController.keyBomb = false;
         }
     }
 

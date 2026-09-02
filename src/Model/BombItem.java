@@ -1,15 +1,14 @@
 package Model;
 
-public class BombItem extends Item{
+public class BombItem extends Item {
 
     public BombItem() {
-        super("Bomba", "piazza un esplosivo che danneggia nemici e ambiente");
-
+        super("Pacchetto Bombe", "Aggiunge 5 bombe al tuo inventario.");
     }
 
     @Override
     public void usa(Player player) {
-        System.out.print("bomba piazzata a coordinate: " + player.getX() + ", " + player.getY());
-
+        player.addBombs(5);
+        System.out.println("Hai trovato delle bombe! Totale: " + player.getBombs());
     }
 }
