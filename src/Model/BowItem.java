@@ -1,15 +1,18 @@
 package Model;
 
-public class BowItem extends Item{
+public class BowItem extends Item {
 
     public BowItem() {
-        super("Arco", "spara frecce a distanza");
+        super("Arco e Frecce", "Sblocca l'arco o aggiunge 10 frecce al tuo inventario.");
     }
 
     @Override
     public void usa(Player player) {
-        System.out.print("freccia scoccata");
-        //qui va chiamato un metodo che permette di sparare una freccia (proiettile)
-        //dritta per dritta dalle coordinate di link (e anche dalla direzione in cui sta guardando
+        if (!player.hasBow()) {
+            player.unlockBow();
+            System.out.println("Hai trovato l'arco!");
+        }
+        player.addArrows(10);
+        System.out.println("Frecce ricaricate! Totale: " + player.getArrows());
     }
 }

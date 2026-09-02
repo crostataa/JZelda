@@ -43,6 +43,23 @@ public class GamePanel extends JPanel implements Observer {
             }
         }
     }
+    // x debug
+    private void drawHitboxes(Graphics2D g) {
+        g.setColor(Color.YELLOW);
+
+        // Disegna la hitbox del giocatore
+        if (model.getPlayer() != null) {
+            java.awt.Rectangle ph = model.getPlayer().getHitbox();
+            g.drawRect(ph.x, ph.y, ph.width, ph.height);
+        }
+
+        // Disegna le hitbox dei nemici
+        g.setColor(Color.RED);
+        model.getEnemies().forEach(e -> {
+            java.awt.Rectangle eh = e.getHitbox();
+            g.drawRect(eh.x, eh.y, eh.width, eh.height);
+        });
+    }
 
     // -- metodi paint --
 
@@ -60,25 +77,24 @@ public class GamePanel extends JPanel implements Observer {
         drawRupees(g2d);
         drawEnemies(g2d);
         drawPlayer(g2d);
-        drawProjectileU(g2d);
+        drawProjectile(g2d);
 
-        //debug
-        drawHitboxes(g2s);
+        //x debug again
+        drawHitboxes(g2d);
 
     }
 
     private void drawLevel(Graphics2D g) {
+        // Esempio: Carica l'immagine dell'intero livello (es. level 8)
+        // Più avanti renderemo il nome del file dinamico in base all'ID del livello
+        BufferedImage bg = SpriteManager.getInstance().getSprite("src/assets/level 8.png");
 
-        // Esempio con lo SpriteManager:
+        if (bg != null) {
+            // Disegna l'immagine grande per tutto lo schermo
+            g.drawImage(bg, 0, 0, getWidth(), getHeight(), null);
+        }
 
-        BufferedImage wallSprite = SpriteManager.getInstance().getSprite("src/assets/backGroundMap.png");
-
-        model.getCurrentLevelMap().getSolidTiles().forEach(tile -> {
-            g.drawImage(wallSprite, tile.getHitbox().x, tile.getHitbox().y, null);
-            g.setColor(Color.GRAY);
-            g.fillRect(tile.getHitbox().x, tile.getHitbox().y, tile.getHitbox().width, tile.getHitbox().height);
-        });
-
+        // Non c'è bisogno di disegnare i Tile logici, servono solo al Model per le collisioni!
     }
 
     private void drawRupees(Graphics2D g) {

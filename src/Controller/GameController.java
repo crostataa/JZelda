@@ -76,7 +76,12 @@ public class GameController {
         //imposta direzione
         player.setDirection(dx, dy);
 
-        //gestione azioni
+        //gestione attacchi
+
+        if (keyController.keyBow) {
+            model.shootArrow();
+            keyController.keyBow = false; // Forza il rilascio (no mitragliatrice)
+        }
 
         if (keyController.attack) {
 

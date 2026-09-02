@@ -17,6 +17,8 @@ public class Player extends Entity implements Damageable{
 
     private int bombs;
     private int potions;
+    private int arrows;
+    private boolean hasBow;
 
     //movimento ereditato dalla classe entity
 
@@ -40,6 +42,8 @@ public class Player extends Entity implements Damageable{
         this.lastDy = 1;
         this.bombs = 1;
         this.potions = 1;
+        this.arrows = 10;
+        this.hasBow = true; //test, da levare*
         audioManager = AudioManager.getInstance();
 
     }
@@ -158,4 +162,12 @@ public class Player extends Entity implements Damageable{
 
     public int getPotions() { return potions; }
     public void addPotions(int amount) { this.potions += amount; }
+
+    public int getArrows() { return arrows; }
+    public void addArrows(int amount) { this.arrows += amount; }
+    public void consumeArrow() { if (arrows > 0) arrows--; }
+
+    public boolean hasBow() { return hasBow; }
+    public void unlockBow() { this.hasBow = true; }
+
 }

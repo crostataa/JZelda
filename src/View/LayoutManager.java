@@ -64,8 +64,8 @@ public class LayoutManager extends JFrame{
       this.setLocationRelativeTo(null); //per centrare la finestra
       this.getContentPane().setBackground(Color.BLACK);
 
-      String icon = "icon";
-      ImageIcon image = new ImageIcon(getClass().getResource("da aggiornare"));
+      String icon = "/assets/logo.jpeg";
+      ImageIcon image = new ImageIcon(getClass().getResource(icon));
       this.setIconImage(image.getImage());
 
       setVisible(true);

@@ -19,7 +19,7 @@ public class GameModel extends Observable {
     private List<Enemy> enemies;
     List<Projectile> projectiles;
     List<Rupee> rupees;
-    private List<BombEntity activeBombs;
+    private List<BombEntity> activeBombs;
 
     //shop
     private ShopModel shop;
@@ -34,10 +34,7 @@ public class GameModel extends Observable {
 
     public GameModel() {
 
-        enemies = new ArrayList<>();
-        projectiles = new ArrayList<>();
-        rupees = new ArrayList<>();
-        this.shop = new ShopModel();
+
         initGame();
 
     }
@@ -46,9 +43,14 @@ public class GameModel extends Observable {
 
     public void initGame() {
 
+        this.enemies = new ArrayList<>();
+        this.projectiles = new ArrayList<>();
+        this.rupees = new ArrayList<>();
+        this.shop = new ShopModel();
         activeBombs = new ArrayList<>();
         this.currentState = GameState.PLAYING;
         this.currentLevel = 1;
+        this.currentLevelMap = new Level(currentLevel);
         this.score = 0;
 
 
@@ -138,6 +140,56 @@ public class GameModel extends Observable {
         projectiles.add(p);
     }
 
+    public void shootArrow() {
+
+        if (currentState != GameState.PLAYING) return;
+
+        if (player.hasBow() && player.getArrows() > 0) {
+            player.consumeArrow();
+
+            double arrowSpeed = 5.0;
+            double projDx = 0;
+            double projDy = 0;
+            int arrowDamage = 3; /**/
+
+            // Se sta guardando a destra o sinistra
+            if (player.getLastDx() > 0) projDx = arrowSpeed;
+            else if (player.getLastDx() < 0) projDx = -arrowSpeed;
+
+                // Se sta guardando in basso o in alto
+            else if (player.getLastDy() > 0) projDy = arrowSpeed;
+            else if (player.getLastDy() < 0) projDy = -arrowSpeed;
+
+            // Fallback di sicurezza: se per qualche motivo è fermo e non ha direzione
+            if (projDx == 0 && projDy == 0) projDy = arrowSpeed; // Spara in basso di default
+
+            // Presumibilmente: Projectile(x, y, dx, dy, isPlayerProjectile)
+            Projectile arrow = new Projectile(
+                    player.getX() + 8, // Centrato rispetto a Link
+                    player.getY() + 8,
+                    projDx,
+                    projDy,
+                    arrowSpeed,
+                    arrowDamage,
+                    true
+            );
+            projectiles.add(arrow);
+            System.out.println("Freccia scoccata! Frecce rimanenti: " + player.getArrows());
+
+            setChanged();
+            notifyObservers("ARROW_SHOT");
+        } else if (!player.hasBow()) {
+            System.out.println("Non hai ancora un arco!");
+        } else {
+            System.out.println("Frecce esaurite!");
+        }
+
+
+
+
+
+    }
+
     //nemici nascono in posizioni diverse in base al livello
     private void loadLevelEntities(int levelId) {
         //cancella entità livello precedente
@@ -161,6 +213,8 @@ public class GameModel extends Observable {
             //cassa con spada dell'eroe
         }
     }
+
+
 
 
 
@@ -360,6 +414,7 @@ public class GameModel extends Observable {
     public GameState getCurrentState() {return currentState;}
     public int getScore() { return score; }
     public int getCurrentLevel() { return currentLevel;}
+    public Level getCurrentLevelMap() { return currentLevelMap; }
     public ShopModel getShop() { return shop; }
     public List<BombEntity> getActiveBombs() { return activeBombs; }
 }

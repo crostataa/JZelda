@@ -27,7 +27,7 @@ public class KeyController implements KeyListener {
         if (code == KeyEvent.VK_P) pause = true;
         if (code == KeyEvent.VK_B) keyBomb = true;
         if (code == KeyEvent.VK_P) keyPotion = true;
-        if (code == KeyEvent.VK_K) keyBow = true;
+        if (code == KeyEvent.VK_X) keyBow = true;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class KeyController implements KeyListener {
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) up = false;
         if (code == KeyEvent.VK_B) keyBomb = false;
         if (code == KeyEvent.VK_P) keyPotion = false;
-        if (code == KeyEvent.VK_K) keyBow = false;
+        if (code == KeyEvent.VK_X) keyBow = false;
     }
 
     @Override
