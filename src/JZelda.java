@@ -1,3 +1,4 @@
+import Controller.MenuController;
 import Model.GameModel;
 import View.LayoutManager;
 import Controller.GameController;
@@ -16,20 +17,20 @@ public class JZelda {
         viewManager.getGamePanel().setModel(model);
         model.addObserver(viewManager.getGamePanel());
 
-        /*
-        mod
-        el.addObserver(viewManager.getHUDPanel());
-        model.addObserver(viewManager.getShopanel());
-         */
+//        model.addObserver(viewManager.getHUDPanel());
+//        model.addObserver(viewManager.getShopanel());
+
 
         //inizializziamo controller
-        GameController controller = new GameController(model, viewManager);
+        GameController gameController = new GameController(model, viewManager);
+
+        MenuController menuController = new MenuController(model, viewManager);
 
         //uniamo keyListener a gamePanel
-        viewManager.getGamePanel().addKeyListener(controller.getKeyController());
+        viewManager.getGamePanel().addKeyListener(gameController.getKeyController());
 
         //avvio gameloop
-        controller.startGame();
+        gameController.startGame();
 
     }
 

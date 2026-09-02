@@ -20,6 +20,10 @@ public class SpriteManager {
 
     }
 
+
+
+    // -- getter --
+
     public static SpriteManager getInstance() {
         if (instance == null) {
             instance = new SpriteManager();
