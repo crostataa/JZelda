@@ -3,7 +3,7 @@ package Controller;
 import Model.GameModel;
 import Model.GameState;
 import Model.Player;
-import View.GameWindow;
+import View.LayoutManager;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -11,12 +11,12 @@ import java.awt.event.*;
 public class GameController {
 
     private GameModel model;
-    private GameWindow view;
+    private LayoutManager view;
     private KeyController keyController;
     private Timer gameloop;
 
 
-    public GameController(GameModel model, GameWindow view) {
+    public GameController(GameModel model, LayoutManager view) {
 
         this.model = model;
         this.view = view;
@@ -95,7 +95,10 @@ public class GameController {
         }
     }
 
+    // -- getter --
 
 
-
+    public KeyController getKeyController() {
+        return keyController;
+    }
 }

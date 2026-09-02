@@ -26,11 +26,10 @@ public class GameModel extends Observable {
 
     //mappa
     private Level currentLevelMap;
+    private int currentLevelId;
 
-    // -- singleton --
-    private static GameModel instance = new GameModel();
 
-    private GameModel() {
+    public GameModel() {
 
         enemies = new ArrayList<>();
         projectiles = new ArrayList<>();
@@ -53,18 +52,6 @@ public class GameModel extends Observable {
         //il primo livello NON HA NEMICI
         enemies.clear();
 
-        // # = Muro; . = Prato; M = MoblinEnemy; O = OctorokEnemy; P = Player; D = Porta
-        String[] level1Data = {
-                "#########################",
-                "#P......#.........M.....#",
-                "#.......#...#######.....#",
-                "#...M.......#.....#...O.#",
-                "#.......#...#.....#.....#",
-                "#.......#.........#.....#",
-                "#####D###################"
-        };
-
-        this.currentLevelMap = new Level(level1Data);
 
         // Posiziona il giocatore in base alla mappa
         this.player = new Player(currentLevelMap.getPlayerStartX(), currentLevelMap.getPlayerStartY());
@@ -89,6 +76,22 @@ public class GameModel extends Observable {
         notifyObservers("GAME_RESET");
 
     }
+
+    public void changeLevel(int newLevelId, int startX, int startY) {
+        this.currentLevelId = newLevelId;
+
+        //riposiziona giocatore all'ingresso della nuova zona
+        this.player.setX(startX);
+        this.player.setY(startY);
+
+        //svuota proiettili e carica i nuovi nemici specifici del livello
+        this.projectiles.clear();
+        loadLevelEntities(newLevelId);
+    }
+
+
+
+
 
     //metodo per acquistare da shop
     public void attemptPurchase(String itemName) {
@@ -115,10 +118,31 @@ public class GameModel extends Observable {
         projectiles.add(p);
     }
 
-    // -- singleton --
-    public static GameModel getInstance() {
-        return instance;
+    //nemici nascono in posizioni diverse in base al livello
+    private void loadLevelEntities(int levelId) {
+        //cancella entità livello precedente
+        enemies.clear();
+        rupees.clear();
+        projectiles.clear();
+
+        //spawna nemici
+        if (levelId <= 8) {
+            //coordinate da modificare*
+            enemies.add(new MoblinEnemy(300,400));
+            enemies.add(new OctorokEnemy(400,200));
+
+            rupees.add(new Rupee(150, 150, 1));
+
+        } else if (levelId == 9) {
+            currentState = GameState.SHOP;
+        } else if (levelId == 10) {
+            //moblin pacifico
+        } else if (levelId == 11) {
+            //cassa con spada dell'eroe
+        }
     }
+
+
 
 
     // -- metodi x controller --
@@ -127,6 +151,18 @@ public class GameModel extends Observable {
 
         //1. aggiorna il giocatore
         //player.update();
+
+        currentLevelMap.getTiles().stream()
+                .filter(tile -> tile.getType() == TileType.DOOR)
+                .filter(tile -> tile.getHitbox().intersects(player.getHitbox()))
+                .findFirst()
+                .ifPresent(cave -> {
+                    //in base al livello da cui si accede, si andrà in una caverna diversa
+                    //modificare*
+                    if (currentLevelId == 2) changeLevel(6, 350, 400); //shop
+                    else if(currentLevelId == 3) changeLevel(7, 350, 400);
+                    else if (currentLevelId == 4) changeLevel(8, 350, 400);
+                });
 
         //controllo collisioni player vs muri
         boolean playerHitWall = currentLevelMap.getSolidTiles()

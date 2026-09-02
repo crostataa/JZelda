@@ -123,7 +123,7 @@ public class Player extends Entity implements Damageable{
         });
     }
 
-    // -- getter --
+    // -- getter e setter --
     public boolean isInvulnerable() {
         return invulnerabilityTimer > 0;
     }
@@ -133,5 +133,7 @@ public class Player extends Entity implements Damageable{
     public List<Item> getInventory() { return inventory; }
     public double getLastDx() { return lastDx; }
     public double getLastDy() { return lastDy; }
+    public double setX(double coordX) { return this.x = coordX;}
+    public double setY(double coordY) { return this.y = coordY;}
 
 }

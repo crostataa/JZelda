@@ -15,8 +15,9 @@ public class Level {
     private double playerStartX, playerStartY;
 
 
-    public Level(String[] mapData) {
+    public Level(int levelId) {
 
+        String[] mapData = LevelFactory.getLevelData(levelId);
         initialEnemies = new ArrayList<>();
         loadMap(mapData);
     }
@@ -56,6 +57,19 @@ public class Level {
             }
         }
     }
+    // -- getter --
+    public List<Tile> getTiles() {
+
+        List<Tile> allTiles = new ArrayList<>();
+        if (grid!= null) {
+            for (Tile[] row : grid ) {
+                for (Tile t : row)  {
+                    if (t!= null) allTiles.add(t);
+                }
+            }
+        }
+        return allTiles;
+    }
 
 
     public Stream<Tile> getSolidTiles() {
@@ -64,7 +78,6 @@ public class Level {
                 .filter(Tile::isSolid);
     }
 
-    // -- getter --
     public List<Enemy> getInitialEnemies() { return initialEnemies; }
     public double getPlayerStartX() { return playerStartX; }
     public double getPlayerStartY() { return playerStartY; }
