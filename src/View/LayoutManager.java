@@ -10,7 +10,7 @@ public class LayoutManager extends JFrame{
   CardLayout cardLayout;
   JPanel mainPanel;
 
-  ShopPanel shop;
+
   GamePanel game;
   MenuPanel menu;
   HUDPanel hudPanel;
@@ -32,7 +32,6 @@ public class LayoutManager extends JFrame{
 
       this.hudPanel = new HUDPanel();
       this.game = new GamePanel();
-      this.shop = new ShopPanel();
       this.menu = new MenuPanel();
 
       // 2. Imposto le dimensioni corrette
@@ -48,8 +47,6 @@ public class LayoutManager extends JFrame{
       // 4. Aggiungo le "Carte" al mainPanel
       mainPanel.add(menu, Window.MENU.name());
       mainPanel.add(gameContainer, Window.GIOCO.name()); // Aggiungo il wrapper, non solo game!
-      mainPanel.add(shop, Window.SHOP.name());
-
         /*
         gameover = new GameOverPanel();
         mainPanel.add(gameover, Window.GAMEOVER.name());
@@ -101,9 +98,5 @@ public class LayoutManager extends JFrame{
     // -- getter --
     public GamePanel getGamePanel() { return game; }
     public MenuPanel getMenuPanel() { return menu; }
-    public ShopPanel getShopPanel() { return shop; }
-
-
-
-
+    public HUDPanel getHUDPanel() { return hudPanel; }
 }

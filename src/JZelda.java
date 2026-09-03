@@ -17,7 +17,8 @@ public class JZelda {
         viewManager.getGamePanel().setModel(model);
         model.addObserver(viewManager.getGamePanel());
 
-//        model.addObserver(viewManager.getHUDPanel());
+        viewManager.getHUDPanel().setModel(model);
+        model.addObserver(viewManager.getHUDPanel());
 //        model.addObserver(viewManager.getShopanel());
 
 

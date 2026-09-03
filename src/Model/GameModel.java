@@ -21,6 +21,10 @@ public class GameModel extends Observable {
     List<Rupee> rupees;
     private List<BombEntity> activeBombs;
 
+    //animazione eliminazione entitò
+    private List<DeathAnimation> deathAnimations = new ArrayList<>();
+    public List<DeathAnimation> getDeathAnimations() { return deathAnimations; }
+
     //shop
     private ShopModel shop;
 
@@ -52,6 +56,7 @@ public class GameModel extends Observable {
         this.currentLevel = 1;
         this.currentLevelMap = new Level(currentLevel);
         this.score = 0;
+        deathAnimations.clear();
 
 
         //posizione iniziale del giocatore, al centro dello schermo *
@@ -311,6 +316,9 @@ public class GameModel extends Observable {
                                 }
                             });
                 });
+        // gestione animazione morti
+        deathAnimations.forEach(DeathAnimation::update);
+        deathAnimations.removeIf(DeathAnimation::isFinished);
 
 
         //6. raccolta rupie
@@ -328,15 +336,17 @@ public class GameModel extends Observable {
         // 7. pulizia entità morte e drop rupie
         enemies.removeIf(enemy -> {
             if (!enemy.isAlive()) {
-                // 80% di probabilità di droppare una rupia quando muore
+                // SPAWNA L'ANIMAZIONE DI MORTE ALLE COORDINATE DEL NEMICO
+                deathAnimations.add(new DeathAnimation(enemy.getX(), enemy.getY()));
+
+                // 80% di probabilità di droppare una rupia... (il tuo codice esistente)
                 if (Math.random() < 0.80) {
-                    // 40% di possibilità che sia una rupia da 5 (blu), altrimenti da 1 (gialla)
                     int rupeeValue = Math.random() < 0.40 ? 5 : 1;
                     rupees.add(new Rupee(enemy.getX() + 8, enemy.getY() + 8, rupeeValue));
                 }
-                return true; // Rimuove il nemico dalla lista
+                return true;
             }
-            return false; // Mantiene il nemico vivo
+            return false;
         });
 
         rupees.removeIf(rupee -> !rupee.isAlive());

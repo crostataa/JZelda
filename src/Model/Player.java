@@ -101,6 +101,12 @@ public class Player extends Entity implements Damageable{
     public void update() {
         if (!isAlive()) return;
 
+        // SCALA IL TIMER DI INVULNERABILITÀ OGNI FRAME
+        if (invulnerabilityTimer > 0) {
+            invulnerabilityTimer--;
+        }
+
+
         if (isAttacking) {
             attackTimer--;
             if (attackTimer <= 0) {
@@ -171,6 +177,16 @@ public class Player extends Entity implements Damageable{
     public boolean addItem(Item item) {
         if (inventory.size() < MAX_ITEMS) {
             inventory.add(item);
+
+            // AGGIORNA I CONTATORI PER L'HUD IN BASE AL TIPO DI OGGETTO ACQUISTATO
+            if (item instanceof BombItem) {
+                addBombs(5);  // Aggiunge 5 bombe (come definito nella logica del BombItem)
+            } else if (item instanceof HealthPotionItem) {
+                addPotions(1); // Aggiunge 1 pozione
+            } else if (item instanceof ArrowItem) {
+                addArrows(10); // Aggiunge 10 frecce (come definito in ArrowItem)
+            }
+
             return true;
         }
         return false;

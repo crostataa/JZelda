@@ -32,10 +32,8 @@ public class GamePanel extends JPanel implements Observer {
     private final String PATH_ARROW = "/assets/arma_vs_verticaleNew.png";
     private final String PATH_POTION = "/assets/pozioneHUDNew.png";
 
-    //cuori
-    private final String PATH_HEART1 = "/assets/cuoreVuotoHUD.png";
-    private final String PATH_HEART2 = "/assets/cuoreMezzoHUD.png";
-    private final String PATH_HEART3 = "/assets/cuorePienoHUD.png";
+    //animazione eliminazione
+    private final String PATH_DEATH_ANIM = "/assets/Enemy Death Animation.png";
 
     //octorok
     private final String PATH_OCTOROK_1 = "/assets/octorok1New.png"; // Guarda in basso / base
@@ -118,6 +116,7 @@ public class GamePanel extends JPanel implements Observer {
         drawLevel(g2d);
         drawRupees(g2d);
         drawEnemies(g2d);
+        drawDeathAnimations(g2d);
         drawShop(g2d);
         drawPlayer(g2d);
         drawProjectiles(g2d);
@@ -397,6 +396,29 @@ public class GamePanel extends JPanel implements Observer {
                     g.setColor(Color.YELLOW);
                     g.fillRect((int)p.getX(), (int)p.getY(), 16, 16);
                 }
+            }
+        }
+    }
+
+    private void drawDeathAnimations(Graphics2D g) {
+        BufferedImage deathSheet = SpriteManager.getInstance().getSprite(PATH_DEATH_ANIM);
+        if (deathSheet == null) return;
+
+        int totalFrames = 4;
+        int frameWidth = deathSheet.getWidth() / totalFrames; // 64 / 4 = 16 pixel a frame
+        int frameHeight = deathSheet.getHeight();
+
+        for (DeathAnimation anim : model.getDeathAnimations()) {
+            int currentFrame = Math.min(anim.getCurrentFrame(), totalFrames - 1);
+
+            // Usiamo 'currentFrame' come colonna (col).
+            // Sarà SpriteManager a moltiplicarlo internamente per la larghezza (col * width).
+            BufferedImage sprite = SpriteManager.getInstance().getSubSprite(
+                    PATH_DEATH_ANIM, currentFrame, 0, frameWidth, frameHeight
+            );
+
+            if (sprite != null) {
+                g.drawImage(sprite, (int)anim.getX(), (int)anim.getY(), 32, 32, null);
             }
         }
     }
