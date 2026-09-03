@@ -172,28 +172,51 @@ public class GamePanel extends JPanel implements Observer {
             BufferedImage img = null;
             boolean flipHorizontal = false;
 
-            // 1. OCTOROK
+            // 1. OCTOROK (Sparo)
             if (e instanceof OctorokEnemy) {
+                OctorokEnemy octo = (OctorokEnemy) e;
+                boolean shooting = octo.isShooting();
+
                 if (Math.abs(e.getDx()) > Math.abs(e.getDy())) {
-                    img = SpriteManager.getInstance().getSprite(PATH_OCTOROK_3); // Guarda di lato
-                    if (e.getDx() < 0) flipHorizontal = true; // Guarda a sinistra
+                    // Guarda di lato
+                    img = SpriteManager.getInstance().getSprite(shooting ? "/assets/octorok3New.png" : PATH_OCTOROK_3);
+                    if (e.getDx() < 0) flipHorizontal = true;
+                } else if (e.getDy() < 0) {
+                    // Guarda in alto
+                    img = SpriteManager.getInstance().getSprite(shooting ? PATH_OCTOROK_2 : "/assets/octorok2New.png");
                 } else {
-                    img = SpriteManager.getInstance().getSprite(PATH_OCTOROK_1); // Guarda in basso/alto
+                    // Guarda in basso
+                    img = SpriteManager.getInstance().getSprite(shooting ? "/assets/octorok1New.png" : PATH_OCTOROK_1);
                 }
             }
-            // 2. MOBLIN
+            // 2. MOBLIN (Camminata)
             else if (e instanceof MoblinEnemy) {
+                int frame = e.getSpriteNum();
+
                 if (Math.abs(e.getDx()) > Math.abs(e.getDy())) {
-                    img = SpriteManager.getInstance().getSprite(PATH_MOBLIN_3); // Guarda di lato
-                    if (e.getDx() < 0) flipHorizontal = true; // Guarda a sinistra
+                    // Guarda di lato: Alterna tra la base (3) e l'animazione (4)
+                    img = SpriteManager.getInstance().getSprite(frame == 1 ? PATH_MOBLIN_3 : PATH_MOBLIN_4);
+
+                    // Se cammina verso sinistra, specchia lo sprite
+                    if (e.getDx() < 0) flipHorizontal = true;
+
                 } else if (e.getDy() < 0) {
-                    img = SpriteManager.getInstance().getSprite(PATH_MOBLIN_2); // Guarda in alto
+                    // Guarda in alto: Usa SEMPRE l'immagine di base (2)...
+                    img = SpriteManager.getInstance().getSprite(PATH_MOBLIN_2);
+
+                    // ...ma al frame 2 specchiamo l'immagine per simulare i passi!
+                    if (frame == 2) flipHorizontal = true;
+
                 } else {
-                    img = SpriteManager.getInstance().getSprite(PATH_MOBLIN_1); // Guarda in basso
+                    // Guarda in basso: Usa SEMPRE l'immagine di base (1)...
+                    img = SpriteManager.getInstance().getSprite(PATH_MOBLIN_1);
+
+                    // ...ma al frame 2 specchiamo l'immagine per simulare i passi!
+                    if (frame == 2) flipHorizontal = true;
                 }
             }
 
-            // 3. DISEGNO NEMICO
+            // 3. DISEGNO FINALE
             int drawX = (int) e.getX();
             int drawY = (int) e.getY();
 
@@ -247,13 +270,29 @@ public class GamePanel extends JPanel implements Observer {
         // 2. STATO NORMALE (Movimento o Fermo)
         else {
             if (Math.abs(p.getLastDx()) > Math.abs(p.getLastDy())) {
-                linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_SIDE_1);
+                // Guarda a Destra / Sinistra
+                if (p.getSpriteNum() == 1) {
+                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_SIDE_1);
+                } else {
+                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_SIDE_2);
+                }
+
                 if (p.getLastDx() < 0) flipHorizontal = true;
             } else {
                 if (p.getLastDy() < 0) {
-                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_UP_1);
+                    // Guarda in Alto
+                    if (p.getSpriteNum() == 1) {
+                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_UP_1);
+                    } else {
+                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_UP_2);
+                    }
                 } else {
-                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_DOWN_1);
+                    // Guarda in Basso
+                    if (p.getSpriteNum() == 1) {
+                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_DOWN_1);
+                    } else {
+                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_DOWN_2);
+                    }
                 }
             }
         }

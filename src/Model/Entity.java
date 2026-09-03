@@ -14,6 +14,10 @@ public abstract class Entity {
     protected double speed;
     protected boolean isAlive;
 
+    //animazione spostamento
+    protected int spriteCounter = 0;
+    protected int spriteNum = 1;
+
     //tutte le entità devono avere una direzione
     protected double dx, dy;
 
@@ -63,7 +67,7 @@ public abstract class Entity {
     public double getDx() { return dx; }
     public double getDy() { return dy; }
 
-    public void takeDamage(int damage) {
+    public void takeDamage(int damage) {}
 
-    }
+    public int getSpriteNum() {return spriteNum;}
 }

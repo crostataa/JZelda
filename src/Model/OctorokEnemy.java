@@ -11,6 +11,10 @@ public class OctorokEnemy extends Enemy{
         this.shootCooldown = 0;
     }
 
+    public boolean isShooting() {
+        return shootCooldown > 100;
+    }
+
     @Override
     public void updateBehavior(GameModel model) {
         if (!isAlive()) return;

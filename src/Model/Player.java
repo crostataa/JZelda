@@ -17,6 +17,8 @@ public class Player extends Entity implements Damageable{
     private int attackTimer;
     private final int ATTACK_DURATION;
 
+
+
     //inventario (max 3 item)
     private List <Item> inventory;
     private static final int MAX_ITEMS = 3;
@@ -99,24 +101,34 @@ public class Player extends Entity implements Damageable{
     public void update() {
         if (!isAlive()) return;
 
-        // Se sta attaccando, il timer scende e Link NON si muove
         if (isAttacking) {
             attackTimer--;
             if (attackTimer <= 0) {
                 isAttacking = false;
             }
-        }
-        // Altrimenti si muove normalmente
-        else {
+        } else {
+            // Movimento fisico
             this.x += this.dx * this.speed;
             this.y += this.dy * this.speed;
-        }
 
-        //2. incrementa il timer di invulnerabilità se è attivo
-        if (invulnerabilityTimer > 0 ) {
-            invulnerabilityTimer--;
+            // ANIMAZIONE CAMMINATA: Avanza solo se c'è movimento
+            if (this.dx != 0 || this.dy != 0) {
+                spriteCounter++;
+                if (spriteCounter > 12) { // Cambia frame ogni 12 tick (regola per renderlo più o meno veloce)
+                    if (spriteNum == 1) {
+                        spriteNum = 2;
+                    } else {
+                        spriteNum = 1;
+                    }
+                    spriteCounter = 0; // Resetta il contatore
+                }
+            } else {
+                // Se è fermo, torna sempre alla posizione statica (frame 1)
+                spriteNum = 1;
+            }
         }
     }
+
 
     // -- gestione salute e danni --
     @Override
@@ -207,5 +219,6 @@ public class Player extends Entity implements Damageable{
 
     public boolean hasBow() { return hasBow; }
     public void unlockBow() { this.hasBow = true; }
+
 
 }
