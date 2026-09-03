@@ -14,39 +14,43 @@ public class GamePanel extends JPanel implements Observer {
 
 
     //link che cammina
-    // Percorsi immagini Link (Movimento Base)
-    private final String PATH_LINK_DOWN_1 = "/assets/basicLink1.png"; // Guarda in basso
-    private final String PATH_LINK_DOWN_2 = "/assets/basicLink2.png"; // Guarda in basso (animazione)
-    private final String PATH_LINK_SIDE_1 = "/assets/basicLink3.png"; // Guarda di lato
-    private final String PATH_LINK_SIDE_2 = "/assets/basicLink4.png"; // Guarda di lato (animazione)
-    private final String PATH_LINK_UP_1   = "/assets/basicLink5.png"; // Guarda in alto
-    private final String PATH_LINK_UP_2   = "/assets/basicLink6.png"; // Il nuovo sprite (animazione)
+    private final String PATH_LINK_DOWN_1 = "/assets/basicLink1New.png"; // Guarda in basso
+    private final String PATH_LINK_DOWN_2 = "/assets/basicLink2New.png"; // Guarda in basso (animazione)
+    private final String PATH_LINK_SIDE_1 = "/assets/basicLink3New.png"; // Guarda di lato
+    private final String PATH_LINK_SIDE_2 = "/assets/basicLink4New.png"; // Guarda di lato (animazione)
+    private final String PATH_LINK_UP_1   = "/assets/basicLink5New.png"; // Guarda in alto
+    private final String PATH_LINK_UP_2   = "/assets/basicLink6New.png";
+
+    //link che attacca
+    // Percorsi immagini Link (Attacco Spada)
+    private final String PATH_ATTACK_UP   = "/assets/spadaLink3New.png";
+    private final String PATH_ATTACK_DOWN = "/assets/spadaLink2New.png";
+    private final String PATH_ATTACK_SIDE = "/assets/spadaLink1New.png"; // Usato per Destra e Sinistra
+
+
 
 
     private final String PATH_ITEMS = "/assets/NES - The Legend of Zelda - Miscellaneous - Items & Weapons.png";
 
-    // Coordinate [x, y, width, height]
-    // LINK (Basic Movement, primo frame rivolto verso il basso)
-    private final int[] SPRITE_LINK_DOWN = { 1, 11, 16, 16 };
 
     // NEMICI
     //octorok
-    private final String PATH_OCTOROK_1 = "/assets/octorok1.png"; // Guarda in basso / base
-    private final String PATH_OCTOROK_2 = "/assets/octorok2.png"; // Animazione
-    private final String PATH_OCTOROK_3 = "/assets/octorok3.png"; // Guarda di lato
-    private final String PATH_OCTOROK_4 = "/assets/octorok4.png"; // Guarda di lato
-    private final String PATH_OCTO_ROCK = "/assets/octorok_proiettile.png"; // Proiettile
+    private final String PATH_OCTOROK_1 = "/assets/octorok1New.png"; // Guarda in basso / base
+    private final String PATH_OCTOROK_2 = "/assets/octorok2New.png"; // Animazione
+    private final String PATH_OCTOROK_3 = "/assets/octorok3New.png"; // Guarda di lato
+    private final String PATH_OCTOROK_4 = "/assets/octorok4New.png"; // Guarda di lato
+    private final String PATH_OCTO_ROCK = "/assets/octorok_proiettileNew.png"; // Proiettile
 
     //moblin
     //percorsi immagini Moblin
-    private final String PATH_MOBLIN_1 = "/assets/moblin1.png"; // Guarda in basso / base
-    private final String PATH_MOBLIN_2 = "/assets/moblin2.png"; // Guarda in alto
-    private final String PATH_MOBLIN_3 = "/assets/moblin3.png"; // Guarda di lato
-    private final String PATH_MOBLIN_4 = "/assets/moblin4.png"; // Guarda di lato (animazione)
+    private final String PATH_MOBLIN_1 = "/assets/moblin1New.png"; // Guarda in basso / base
+    private final String PATH_MOBLIN_2 = "/assets/moblin2New.png"; // Guarda in alto
+    private final String PATH_MOBLIN_3 = "/assets/moblin3New.png"; // Guarda di lato
+    private final String PATH_MOBLIN_4 = "/assets/moblin4New.png"; // Guarda di lato (animazione)
 
     // Percorsi armi (Frecce)
-    private final String PATH_ARROW_H = "/assets/arma_vs_orizzontale.png";
-    private final String PATH_ARROW_V = "/assets/arma_vs_verticale.png";
+    private final String PATH_ARROW_H = "/assets/arma_vs_orizzontaleNew.png";
+    private final String PATH_ARROW_V = "/assets/arma_vs_verticaleNew.png";
 
     // OGGETTI
 
@@ -175,31 +179,62 @@ public class GamePanel extends JPanel implements Observer {
             Player p = model.getPlayer();
             BufferedImage linkImg = null;
 
-            // Determina la direzione in cui Link sta guardando
-            // Se si muove orizzontalmente
-            if (Math.abs(p.getLastDx()) > Math.abs(p.getLastDy())) {
-                linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_SIDE_1);
+            int drawX = (int) p.getX();
+            int drawY = (int) p.getY();
+            boolean flipHorizontal = false; // Flag per specchiare lo sprite
 
-                // NOTA: Se si muove a sinistra (p.getLastDx() < 0), in futuro dovremo
-                // specchiare l'immagine orizzontalmente con Graphics2D.
-            }
-            // Se si muove verticalmente
-            else {
-                if (p.getLastDy() < 0) {
-                    // Guarda in alto
-                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_UP_1);
+            // 1. SE LINK STA ATTACCANDO
+            if (p.isAttacking()) {
+                if (Math.abs(p.getLastDx()) > Math.abs(p.getLastDy())) {
+                    linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_SIDE);
+                    if (p.getLastDx() < 0) {
+                        flipHorizontal = true; // Guarda a sinistra
+                        if (linkImg != null) {
+                            // Spostiamo il punto di origine indietro per la lunghezza della spada
+                            drawX = (int) p.getX() - (linkImg.getWidth() * 2 - 32);
+                        }
+                    }
                 } else {
-                    // Guarda in basso (Default)
-                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_DOWN_1);
+                    if (p.getLastDy() < 0) {
+                        linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_UP);
+                        if (linkImg != null) {
+                            drawY = (int) p.getY() - (linkImg.getHeight() * 2 - 32);
+                        }
+                    } else {
+                        linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_DOWN);
+                    }
+                }
+            }
+            // 2. SE LINK STA CAMMINANDO O È FERMO
+            else {
+                if (Math.abs(p.getLastDx()) > Math.abs(p.getLastDy())) {
+                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_SIDE_1);
+                    if (p.getLastDx() < 0) {
+                        flipHorizontal = true; // Specchiamo anche la camminata laterale
+                    }
+                } else {
+                    if (p.getLastDy() < 0) {
+                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_UP_1);
+                    } else {
+                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_DOWN_1);
+                    }
                 }
             }
 
-            // Fallback di sicurezza se l'immagine non carica
+            // 3. DISEGNO FINALE
             if (linkImg != null) {
-                g.drawImage(linkImg, (int)p.getX(), (int)p.getY(), 32, 32, null);
+                int scaledWidth = linkImg.getWidth() * 2;
+                int scaledHeight = linkImg.getHeight() * 2;
+
+                if (flipHorizontal) {
+                    // Disegna l'immagine capovolta orizzontalmente usando larghezza negativa
+                    g.drawImage(linkImg, drawX + scaledWidth, drawY, -scaledWidth, scaledHeight, null);
+                } else {
+                    g.drawImage(linkImg, drawX, drawY, scaledWidth, scaledHeight, null);
+                }
             } else {
                 g.setColor(Color.GREEN);
-                g.fillRect((int)p.getX(), (int)p.getY(), 32, 32);
+                g.fillRect(drawX, drawY, 32, 32);
             }
         }
     }

@@ -11,6 +11,9 @@ public class Player extends Entity implements Damageable{
     private int maxHp;
     private int rupees;
 
+    private boolean isAttacking;
+    private int attackTimer;
+
     //inventario (max 3 item)
     private List <Item> inventory;
     private static final int MAX_ITEMS = 3;
@@ -32,10 +35,12 @@ public class Player extends Entity implements Damageable{
 
 
     public Player(double x, double y) {
-        super(x, y, 32, 32, 4.0);
+        super(300, 300, 32, 32, 4.0);
         this.maxHp = 6;
         this.hp = this.maxHp;
         this.rupees = 0;
+        this.isAttacking = false;
+        this.attackTimer = 0;
         this.inventory = new ArrayList<Item>();
         this.invulnerabilityTimer = 0;
         this.lastDx = 0;
@@ -60,6 +65,14 @@ public class Player extends Entity implements Damageable{
         }
     }
 
+    public void attack() {
+        if (!isAttacking) {
+            isAttacking = true;
+            attackTimer = 15; // L'attacco dura 15 frame (1/4 di secondo a 60 FPS)
+            // Qui andrà anche la logica per generare la Hitbox dell'arma e colpire i nemici*
+        }
+    }
+
     // --- LOGICA POZIONE ---
     // La pozione si usa istantaneamente, ripristina la vita e si consuma.
     public void usePotion() {
@@ -73,9 +86,18 @@ public class Player extends Entity implements Damageable{
     @Override
     public void update() {
 
-        //1. aggiorna la posizione
-        this.x += dx * speed;
-        this.y += dy * speed;
+        if (isAttacking) {
+            attackTimer--;
+            if (attackTimer <= 0) {
+                isAttacking = false;
+            }
+        } else {
+
+            //1. aggiorna la posizione
+            this.x += dx * speed;
+            this.y += dy * speed;
+
+        }
 
         //2. incrementa il timer di invulnerabilità se è attivo
         if (invulnerabilityTimer > 0 ) {
@@ -150,6 +172,7 @@ public class Player extends Entity implements Damageable{
     @Override public int getHp() { return hp; }
     public int getMaxHp() { return maxHp; }
     public int getRupees() { return rupees; }
+    public boolean isAttacking() { return isAttacking; }
     public List<Item> getInventory() { return inventory; }
     public double getLastDx() { return lastDx; }
     public double getLastDy() { return lastDy; }
