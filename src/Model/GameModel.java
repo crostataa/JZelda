@@ -49,7 +49,7 @@ public class GameModel extends Observable {
         this.shop = new ShopModel();
         activeBombs = new ArrayList<>();
         this.currentState = GameState.PLAYING;
-        this.currentLevel = 1;
+        this.currentLevel = 6;
         this.currentLevelMap = new Level(currentLevel);
         this.score = 0;
 
@@ -258,9 +258,11 @@ public class GameModel extends Observable {
 
         //controllo collisioni player vs muri
         boolean playerHitWall = currentLevelMap.getSolidTiles()
-                        .anyMatch(tile -> tile.getHitbox().intersects(player.getPredictedHitbox()));
+                .anyMatch(tile -> tile.getHitbox().intersects(player.getPredictedHitbox()));
+
         if(!playerHitWall) {
-            player.update();
+            player.update(); // Muove Link
+            checkLevelTransitions(); // <--- AGGIUNGI QUESTO QUI! Controlla se è uscito dalla mappa o ha toccato una porta
         } else {
             player.setDirection(0,0);
         }
@@ -333,11 +335,24 @@ public class GameModel extends Observable {
 
 
 
-        //7. pulizia entità morte/acquisite/altro tramite stream
-        enemies.removeIf(enemy -> !enemy.isAlive());
+        // 7. pulizia entità morte e drop rupie
+        enemies.removeIf(enemy -> {
+            if (!enemy.isAlive()) {
+                // 80% di probabilità di droppare una rupia quando muore
+                if (Math.random() < 0.80) {
+                    // 40% di possibilità che sia una rupia da 5 (blu), altrimenti da 1 (gialla)
+                    int rupeeValue = Math.random() < 0.40 ? 5 : 1;
+                    rupees.add(new Rupee(enemy.getX() + 8, enemy.getY() + 8, rupeeValue));
+                }
+                return true; // Rimuove il nemico dalla lista
+            }
+            return false; // Mantiene il nemico vivo
+        });
+
         rupees.removeIf(rupee -> !rupee.isAlive());
-        //i proiettili li rimuoviamo se hanno colpito qualcosa oppure se escono dalla mappa
-        projectiles.removeIf(p-> !p.isAlive() || !screenBounds.intersects(p.getHitbox()));
+        projectiles.removeIf(p -> !p.isAlive() || !screenBounds.intersects(p.getHitbox()));
+
+
 
         //6. controllo gameover
         if (!player.isAlive) {
@@ -401,6 +416,92 @@ public class GameModel extends Observable {
                 //il messaggio serve la view che deve disegnare l'animazione della spada per qualche frame
                 notifyObservers("PLAYER_ATTACK");
             }
+
+    // Metodo per controllare se Link ha calpestato una porta o superato i bordi
+    private void checkLevelTransitions() {
+        int mapWidth = 768;
+        int mapHeight = 512;
+        int playerSize = 32;
+
+        // 1. TRANSIZIONI OVERWORLD (Tutte e 4 le direzioni)
+        if (player.getX() < 0) {
+            // Esce a SINISTRA
+            int nextLevel = getAdjacentLevel(currentLevel, "LEFT");
+            if (nextLevel != -1) changeLevel(nextLevel, mapWidth - playerSize, (int)player.getY());
+        }
+        else if (player.getX() + playerSize > mapWidth) {
+            // Esce a DESTRA
+            int nextLevel = getAdjacentLevel(currentLevel, "RIGHT");
+            if (nextLevel != -1) changeLevel(nextLevel, 0, (int)player.getY());
+        }
+        else if (player.getY() < 0) {
+            // Esce in ALTO
+            int nextLevel = getAdjacentLevel(currentLevel, "UP");
+            if (nextLevel != -1) changeLevel(nextLevel, (int)player.getX(), mapHeight - playerSize);
+        }
+        else if (player.getY() + playerSize > mapHeight) {
+            // Esce in BASSO
+            int nextLevel = getAdjacentLevel(currentLevel, "DOWN");
+            if (nextLevel != -1) changeLevel(nextLevel, (int)player.getX(), 0);
+        }
+
+        // 2. CONTROLLO PORTE DEI DUNGEON
+        currentLevelMap.getTiles().stream()
+                .filter(tile -> tile.getType() == TileType.DOOR)
+                .filter(tile -> tile.getHitbox().intersects(player.getHitbox()))
+                .findFirst()
+                .ifPresent(door -> {
+                    // Overworld -> Dungeon
+                    if (currentLevel == 1) changeLevel(9, 368, 400);
+                    else if (currentLevel == 2) changeLevel(10, 368, 400);
+                    else if (currentLevel == 8) changeLevel(11, 368, 400);
+
+                        // Dungeon -> Overworld
+                    else if (currentLevel == 9) changeLevel(1, (int)door.getX(), (int)door.getY() + 40);
+                    else if (currentLevel == 10) changeLevel(2, (int)door.getX(), (int)door.getY() + 40);
+                    else if (currentLevel == 11) changeLevel(8, (int)door.getX(), (int)door.getY() + 40);
+                });
+    }
+
+    // Navigatore esplicito della griglia del mondo
+    private int getAdjacentLevel(int current, String direction) {
+        switch (current) {
+            case 1:
+                if (direction.equals("RIGHT")) return 2;
+                // se hai una mappa sopra l'1: if (direction.equals("UP")) return X;
+                break;
+            case 2:
+                if (direction.equals("LEFT")) return 1;
+                if (direction.equals("RIGHT")) return 3;
+                break;
+            case 3:
+                if (direction.equals("LEFT")) return 2;
+                if (direction.equals("RIGHT")) return 4;
+                break;
+            case 4:
+                if (direction.equals("LEFT")) return 3;
+                if (direction.equals("UP")) return 5; // Transizione verticale!
+                break;
+            case 5:
+                if (direction.equals("DOWN")) return 4; // Ritorno al liv 4
+                if (direction.equals("LEFT")) return 6;
+                break;
+            case 6:
+                if (direction.equals("RIGHT")) return 5;
+                if (direction.equals("LEFT")) return 7;
+                break;
+            case 7:
+                // Crocevia aperto
+                if (direction.equals("LEFT")) return 8;
+                if (direction.equals("RIGHT")) return 6;
+                break;
+            case 8:
+                if (direction.equals("RIGHT")) return 7;
+                break;
+        }
+        return -1; // Restituisce -1 seLink sbatte contro un bordo del mondo senza mappe collegate
+    }
+
 
 
     // --  getter --

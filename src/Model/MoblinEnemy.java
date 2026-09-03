@@ -13,20 +13,20 @@ public class MoblinEnemy extends Enemy{
     @Override
     public void updateBehavior(GameModel model) {
         if (!isAlive()) return;
-
         Player player = model.getPlayer();
-
         double diffX = player.getX() - this.x;
         double diffY = player.getY() - this.y;
-
-        // Teorema di Pitagora per trovare la distanza totale
         double distance = Math.hypot(diffX, diffY);
 
-        // Se è distante, si muove verso il giocatore
-        if (distance > 0 && distance < 300) { // 300 è il raggio visivo
-            this.setDirection(diffX / distance, diffY / distance);
+        if (distance > 0 && distance < 300) {
+            // Sceglie l'asse dominante per un movimento a croce perfetto
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                this.setDirection(Math.signum(diffX), 0);
+            } else {
+                this.setDirection(0, Math.signum(diffY));
+            }
         } else {
-            this.setDirection(0,0); //il nemico è fermo se il giocatore è lontano*
+            this.setDirection(0, 0); // Fermo
         }
     }
 

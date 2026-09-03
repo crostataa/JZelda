@@ -38,32 +38,28 @@ public class OctorokEnemy extends Enemy{
     }
 
     private void shoot(GameModel model, Player player) {
-
-        //calcoliamo direzione per proiettile
         double diffX = player.getX() - this.x;
         double diffY = player.getY() - this.y;
-        double distance = Math.hypot(diffX,diffY);
 
-        if (distance>0) {
-            double projDx = diffX / distance;
-            double projDy = diffY / distance;
+        double projDx = 0;
+        double projDy = 0;
 
-            //il proiettile parte dal centro del nemico
-            //la velocità del proiettile è 3
-            Projectile p = new Projectile(
-                    this.x +16,
-                    this.y + 16,
-                    (int) projDx,
-                    (int) projDy,
-                    3,
-                    this.damage,
-                    false
-            );
-
-            model.addProjectile(p);
+        // Spara dritto lungo l'asse in cui si trova il giocatore
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            projDx = Math.signum(diffX);
+        } else {
+            projDy = Math.signum(diffY);
         }
 
-
+        // Passa projDx e projDy. Se il tuo costruttore Projectile usa "int",
+        // cambialo in "double" nella classe Projectile!
+        Projectile p = new Projectile(
+                this.x + 8, this.y + 8, // Centrato
+                projDx, projDy,
+                3.0, // velocità
+                this.damage, false
+        );
+        model.addProjectile(p);
     }
 
     @Override

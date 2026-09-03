@@ -167,31 +167,45 @@ public class GamePanel extends JPanel implements Observer {
         }
     }
 
-    //per ora usiamo octorok1 ma lo dobbiamo modificare per farlo ruotare in futuro
-    //idem per moblin
     private void drawEnemies(Graphics2D g) {
         for (Enemy e : model.getEnemies()) {
+            BufferedImage img = null;
+            boolean flipHorizontal = false;
 
-            if (e.getClass().getSimpleName().equals("RangedEnemy")) {
-                BufferedImage octorokImg = SpriteManager.getInstance().getSprite(PATH_OCTOROK_1);
-
-                if (octorokImg != null) {
-                    g.drawImage(octorokImg, (int)e.getX(), (int)e.getY(), 32, 32, null);
+            // 1. OCTOROK
+            if (e instanceof OctorokEnemy) {
+                if (Math.abs(e.getDx()) > Math.abs(e.getDy())) {
+                    img = SpriteManager.getInstance().getSprite(PATH_OCTOROK_3); // Guarda di lato
+                    if (e.getDx() < 0) flipHorizontal = true; // Guarda a sinistra
                 } else {
-                    g.setColor(Color.MAGENTA);
-                    g.fillRect((int)e.getX(), (int)e.getY(), 32, 32);
+                    img = SpriteManager.getInstance().getSprite(PATH_OCTOROK_1); // Guarda in basso/alto
                 }
             }
-            // Gestione del Moblin (MeleeEnemy)
-            else {
-                BufferedImage moblinImg = SpriteManager.getInstance().getSprite(PATH_MOBLIN_1);
-
-                if (moblinImg != null) {
-                    g.drawImage(moblinImg, (int)e.getX(), (int)e.getY(), 32, 32, null);
+            // 2. MOBLIN
+            else if (e instanceof MoblinEnemy) {
+                if (Math.abs(e.getDx()) > Math.abs(e.getDy())) {
+                    img = SpriteManager.getInstance().getSprite(PATH_MOBLIN_3); // Guarda di lato
+                    if (e.getDx() < 0) flipHorizontal = true; // Guarda a sinistra
+                } else if (e.getDy() < 0) {
+                    img = SpriteManager.getInstance().getSprite(PATH_MOBLIN_2); // Guarda in alto
                 } else {
-                    g.setColor(Color.RED);
-                    g.fillRect((int)e.getX(), (int)e.getY(), 32, 32);
+                    img = SpriteManager.getInstance().getSprite(PATH_MOBLIN_1); // Guarda in basso
                 }
+            }
+
+            // 3. DISEGNO NEMICO
+            int drawX = (int) e.getX();
+            int drawY = (int) e.getY();
+
+            if (img != null) {
+                if (flipHorizontal) {
+                    g.drawImage(img, drawX + 32, drawY, -32, 32, null);
+                } else {
+                    g.drawImage(img, drawX, drawY, 32, 32, null);
+                }
+            } else {
+                g.setColor(Color.RED);
+                g.fillRect(drawX, drawY, 32, 32);
             }
         }
     }

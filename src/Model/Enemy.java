@@ -28,6 +28,9 @@ public abstract class Enemy extends Entity {
 
     @Override
     public void update() {
-        // Logica di aggiornamento indipendente dal giocatore (es. timer di stordimento)
+        if (!isAlive()) return;
+        // Applica la direzione moltiplicata per la velocità alle coordinate
+        this.x += this.dx * this.speed;
+        this.y += this.dy * this.speed;
     }
 }

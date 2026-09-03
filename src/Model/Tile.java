@@ -22,5 +22,7 @@ public class Tile {
     // -- getter --
     public TileType getType() { return type; }
     public Rectangle getHitbox() { return new Rectangle((int) x, (int) y, size, size); }
+    public double getX() { return x; }
+    public double getY() { return y; }
 
 }
