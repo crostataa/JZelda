@@ -28,20 +28,20 @@ public class GamePanel extends JPanel implements Observer {
     private final String PATH_ATTACK_SIDE = "/assets/spadaLink1New.png"; // Usato per Destra e Sinistra
 
     //oggetti
-    private final String PATH_BOMB = "assets/bombaHUDNew.png";
-    private final String PATH_BOW= "assets/arcoHUDNew.png";
-    private final String PATH_POTION = "assets/pozioneHUDNew.png";
+    private final String PATH_BOMB = "/assets/bombaHUDNew.png";
+    private final String PATH_ARROW = "/assets/arma_vs_verticaleNew.png";
+    private final String PATH_POTION = "/assets/pozioneHUDNew.png";
 
     //cuori
-    private final String PATH_HEART1 = "assets/cuoreVuotoHUD.png";
-    private final String PATH_HEART2 = "assets/cuoreMezzoHUD.png";
-    private final String PATH_HEART3 = "assets/cuorePienoHUD.png";
+    private final String PATH_HEART1 = "/assets/cuoreVuotoHUD.png";
+    private final String PATH_HEART2 = "/assets/cuoreMezzoHUD.png";
+    private final String PATH_HEART3 = "/assets/cuorePienoHUD.png";
 
     //octorok
     private final String PATH_OCTOROK_1 = "/assets/octorok1New.png"; // Guarda in basso / base
     private final String PATH_OCTOROK_2 = "/assets/octorok2New.png"; // Animazione
     private final String PATH_OCTOROK_3 = "/assets/octorok3New.png"; // Guarda di lato
-    private final String PATH_OCTOROK_4 = "/assets/octorok4New.png"; // Guarda di lato
+    //private final String PATH_OCTOROK_4 = "/assets/octorok4New.png"; // Guarda di lato
     private final String PATH_OCTO_ROCK = "/assets/octorok_proiettileNew.png"; // Proiettile
 
     //moblin
@@ -118,6 +118,7 @@ public class GamePanel extends JPanel implements Observer {
         drawLevel(g2d);
         drawRupees(g2d);
         drawEnemies(g2d);
+        drawShop(g2d);
         drawPlayer(g2d);
         drawProjectiles(g2d);
 
@@ -127,19 +128,47 @@ public class GamePanel extends JPanel implements Observer {
     }
 
     private void drawLevel(Graphics2D g) {
-        // Chiede al Model in che livello siamo
         int currentId = model.getCurrentLevel();
-
-        // Costruisce la stringa: "/assets/level 8.png"
-        String bgPath = "/assets/level " + currentId + ".png";
+        // Se siamo nello shop carica "shop.png", altrimenti il classico "level X.png"
+        String bgPath = (currentId == 10) ? "/assets/shop.png" : "/assets/level " + currentId + ".png";
 
         BufferedImage bg = SpriteManager.getInstance().getSprite(bgPath);
-
         if (bg != null) {
             g.drawImage(bg, 0, 0, getWidth(), getHeight(), null);
         } else {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, getWidth(), getHeight());
+        }
+    }
+
+    private void drawShop(Graphics2D g) {
+        if (model.getCurrentLevel() != 10 || model.getShop() == null) return;
+
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 14));
+
+        for (ShopEntry entry : model.getShop().getItemsForSale()) {
+            if (!entry.isAvailable()) continue;
+
+            BufferedImage img = null;
+            String itemName = entry.getItem().getName();
+
+            // SALVAVITA: Evita il NullPointerException
+            if (itemName == null) itemName = "";
+
+            // Controlla i nomi esatti usati nelle tue classi (es. "Pozione Rossa")
+            if (itemName.contains("Pozione")) img = SpriteManager.getInstance().getSprite(PATH_POTION);
+            else if (itemName.contains("Bombe")) img = SpriteManager.getInstance().getSprite(PATH_BOMB);
+            else if (itemName.contains("frecce")) img = SpriteManager.getInstance().getSprite(PATH_ARROW);
+
+            if (img != null) {
+                g.drawImage(img, entry.getX(), entry.getY(), 32, 32, null);
+            } else {
+                g.setColor(Color.WHITE);
+                g.fillRect(entry.getX(), entry.getY(), 32, 32);
+            }
+
+            g.drawString(entry.getPrice() + " R", entry.getX() + 2, entry.getY() + 50);
         }
     }
 

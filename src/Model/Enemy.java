@@ -29,8 +29,19 @@ public abstract class Enemy extends Entity {
     @Override
     public void update() {
         if (!isAlive()) return;
-        // Applica la direzione moltiplicata per la velocità alle coordinate
+
         this.x += this.dx * this.speed;
         this.y += this.dy * this.speed;
+
+        // Se il nemico si sta muovendo, alterna i frame
+        if (this.dx != 0 || this.dy != 0) {
+            spriteCounter++;
+            if (spriteCounter > 15) { // 15 tick rende i nemici leggermente più goffi di Link
+                spriteNum = (spriteNum == 1) ? 2 : 1;
+                spriteCounter = 0;
+            }
+        } else {
+            spriteNum = 1; // Torna fermo se non si muove
+        }
     }
 }

@@ -12,11 +12,12 @@ public class ShopModel {
     }
 
     private void loadShop() {
-
-        itemsForSale.add(new ShopEntry(new HealthPotionItem(), 20));
-        itemsForSale.add(new ShopEntry(new BombItem(), 30));
-        itemsForSale.add(new ShopEntry(new BowItem(), 80));
+        // Le coordinate (X, Y) li posizionano sotto i fuochi del tuo background "shop.png"
+        itemsForSale.add(new ShopEntry(new HealthPotionItem(), 30, 468, 250)); // Destra
+        itemsForSale.add(new ShopEntry(new BombItem(), 20, 368, 250));         // Centro
+        itemsForSale.add(new ShopEntry(new BowItem(), 10, 268, 250));          // Sinistra
     }
+
 
     public List<ShopEntry> getItemsForSale() {
         return itemsForSale;

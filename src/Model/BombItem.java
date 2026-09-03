@@ -3,7 +3,7 @@ package Model;
 public class BombItem extends Item {
 
     public BombItem() {
-        super("Pacchetto Bombe", "Aggiunge 5 bombe al tuo inventario.");
+        super("Pacchetto Bombe");
     }
 
     @Override

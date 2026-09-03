@@ -3,7 +3,7 @@ package Model;
 public class BowItem extends Item {
 
     public BowItem() {
-        super("Arco e Frecce", "Sblocca l'arco o aggiunge 10 frecce al tuo inventario.");
+        super("Arco e Frecce");
     }
 
     @Override

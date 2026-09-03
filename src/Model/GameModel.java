@@ -244,17 +244,7 @@ public class GameModel extends Observable {
                                 });
         activeBombs.removeIf(bomb -> !bomb.isAlive());
 
-        currentLevelMap.getTiles().stream()
-                .filter(tile -> tile.getType() == TileType.DOOR)
-                .filter(tile -> tile.getHitbox().intersects(player.getHitbox()))
-                .findFirst()
-                .ifPresent(cave -> {
-                    //in base al livello da cui si accede, si andrà in una caverna diversa
-                    //modificare*
-                    if (currentLevel == 2) changeLevel(6, 350, 400); //shop
-                    else if(currentLevel == 3) changeLevel(7, 350, 400);
-                    else if (currentLevel == 4) changeLevel(8, 350, 400);
-                });
+
 
         //controllo collisioni player vs muri
         boolean playerHitWall = currentLevelMap.getSolidTiles()
@@ -352,7 +342,23 @@ public class GameModel extends Observable {
         rupees.removeIf(rupee -> !rupee.isAlive());
         projectiles.removeIf(p -> !p.isAlive() || !screenBounds.intersects(p.getHitbox()));
 
-
+        // 8. LOGICA SHOPPING FISICO (Livello 10)
+        if (currentLevel == 10 && shop != null) {
+            shop.getItemsForSale().stream()
+                    .filter(ShopEntry::isAvailable)
+                    .filter(entry -> entry.getHitbox().intersects(player.getHitbox()))
+                    .forEach(entry -> {
+                        // Tenta di acquistare usando la TUA logica (scala rupie, mette in inventario se c'è spazio)
+                        boolean success = shop.buyItem(player, entry.getItem().getName());
+                        if (success) {
+                            entry.setAvailable(false); // Nasconde l'oggetto dal bancone
+                            System.out.println("Hai comprato: " + entry.getItem().getName());
+                        } else {
+                            // Se inventario pieno o mancano rupie, Link viene "respinto" leggermente per non incastrarsi
+                            player.setY(player.getY() + 10);
+                        }
+                    });
+        }
 
         //6. controllo gameover
         if (!player.isAlive) {
@@ -428,22 +434,18 @@ public class GameModel extends Observable {
 
         // 1. TRANSIZIONI OVERWORLD (Tutte e 4 le direzioni)
         if (player.getX() < 0) {
-            // Esce a SINISTRA
             int nextLevel = getAdjacentLevel(currentLevel, "LEFT");
             if (nextLevel != -1) changeLevel(nextLevel, mapWidth - playerSize, (int)player.getY());
         }
         else if (player.getX() + playerSize > mapWidth) {
-            // Esce a DESTRA
             int nextLevel = getAdjacentLevel(currentLevel, "RIGHT");
             if (nextLevel != -1) changeLevel(nextLevel, 0, (int)player.getY());
         }
         else if (player.getY() < 0) {
-            // Esce in ALTO
             int nextLevel = getAdjacentLevel(currentLevel, "UP");
             if (nextLevel != -1) changeLevel(nextLevel, (int)player.getX(), mapHeight - playerSize);
         }
         else if (player.getY() + playerSize > mapHeight) {
-            // Esce in BASSO
             int nextLevel = getAdjacentLevel(currentLevel, "DOWN");
             if (nextLevel != -1) changeLevel(nextLevel, (int)player.getX(), 0);
         }
@@ -454,28 +456,28 @@ public class GameModel extends Observable {
                 .filter(tile -> tile.getHitbox().intersects(player.getHitbox()))
                 .findFirst()
                 .ifPresent(door -> {
-                    // Overworld -> Dungeon
+                    // Overworld -> Dungeon (entra dal basso al centro)
                     if (currentLevel == 1) changeLevel(9, 368, 400);
                     else if (currentLevel == 2) changeLevel(10, 368, 400);
                     else if (currentLevel == 8) changeLevel(11, 368, 400);
 
-                        // Dungeon -> Overworld
-                    else if (currentLevel == 9) changeLevel(1, (int)door.getX(), (int)door.getY() + 40);
-                    else if (currentLevel == 10) changeLevel(2, (int)door.getX(), (int)door.getY() + 40);
-                    else if (currentLevel == 11) changeLevel(8, (int)door.getX(), (int)door.getY() + 40);
+                        // Dungeon -> Overworld (esce in punti specifici a Y = 40)
+                    else if (currentLevel == 9) changeLevel(1, 512, 60); // La porta nella mappa 1 è a destra
+                    else if (currentLevel == 10) changeLevel(2, 256, 60); // La porta nella mappa 2 è a sinistra
+                    else if (currentLevel == 11) changeLevel(8, 512, 60); // La porta nella mappa 8 è a destra
                 });
     }
 
-    // Navigatore esplicito della griglia del mondo
+    // Navigatore esplicito della griglia del mondo (SOLO OVERWORLD)
     private int getAdjacentLevel(int current, String direction) {
         switch (current) {
             case 1:
                 if (direction.equals("RIGHT")) return 2;
-                // se hai una mappa sopra l'1: if (direction.equals("UP")) return X;
                 break;
             case 2:
                 if (direction.equals("LEFT")) return 1;
                 if (direction.equals("RIGHT")) return 3;
+
                 break;
             case 3:
                 if (direction.equals("LEFT")) return 2;
@@ -483,10 +485,10 @@ public class GameModel extends Observable {
                 break;
             case 4:
                 if (direction.equals("LEFT")) return 3;
-                if (direction.equals("UP")) return 5; // Transizione verticale!
+                if (direction.equals("UP")) return 5;
                 break;
             case 5:
-                if (direction.equals("DOWN")) return 4; // Ritorno al liv 4
+                if (direction.equals("DOWN")) return 4;
                 if (direction.equals("LEFT")) return 6;
                 break;
             case 6:
@@ -494,7 +496,6 @@ public class GameModel extends Observable {
                 if (direction.equals("LEFT")) return 7;
                 break;
             case 7:
-                // Crocevia aperto
                 if (direction.equals("LEFT")) return 8;
                 if (direction.equals("RIGHT")) return 6;
                 break;
@@ -502,7 +503,7 @@ public class GameModel extends Observable {
                 if (direction.equals("RIGHT")) return 7;
                 break;
         }
-        return -1; // Restituisce -1 seLink sbatte contro un bordo del mondo senza mappe collegate
+        return -1;
     }
 
 

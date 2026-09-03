@@ -5,7 +5,7 @@ public class HealthPotionItem extends Item{
 
 
     public HealthPotionItem() {
-        super("Pozione Rossa", "ripristina tutti i cuori");
+        super("Pozione Rossa");
 
     }
 
