@@ -2,7 +2,9 @@ package Model;
 
 import View.AudioManager;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class Player extends Entity implements Damageable{
 
@@ -166,6 +168,8 @@ public class Player extends Entity implements Damageable{
     }
 
     // -- getter e setter --
+    @Override
+    public Rectangle getHitbox() { return new Rectangle((int)getX() + 6, (int)getY() + 16, 20, 16);}
     public boolean isInvulnerable() {
         return invulnerabilityTimer > 0;
     }

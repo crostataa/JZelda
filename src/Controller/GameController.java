@@ -16,13 +16,12 @@ public class GameController {
     private Timer gameloop;
 
 
+
     public GameController(GameModel model, LayoutManager view) {
 
         this.model = model;
         this.view = view;
         this.keyController = new KeyController();
-
-        //il keyController andrà collegato alla finestra grafica
 
         initGameloop();
     }
@@ -57,26 +56,25 @@ public class GameController {
 
         Player player = model.getPlayer();
 
-        //calcolo del movimento (supporta le diagonali)
+        // calcolo del movimento a 4 direzioni (Stile Zelda classico)
         double dx = 0;
         double dy = 0;
 
-        if (keyController.up) dy = -1;
-        if (keyController.down) dy = 1;
-        if (keyController.left) dy = -1;
-        if (keyController.right) dy = 1;
-
-        //normalizza la diagonale per non muoversi più velocemente
-        if (dx != 0 && dy !=0) {
-            double lenght = Math.hypot(dx, dy);
-            dx /= lenght;
-            dy /= lenght;
+        if (keyController.up) {
+            dy = -1;
+        } else if (keyController.down) {
+            dy = 1;
+        } else if (keyController.left) {
+            dx = -1; // Corretto da dy a dx!
+        } else if (keyController.right) {
+            dx = 1;  // Corretto da dy a dx!
         }
 
-        //imposta direzione
+        // impostazione direzione (niente diagonali, quindi niente normalizzazione)
         player.setDirection(dx, dy);
 
-        //gestione attacchi
+
+        // -- gestione attacchi --
 
         if (keyController.keyBow) {
             model.shootArrow();
@@ -84,20 +82,11 @@ public class GameController {
         }
 
         if (keyController.attack) {
-
             model.playerAttack();
-            keyController.attack = false; //si resetta in automatico per evitare spam
+            keyController.attack = false; // si resetta in automatico per evitare spam
         }
 
-        //gestione oggetti
-
-//        if (keyController.useItem) {
-//            if (!player.getInventory().isEmpty()) {
-//                String itemName = player.getInventory().getFirst().getName();
-//                player.useItem(itemName);
-//            }
-//            keyController.useItem = false;
-//            }
+        // -- gestione oggetti --
 
         if (keyController.keyPotion) {
             model.getPlayer().usePotion();

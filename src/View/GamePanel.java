@@ -32,6 +32,15 @@ public class GamePanel extends JPanel implements Observer {
 
     private final String PATH_ITEMS = "/assets/NES - The Legend of Zelda - Miscellaneous - Items & Weapons.png";
 
+    private final String PATH_BOMB = "assets/bombaHUDNew.png";
+    private final String PATH_BOW= "assets/arcoHUDNew.png";
+    private final String PATH_POTION = "assets/pozioneHUDNew.png";
+
+    private final String PATH_HEART1 = "assets/cuoreVuotoHUD.png";
+    private final String PATH_HEART2 = "assets/cuoreMezzoHUD.png";
+    private final String PATH_HEART3 = "assets/cuorePienoHUD.png";
+
+
 
     // NEMICI
     //octorok
@@ -42,20 +51,14 @@ public class GamePanel extends JPanel implements Observer {
     private final String PATH_OCTO_ROCK = "/assets/octorok_proiettileNew.png"; // Proiettile
 
     //moblin
-    //percorsi immagini Moblin
     private final String PATH_MOBLIN_1 = "/assets/moblin1New.png"; // Guarda in basso / base
     private final String PATH_MOBLIN_2 = "/assets/moblin2New.png"; // Guarda in alto
     private final String PATH_MOBLIN_3 = "/assets/moblin3New.png"; // Guarda di lato
     private final String PATH_MOBLIN_4 = "/assets/moblin4New.png"; // Guarda di lato (animazione)
 
-    // Percorsi armi (Frecce)
+    // frecce
     private final String PATH_ARROW_H = "/assets/arma_vs_orizzontaleNew.png";
     private final String PATH_ARROW_V = "/assets/arma_vs_verticaleNew.png";
-
-    // OGGETTI
-
-    private final int[] SPRITE_BOMB      = { 136, 11, 16, 16 }; // Da ritoccare in base al foglio items
-    private final int[] SPRITE_POTION    = { 170, 11, 16, 16 }; // Pozione rossa
 
 
     //nota, forse meglio singleton*
@@ -126,15 +129,20 @@ public class GamePanel extends JPanel implements Observer {
     }
 
     private void drawLevel(Graphics2D g) {
+        // Chiede al Model in che livello siamo
+        int currentId = model.getCurrentLevel();
 
-        BufferedImage bg = SpriteManager.getInstance().getSprite("/assets/level 1.png");
+        // Costruisce la stringa: "/assets/level 8.png"
+        String bgPath = "/assets/level " + currentId + ".png";
+
+        BufferedImage bg = SpriteManager.getInstance().getSprite(bgPath);
 
         if (bg != null) {
-            // Disegna l'immagine grande per tutto lo schermo
             g.drawImage(bg, 0, 0, getWidth(), getHeight(), null);
+        } else {
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, getWidth(), getHeight());
         }
-
-        // Non c'è bisogno di disegnare i Tile logici, servono solo al Model per le collisioni!
     }
 
     private void drawRupees(Graphics2D g) {
@@ -275,9 +283,8 @@ public class GamePanel extends JPanel implements Observer {
 
 
     private void drawBombs(Graphics2D g) {
-        // Presuppone che in Items & Weapons la bomba sia a x=136, y=11 circa
-        BufferedImage bombImg = SpriteManager.getInstance().getSubSprite(
-                PATH_ITEMS, 136, 11, 16, 16);
+
+        BufferedImage bombImg = SpriteManager.getInstance().getSprite(PATH_BOMB);
 
         for (BombEntity bomb : model.getActiveBombs()) {
             if (!bomb.hasExploded()) {

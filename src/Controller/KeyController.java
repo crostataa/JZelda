@@ -21,7 +21,7 @@ public class KeyController implements KeyListener {
         if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) up = true;
         if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = true;
         if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = true;
-        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) up = true;
+        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = true;
         // per le azioni
         if (code == KeyEvent.VK_SPACE) attack = true;
         if (code == KeyEvent.VK_P) pause = true;
@@ -38,7 +38,7 @@ public class KeyController implements KeyListener {
         if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) up = false;
         if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) down = false;
         if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) left = false;
-        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) up = false;
+        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = false;
         if (code == KeyEvent.VK_B) keyBomb = false;
         if (code == KeyEvent.VK_P) keyPotion = false;
         if (code == KeyEvent.VK_X) keyBow = false;

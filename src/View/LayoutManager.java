@@ -60,7 +60,8 @@ public class LayoutManager extends JFrame{
       this.setTitle("The Legend of Zelda");
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       this.setResizable(false);
-      this.setSize(756, 528);
+      this.mainPanel.setPreferredSize(new Dimension(768, 512));
+      this.pack();
       this.setLocationRelativeTo(null); //per centrare la finestra
       this.getContentPane().setBackground(Color.BLACK);
 

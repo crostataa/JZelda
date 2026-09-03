@@ -29,7 +29,7 @@ public class GameModel extends Observable {
 
     //mappa
     private Level currentLevelMap;
-    private int currentLevelId;
+
 
 
     public GameModel() {
@@ -86,8 +86,8 @@ public class GameModel extends Observable {
     }
 
     public void changeLevel(int newLevelId, int startX, int startY) {
-        this.currentLevelId = newLevelId;
-
+        this.currentLevel = newLevelId;
+        this.currentLevelMap = new Level(currentLevel);
         //riposiziona giocatore all'ingresso della nuova zona
         this.player.setX(startX);
         this.player.setY(startY);
@@ -223,9 +223,6 @@ public class GameModel extends Observable {
     public void update() {
         if (currentState != GameState.PLAYING) return;
 
-        //1. aggiorna il giocatore
-        //player.update();
-
         // aggiorna timer bombe
         activeBombs.forEach(BombEntity::update);
 
@@ -254,9 +251,9 @@ public class GameModel extends Observable {
                 .ifPresent(cave -> {
                     //in base al livello da cui si accede, si andrà in una caverna diversa
                     //modificare*
-                    if (currentLevelId == 2) changeLevel(6, 350, 400); //shop
-                    else if(currentLevelId == 3) changeLevel(7, 350, 400);
-                    else if (currentLevelId == 4) changeLevel(8, 350, 400);
+                    if (currentLevel == 2) changeLevel(6, 350, 400); //shop
+                    else if(currentLevel == 3) changeLevel(7, 350, 400);
+                    else if (currentLevel == 4) changeLevel(8, 350, 400);
                 });
 
         //controllo collisioni player vs muri
