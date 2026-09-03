@@ -57,17 +57,22 @@ public class HUDPanel extends JPanel implements Observer {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (model == null || model.getCurrentState() == Model.GameState.MENU) return;
-
         Graphics2D g2d = (Graphics2D) g;
-        Player player = model.getPlayer();
 
-        // Font in stile retro per i testi
-        g2d.setFont(new Font("Monospaced", Font.BOLD, 18));
+        // Carica lo sfondo dell'HUD
+        BufferedImage hudBg = SpriteManager.getInstance().getSprite("/assets/HUDNew.png");
 
-        drawConsumables(g2d, player);
-        drawEquipment(g2d);
-        drawLife(g2d, player);
+        if (hudBg != null) {
+            // Lo disegna partendo da 0,0 grande tutto il pannello
+            g2d.drawImage(hudBg, 0, 0, getWidth(), getHeight(), null);
+        } else {
+            // Fallback nero se l'immagine non viene trovata
+            g2d.setColor(Color.BLACK);
+            g2d.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        // Qui in futuro disegnerai i cuori, il conteggio delle rupie e la spada
+        // usando le coordinate calcolate rispetto a questo pannello (es. y=100)*
     }
 
     private void drawConsumables(Graphics2D g, Player player) {

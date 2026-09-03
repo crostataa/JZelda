@@ -27,22 +27,16 @@ public class GamePanel extends JPanel implements Observer {
     private final String PATH_ATTACK_DOWN = "/assets/spadaLink2New.png";
     private final String PATH_ATTACK_SIDE = "/assets/spadaLink1New.png"; // Usato per Destra e Sinistra
 
-
-
-
-    private final String PATH_ITEMS = "/assets/NES - The Legend of Zelda - Miscellaneous - Items & Weapons.png";
-
+    //oggetti
     private final String PATH_BOMB = "assets/bombaHUDNew.png";
     private final String PATH_BOW= "assets/arcoHUDNew.png";
     private final String PATH_POTION = "assets/pozioneHUDNew.png";
 
+    //cuori
     private final String PATH_HEART1 = "assets/cuoreVuotoHUD.png";
     private final String PATH_HEART2 = "assets/cuoreMezzoHUD.png";
     private final String PATH_HEART3 = "assets/cuorePienoHUD.png";
 
-
-
-    // NEMICI
     //octorok
     private final String PATH_OCTOROK_1 = "/assets/octorok1New.png"; // Guarda in basso / base
     private final String PATH_OCTOROK_2 = "/assets/octorok2New.png"; // Animazione
@@ -59,6 +53,10 @@ public class GamePanel extends JPanel implements Observer {
     // frecce
     private final String PATH_ARROW_H = "/assets/arma_vs_orizzontaleNew.png";
     private final String PATH_ARROW_V = "/assets/arma_vs_verticaleNew.png";
+
+    //rupie
+    private final String PATH_RUPEE_1 = "/assets/rupia1.png"; // Rupia gialla/arancio (Valore 1)
+    private final String PATH_RUPEE_5 = "/assets/rupia5.png"; // Rupia blu (Valore 5)
 
 
     //nota, forse meglio singleton*
@@ -146,11 +144,27 @@ public class GamePanel extends JPanel implements Observer {
     }
 
     private void drawRupees(Graphics2D g) {
+        if (model.getRupees() == null) return;
 
-        model.getRupees().forEach(rupee -> {
-            g.setColor(rupee.getValue() == 1 ? Color.GREEN : Color.BLUE);
-            g.fillOval((int) rupee.getX(), (int) rupee.getY(), 16, 24);
-        });
+        for (Rupee r : model.getRupees()) {
+            BufferedImage rupeeImg = null;
+
+            // Seleziona l'immagine in base al valore della rupia
+            if (r.getValue() == 5) {
+                rupeeImg = SpriteManager.getInstance().getSprite(PATH_RUPEE_5);
+            } else {
+                rupeeImg = SpriteManager.getInstance().getSprite(PATH_RUPEE_1);
+            }
+
+            if (rupeeImg != null) {
+                // Le rupie sono strette e alte, 16x32 mantiene le proporzioni originali raddoppiate
+                g.drawImage(rupeeImg, (int)r.getX(), (int)r.getY(), 16, 32, null);
+            } else {
+                // Fallback visivo di sicurezza
+                g.setColor(r.getValue() == 5 ? Color.BLUE : Color.YELLOW);
+                g.fillRect((int)r.getX(), (int)r.getY(), 16, 32);
+            }
+        }
     }
 
     //per ora usiamo octorok1 ma lo dobbiamo modificare per farlo ruotare in futuro

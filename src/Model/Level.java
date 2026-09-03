@@ -38,8 +38,8 @@ public class Level {
 
                 switch (symbol) {
                     case '#': type = TileType.WALL; break;
-                    case '~': type = TileType.WATER; break;
-                    case 'D': type = TileType.DOOR; break;
+                    case 'D':
+                    case 'C': type = TileType.DOOR; break; // Accetta sia D che C!
                     case 'P':
                         playerStartX = xPos;
                         playerStartY = yPos;

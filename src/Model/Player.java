@@ -37,7 +37,7 @@ public class Player extends Entity implements Damageable{
 
 
     public Player(double x, double y) {
-        super(300, 300, 32, 32, 4.0);
+        super(400, 300, 32, 32, 4.0);
         this.maxHp = 6;
         this.hp = this.maxHp;
         this.rupees = 0;

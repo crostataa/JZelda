@@ -13,6 +13,7 @@ public class LayoutManager extends JFrame{
   ShopPanel shop;
   GamePanel game;
   MenuPanel menu;
+  HUDPanel hudPanel;
   /*
 
   GameOverPanel gameover;
@@ -24,56 +25,61 @@ public class LayoutManager extends JFrame{
 
    */
   private LayoutManager() {
-        
+      // 1. Inizializzo i pannelli principali
       this.mainPanel = new JPanel();
       this.cardLayout = new CardLayout();
-      
-      this.mainPanel.setLayout(cardLayout);
-      this.add(mainPanel);
-      
-      game = new GamePanel();
-      mainPanel.add(game, Window.GIOCO.name());
+      this.mainPanel.setLayout(cardLayout); // Il mainPanel usa SOLO il CardLayout
 
-      shop = new ShopPanel();
+      this.hudPanel = new HUDPanel();
+      this.game = new GamePanel();
+      this.shop = new ShopPanel();
+      this.menu = new MenuPanel();
+
+      // 2. Imposto le dimensioni corrette
+      this.hudPanel.setPreferredSize(new Dimension(768, 192));
+      this.game.setPreferredSize(new Dimension(768, 512));
+
+      // 3. CREO IL WRAPPER PER IL GIOCO (Unisce HUD e MAPPA)
+      JPanel gameContainer = new JPanel();
+      gameContainer.setLayout(new BorderLayout());
+      gameContainer.add(hudPanel, BorderLayout.NORTH);
+      gameContainer.add(game, BorderLayout.CENTER);
+
+      // 4. Aggiungo le "Carte" al mainPanel
+      mainPanel.add(menu, Window.MENU.name());
+      mainPanel.add(gameContainer, Window.GIOCO.name()); // Aggiungo il wrapper, non solo game!
       mainPanel.add(shop, Window.SHOP.name());
 
-      menu = new MenuPanel();
-      mainPanel.add(menu, Window.MENU.name());
+        /*
+        gameover = new GameOverPanel();
+        mainPanel.add(gameover, Window.GAMEOVER.name());
+        statistiche = new StatistichePanel();
+        mainPanel.add(statistiche, Window.STATISTICHE.name());
+        opzioni = new OpzioniPanel();
+        mainPanel.add(opzioni, Window.OPZIONI.name());
+        */
 
-
-      /*
-
-      gameover = new GameOverPanel();
-      mainpanel.add(gameover, Window.GAMEOVER.name());
-
-      statistiche = new StatistichePanel();
-      mainpanel.add(statistiche, Window.STATISTICHE.name());
-
-      opzioni = new OpzioniPanel();
-      mainpanel.add(opzioni, Window.OPZIONI.name());
-
-       */
-
-      //inizializzo controller ??
-
-
+      // 5. Configuro la Finestra (JFrame)
       this.setTitle("The Legend of Zelda");
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      this.setContentPane(mainPanel);
       this.setResizable(false);
-      this.mainPanel.setPreferredSize(new Dimension(768, 512));
-      this.pack();
-      this.setLocationRelativeTo(null); //per centrare la finestra
+      this.pack(); // Ora calcolerà (768 x (192+512)) = 768x704 pixel esatti!
+
+      this.setLocationRelativeTo(null); // Centra la finestra
       this.getContentPane().setBackground(Color.BLACK);
 
+      // Icona di gioco (con controllo di sicurezza per evitare null pointer)
       String icon = "/assets/logo.jpeg";
-      ImageIcon image = new ImageIcon(getClass().getResource(icon));
-      this.setIconImage(image.getImage());
-
-      setVisible(true);
-
-      switchScreen(Window.MENU);
-
+      java.net.URL imgURL = getClass().getResource(icon);
+      if (imgURL != null) {
+          ImageIcon image = new ImageIcon(imgURL);
+          this.setIconImage(image.getImage());
       }
+
+      this.setVisible(true);
+      switchScreen(Window.MENU);
+  }
 
       public void switchScreen(Window finestra) {
 
