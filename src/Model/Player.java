@@ -15,6 +15,7 @@ public class Player extends Entity implements Damageable{
 
     private boolean isAttacking;
     private int attackTimer;
+    private final int ATTACK_DURATION;
 
     //inventario (max 3 item)
     private List <Item> inventory;
@@ -43,7 +44,8 @@ public class Player extends Entity implements Damageable{
         this.rupees = 0;
         this.isAttacking = false;
         this.attackTimer = 0;
-        this.inventory = new ArrayList<Item>();
+        this.ATTACK_DURATION = 15;
+        this.inventory = new ArrayList<>();
         this.invulnerabilityTimer = 0;
         this.lastDx = 0;
         this.lastDy = 1;
@@ -53,6 +55,14 @@ public class Player extends Entity implements Damageable{
         this.hasBow = true; //test, da levare*
         audioManager = AudioManager.getInstance();
 
+    }
+
+    // Metodo per avviare l'animazione
+    public void startAttack() {
+        if (!isAttacking) {
+            isAttacking = true;
+            attackTimer = ATTACK_DURATION;
+        }
     }
 
     // sovrascriviamo il metodo di Entity
@@ -87,18 +97,19 @@ public class Player extends Entity implements Damageable{
 
     @Override
     public void update() {
+        if (!isAlive()) return;
 
+        // Se sta attaccando, il timer scende e Link NON si muove
         if (isAttacking) {
             attackTimer--;
             if (attackTimer <= 0) {
                 isAttacking = false;
             }
-        } else {
-
-            //1. aggiorna la posizione
-            this.x += dx * speed;
-            this.y += dy * speed;
-
+        }
+        // Altrimenti si muove normalmente
+        else {
+            this.x += this.dx * this.speed;
+            this.y += this.dy * this.speed;
         }
 
         //2. incrementa il timer di invulnerabilità se è attivo

@@ -211,67 +211,69 @@ public class GamePanel extends JPanel implements Observer {
     }
 
     private void drawPlayer(Graphics2D g) {
-        if (model.getPlayer() != null) {
-            Player p = model.getPlayer();
-            BufferedImage linkImg = null;
+        if (model.getPlayer() == null) return;
 
-            int drawX = (int) p.getX();
-            int drawY = (int) p.getY();
-            boolean flipHorizontal = false; // Flag per specchiare lo sprite
+        Player p = model.getPlayer();
+        BufferedImage linkImg = null;
 
-            // 1. SE LINK STA ATTACCANDO
-            if (p.isAttacking()) {
-                if (Math.abs(p.getLastDx()) > Math.abs(p.getLastDy())) {
-                    linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_SIDE);
-                    if (p.getLastDx() < 0) {
-                        flipHorizontal = true; // Guarda a sinistra
-                        if (linkImg != null) {
-                            // Spostiamo il punto di origine indietro per la lunghezza della spada
-                            drawX = (int) p.getX() - (linkImg.getWidth() * 2 - 32);
-                        }
-                    }
-                } else {
-                    if (p.getLastDy() < 0) {
-                        linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_UP);
-                        if (linkImg != null) {
-                            drawY = (int) p.getY() - (linkImg.getHeight() * 2 - 32);
-                        }
-                    } else {
-                        linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_DOWN);
-                    }
-                }
-            }
-            // 2. SE LINK STA CAMMINANDO O È FERMO
-            else {
-                if (Math.abs(p.getLastDx()) > Math.abs(p.getLastDy())) {
-                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_SIDE_1);
-                    if (p.getLastDx() < 0) {
-                        flipHorizontal = true; // Specchiamo anche la camminata laterale
-                    }
-                } else {
-                    if (p.getLastDy() < 0) {
-                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_UP_1);
-                    } else {
-                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_DOWN_1);
-                    }
-                }
-            }
+        int drawX = (int) p.getX();
+        int drawY = (int) p.getY();
+        boolean flipHorizontal = false;
 
-            // 3. DISEGNO FINALE
-            if (linkImg != null) {
-                int scaledWidth = linkImg.getWidth() * 2;
-                int scaledHeight = linkImg.getHeight() * 2;
-
-                if (flipHorizontal) {
-                    // Disegna l'immagine capovolta orizzontalmente usando larghezza negativa
-                    g.drawImage(linkImg, drawX + scaledWidth, drawY, -scaledWidth, scaledHeight, null);
-                } else {
-                    g.drawImage(linkImg, drawX, drawY, scaledWidth, scaledHeight, null);
+        // 1. STATO DI ATTACCO
+        if (p.isAttacking()) {
+            if (Math.abs(p.getLastDx()) > Math.abs(p.getLastDy())) {
+                linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_SIDE);
+                if (p.getLastDx() < 0) {
+                    flipHorizontal = true; // Attacca a sinistra
+                    if (linkImg != null) {
+                        // Offset: Sposta l'origine a sinistra per compensare la lama
+                        drawX = (int) p.getX() - (linkImg.getWidth() * 2 - 32);
+                    }
                 }
             } else {
-                g.setColor(Color.GREEN);
-                g.fillRect(drawX, drawY, 32, 32);
+                if (p.getLastDy() < 0) {
+                    linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_UP);
+                    if (linkImg != null) {
+                        // Offset: Sposta l'origine in alto per compensare la lama
+                        drawY = (int) p.getY() - (linkImg.getHeight() * 2 - 32);
+                    }
+                } else {
+                    linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_DOWN);
+                    // Verso il basso non serve offset perché Link è in alto nell'immagine
+                }
             }
+        }
+        // 2. STATO NORMALE (Movimento o Fermo)
+        else {
+            if (Math.abs(p.getLastDx()) > Math.abs(p.getLastDy())) {
+                linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_SIDE_1);
+                if (p.getLastDx() < 0) flipHorizontal = true;
+            } else {
+                if (p.getLastDy() < 0) {
+                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_UP_1);
+                } else {
+                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_DOWN_1);
+                }
+            }
+        }
+
+        // 3. DISEGNO A SCHERMO
+        if (linkImg != null) {
+            // Moltiplichiamo x2 per scalare la pixel art
+            int scaledWidth = linkImg.getWidth() * 2;
+            int scaledHeight = linkImg.getHeight() * 2;
+
+            if (flipHorizontal) {
+                // Ribalta orizzontalmente usando la larghezza negativa
+                g.drawImage(linkImg, drawX + scaledWidth, drawY, -scaledWidth, scaledHeight, null);
+            } else {
+                g.drawImage(linkImg, drawX, drawY, scaledWidth, scaledHeight, null);
+            }
+        } else {
+            // Fallback verde se manca l'immagine
+            g.setColor(Color.GREEN);
+            g.fillRect((int)p.getX(), (int)p.getY(), 32, 32);
         }
     }
 

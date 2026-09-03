@@ -397,6 +397,7 @@ public class GameModel extends Observable {
                 //guarda in alto
                 swordHitbox = new Rectangle(px, py - swordLength, playerWidth, swordLength);
             }
+
         }
 
         //  2. controllo collisioni
@@ -412,6 +413,8 @@ public class GameModel extends Observable {
                     }
 
                 });
+
+                player.startAttack();
                 setChanged();
                 //il messaggio serve la view che deve disegnare l'animazione della spada per qualche frame
                 notifyObservers("PLAYER_ATTACK");

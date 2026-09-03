@@ -16,24 +16,30 @@ public class OctorokEnemy extends Enemy{
         if (!isAlive()) return;
 
         Player player = model.getPlayer();
-
         double diffX = player.getX() - this.x;
         double diffY = player.getY() - this.y;
         double distance = Math.hypot(diffX, diffY);
 
-        //se il giocatore è troppo vicino (es. meno di 100 pixel), fugge via
+        // 1. Logica di Fuga o Puntamento
         if (distance < 100 && distance > 0) {
-            this.setDirection(-(diffX / distance), -(diffY-distance));
+            this.speed = 1.0; // Torna a muoversi per fuggire
+            this.setDirection(-(diffX / distance), -(diffY / distance));
         } else {
-            this.setDirection(0,0); //si ferma per sparare
+            this.speed = 0; // Si ferma fisicamente per mirare...
+            // ...ma imposta la direzione verso Link per girare lo sprite!
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                this.setDirection(Math.signum(diffX), 0);
+            } else {
+                this.setDirection(0, Math.signum(diffY));
+            }
         }
 
-        //logica di sparo
+        // 2. Logica di Sparo
         if (shootCooldown > 0) {
             shootCooldown--;
         } else if (distance < 250) {
             shoot(model, player);
-            shootCooldown = 120; //120 ms = 2 sec
+            shootCooldown = 120; // Ricarica (circa 2 secondi)
         }
     }
 
@@ -44,26 +50,22 @@ public class OctorokEnemy extends Enemy{
         double projDx = 0;
         double projDy = 0;
 
-        // Spara dritto lungo l'asse in cui si trova il giocatore
+        // Spara un proiettile dritto, non in diagonale
         if (Math.abs(diffX) > Math.abs(diffY)) {
             projDx = Math.signum(diffX);
         } else {
             projDy = Math.signum(diffY);
         }
 
-        // Passa projDx e projDy. Se il tuo costruttore Projectile usa "int",
-        // cambialo in "double" nella classe Projectile!
         Projectile p = new Projectile(
-                this.x + 8, this.y + 8, // Centrato
+                this.x + 8, this.y + 8,
                 projDx, projDy,
-                3.0, // velocità
-                this.damage, false
+                3.0, // Velocità proiettile
+                this.damage,
+                false // È un proiettile nemico
         );
+
         model.addProjectile(p);
     }
 
-    @Override
-    public void update() {
-
-    }
 }
