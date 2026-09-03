@@ -13,26 +13,26 @@ public class MoblinEnemy extends Enemy{
     @Override
     public void updateBehavior(GameModel model) {
         if (!isAlive()) return;
+
         Player player = model.getPlayer();
         double diffX = player.getX() - this.x;
         double diffY = player.getY() - this.y;
         double distance = Math.hypot(diffX, diffY);
 
+        this.speed = 1.5; // Assicuriamoci che abbia la sua velocità
+
+        // Se è nel raggio visivo, lo insegue muovendosi a croce
         if (distance > 0 && distance < 300) {
-            // Sceglie l'asse dominante per un movimento a croce perfetto
             if (Math.abs(diffX) > Math.abs(diffY)) {
-                this.setDirection(Math.signum(diffX), 0);
+                this.setDirection(Math.signum(diffX), 0); // Si muove in orizzontale
             } else {
-                this.setDirection(0, Math.signum(diffY));
+                this.setDirection(0, Math.signum(diffY)); // Si muove in verticale
             }
         } else {
-            this.setDirection(0, 0); // Fermo
+            this.setDirection(0, 0); // Si ferma
         }
     }
 
 
-    @Override
-    public void update() {
 
-    }
 }

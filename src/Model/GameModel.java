@@ -49,7 +49,7 @@ public class GameModel extends Observable {
         this.shop = new ShopModel();
         activeBombs = new ArrayList<>();
         this.currentState = GameState.PLAYING;
-        this.currentLevel = 6;
+        this.currentLevel = 1;
         this.currentLevelMap = new Level(currentLevel);
         this.score = 0;
 

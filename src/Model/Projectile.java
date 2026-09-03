@@ -13,8 +13,11 @@ public class Projectile extends Entity {
         super(x, y, 10, 10, speed);
         this.dx = dx;
         this.dy = dy;
+        this.setDirection(dx, dy);
         this.damage = damage;
         this.isPlayerProjectile = isPlayerProjectile;
+
+
     }
 
 

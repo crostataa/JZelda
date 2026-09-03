@@ -119,7 +119,7 @@ public class GamePanel extends JPanel implements Observer {
         drawRupees(g2d);
         drawEnemies(g2d);
         drawPlayer(g2d);
-        //drawProjectiles(g2d);*
+        drawProjectiles(g2d);
 
         //x debug again
         drawHitboxes(g2d);
@@ -278,29 +278,51 @@ public class GamePanel extends JPanel implements Observer {
     private void drawProjectiles(Graphics2D g) {
         for (Projectile p : model.getProjectiles()) {
 
-            // Sasso dell'Octorok
+            // 1. Sasso dell'Octorok
             if (!p.isPlayerProjectile()) {
                 BufferedImage rockImg = SpriteManager.getInstance().getSprite(PATH_OCTO_ROCK);
                 if (rockImg != null) {
                     g.drawImage(rockImg, (int)p.getX(), (int)p.getY(), 16, 16, null);
                 }
             }
-            // Freccia (Moblin o Link)
+            // 2. Freccia di Link
             else {
-                BufferedImage arrowImg;
+                BufferedImage arrowImg = null;
+                boolean flipHorizontal = false;
+                boolean flipVertical = false;
 
-                // Se la velocità orizzontale (dx) è diversa da 0, sta viaggiando in orizzontale
-                if (Math.abs(p.getDx()) > 0) {
+                // Controlliamo l'asse dominante per capire se viaggia in orizzontale o verticale
+                if (Math.abs(p.getDx()) > Math.abs(p.getDy())) {
                     arrowImg = SpriteManager.getInstance().getSprite(PATH_ARROW_H);
-                }
-                // Altrimenti viaggia in verticale
-                else {
+
+                    // Se viaggia verso sinistra, ribalta l'immagine orizzontalmente
+                    if (p.getDx() < 0) flipHorizontal = true;
+                } else {
                     arrowImg = SpriteManager.getInstance().getSprite(PATH_ARROW_V);
+
+                    // Nota: se il tuo sprite verticale punta verso l'ALTO,
+                    // ribaltiamo l'immagine quando la freccia viaggia verso il BASSO (dy > 0)
+                    if (p.getDy() > 0) flipVertical = true;
                 }
 
                 if (arrowImg != null) {
-                    // Le frecce sono allungate, 32x32 garantisce che mantengano le proporzioni della hitbox
-                    g.drawImage(arrowImg, (int)p.getX(), (int)p.getY(), 32, 32, null);
+                    int drawX = (int) p.getX();
+                    int drawY = (int) p.getY();
+                    int width = 32;
+                    int height = 32;
+
+                    // Disegno ribaltato orizzontalmente (Sinistra)
+                    if (flipHorizontal) {
+                        g.drawImage(arrowImg, drawX + width, drawY, -width, height, null);
+                    }
+                    // Disegno ribaltato verticalmente (Basso)
+                    else if (flipVertical) {
+                        g.drawImage(arrowImg, drawX, drawY + height, width, -height, null);
+                    }
+                    // Disegno standard (Destra o Alto)
+                    else {
+                        g.drawImage(arrowImg, drawX, drawY, width, height, null);
+                    }
                 } else {
                     g.setColor(Color.YELLOW);
                     g.fillRect((int)p.getX(), (int)p.getY(), 16, 16);
