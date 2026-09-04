@@ -3,7 +3,9 @@ package Controller;
 import Model.GameModel;
 import Model.GameState;
 import Model.Player;
+import View.GamePanel;
 import View.LayoutManager;
+import View.Window;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -37,7 +39,13 @@ public class GameController {
                 //aggiorna la logica e calcola le collisioni
                 model.update();
 
-                //la view si aggiorna in automatico con observer/observable
+                //controllo gameover
+                if (model.getPlayer() != null && model.getPlayer().getHp() <= 0) {
+                    model.setCurrentState(GameState.GAME_OVER);
+                    stopGame();
+                    view.switchScreen(Window.GAMEOVER);
+                }
+                //la view si aggiorna in automatico con observer/observable, non c'è bisogno di usare setChanged() etc.
 
             }
         });

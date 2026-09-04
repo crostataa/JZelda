@@ -24,7 +24,7 @@ public class MenuPanel extends JPanel {
         // Titolo
         JLabel titleLabel = new JLabel("THE LEGEND OF ZELDA");
         titleLabel.setForeground(Color.RED);
-        titleLabel.setFont(new Font("Monospaced", Font.BOLD, 40));
+        titleLabel.setFont(FontManager.getFont(24f));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(titleLabel, gbc);
 
@@ -32,21 +32,21 @@ public class MenuPanel extends JPanel {
         gbc.gridy++;
         JLabel nameLabel = new JLabel("Inserisci il tuo nome:");
         nameLabel.setForeground(Color.WHITE);
-        nameLabel.setFont(new Font("Monospaced", Font.PLAIN, 18));
+        nameLabel.setFont(FontManager.getFont(24f));
         nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(nameLabel, gbc);
 
         // Campo di testo per il nome
         gbc.gridy++;
         nameField = new JTextField(15);
-        nameField.setFont(new Font("Monospaced", Font.PLAIN, 18));
+        nameField.setFont(FontManager.getFont(24f));
         nameField.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(nameField, gbc);
 
         // Bottone Start
         gbc.gridy++;
         startButton = new JButton("START GAME");
-        startButton.setFont(new Font("Monospaced", Font.BOLD, 20));
+        startButton.setFont(FontManager.getFont(24f));
         startButton.setBackground(Color.DARK_GRAY);
         startButton.setForeground(Color.WHITE);
         startButton.setFocusPainted(false);
@@ -55,7 +55,7 @@ public class MenuPanel extends JPanel {
         // Bottone Classifica (Leaderboard)
         gbc.gridy++;
         leaderboardButton = new JButton("LEADERBOARD");
-        leaderboardButton.setFont(new Font("Monospaced", Font.BOLD, 16));
+        leaderboardButton.setFont(FontManager.getFont(24f));
         leaderboardButton.setBackground(Color.DARK_GRAY);
         leaderboardButton.setForeground(Color.WHITE);
         leaderboardButton.setFocusPainted(false);

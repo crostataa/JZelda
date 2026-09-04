@@ -38,7 +38,6 @@ public class GameModel extends Observable {
 
     public GameModel() {
 
-
         initGame();
 
     }
@@ -299,6 +298,7 @@ public class GameModel extends Observable {
                             p.setAlive(false); //il proiettile si elimina dopo aver colpito
                         });
 
+
         //5. logica dei proiettili player vs nemici
         projectiles.stream()
                 .filter(Projectile::isPlayerProjectile)
@@ -316,6 +316,8 @@ public class GameModel extends Observable {
                                 }
                             });
                 });
+
+
         // gestione animazione morti
         deathAnimations.forEach(DeathAnimation::update);
         deathAnimations.removeIf(DeathAnimation::isFinished);
@@ -371,8 +373,10 @@ public class GameModel extends Observable {
         }
 
         //6. controllo gameover
-        if (!player.isAlive) {
+        if (player != null && player.getHp() <= 0) {
             currentState = GameState.GAME_OVER;
+            setChanged();
+            notifyObservers("GAME_OVER");
         }
 
         //5. notifica la view
@@ -518,7 +522,7 @@ public class GameModel extends Observable {
 
 
 
-    // --  getter --
+    // --  getter e setter --
     public List<Projectile> getProjectiles() { return projectiles; }
     public List<Rupee> getRupees() { return rupees; }
     public Player getPlayer() {return player; }
@@ -529,5 +533,9 @@ public class GameModel extends Observable {
     public Level getCurrentLevelMap() { return currentLevelMap; }
     public ShopModel getShop() { return shop; }
     public List<BombEntity> getActiveBombs() { return activeBombs; }
+
+    public void setCurrentState(GameState gameState) {
+        currentState = gameState;
+    }
 }
 

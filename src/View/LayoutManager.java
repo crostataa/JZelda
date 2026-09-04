@@ -14,9 +14,10 @@ public class LayoutManager extends JFrame{
   GamePanel game;
   MenuPanel menu;
   HUDPanel hudPanel;
+  GameOverPanel gameover;
   /*
 
-  GameOverPanel gameover;
+
   StatistichePanel statistiche;
   OpzioniPanel opzioni;
 
@@ -33,6 +34,7 @@ public class LayoutManager extends JFrame{
       this.hudPanel = new HUDPanel();
       this.game = new GamePanel();
       this.menu = new MenuPanel();
+      this.gameover = new GameOverPanel();
 
       // 2. Imposto le dimensioni corrette
       this.hudPanel.setPreferredSize(new Dimension(768, 192));
@@ -46,15 +48,17 @@ public class LayoutManager extends JFrame{
 
       // 4. Aggiungo le "Carte" al mainPanel
       mainPanel.add(menu, Window.MENU.name());
-      mainPanel.add(gameContainer, Window.GIOCO.name()); // Aggiungo il wrapper, non solo game!
-        /*
-        gameover = new GameOverPanel();
-        mainPanel.add(gameover, Window.GAMEOVER.name());
+      mainPanel.add(gameContainer, Window.GIOCO.name());
+
+      gameover = new GameOverPanel();
+      mainPanel.add(gameover, Window.GAMEOVER.name());
+
+      /*
         statistiche = new StatistichePanel();
         mainPanel.add(statistiche, Window.STATISTICHE.name());
         opzioni = new OpzioniPanel();
         mainPanel.add(opzioni, Window.OPZIONI.name());
-        */
+       */
 
       // 5. Configuro la Finestra (JFrame)
       this.setTitle("The Legend of Zelda");
@@ -99,4 +103,5 @@ public class LayoutManager extends JFrame{
     public GamePanel getGamePanel() { return game; }
     public MenuPanel getMenuPanel() { return menu; }
     public HUDPanel getHUDPanel() { return hudPanel; }
+    public GameOverPanel getGameOverPanel() { return gameover; }
 }
