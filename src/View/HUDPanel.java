@@ -62,28 +62,27 @@ public class HUDPanel extends JPanel implements Observer {
 
     private void drawQuantities(Graphics2D g, Player player) {
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Monospaced", Font.BOLD, 18));
+        g.setFont(FontManager.getFont(24f));
 
         // Quantità Rupie
-        g.drawString("X " + player.getRupees(), 80, 42);
-
-        // Quantità Bombe
-        g.drawString("X " + player.getBombs(), 80, 82);
+        g.drawString("X " + player.getRupees(), 180, 82);
 
         // Quantità Pozioni
-        g.drawString("X " + player.getPotions(), 180, 82);
+        g.drawString("X " + player.getPotions(), 180, 132);
+
+        // Quantità Bombe
+        g.drawString("X " + player.getBombs(), 180, 162);
+
+
     }
 
     private void drawLife(Graphics2D g, Player player) {
-        g.setColor(Color.RED);
-        g.setFont(new Font("Monospaced", Font.BOLD, 16));
-        g.drawString("-LIFE-", 580, 30); // Posizione della scritta Life nell'HUD
 
         int hp = player.getHp();       // Es. 6 HP (3 cuori pieni)
         int maxHp = player.getMaxHp(); // Es. 6 HP max
 
-        int startX = 550; // Coordinata X iniziale dei cuori
-        int startY = 45;  // Coordinata Y iniziale dei cuori
+        int startX = 565; // Coordinata X iniziale dei cuori
+        int startY = 100;  // Coordinata Y iniziale dei cuori
         int heartSpacing = 24; // Spazio tra un cuore e l'altro
 
         // Carica i tre sprite dei cuori direttamente dagli asset

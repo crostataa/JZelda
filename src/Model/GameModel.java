@@ -244,7 +244,7 @@ public class GameModel extends Observable {
                                     if (player.getHitbox().intersects(blastRadius)) {
                                         player.takeDamage(1);
                                     }
-                                    AudioManager.getInstance().play(/**/);
+                                    //AudioManager.getInstance().play(/**/);
                                 });
         activeBombs.removeIf(bomb -> !bomb.isAlive());
 

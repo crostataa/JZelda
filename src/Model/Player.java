@@ -41,7 +41,7 @@ public class Player extends Entity implements Damageable{
 
     public Player(double x, double y) {
         super(400, 300, 32, 32, 4.0);
-        this.maxHp = 6;
+        this.maxHp = 10;
         this.hp = this.maxHp;
         this.rupees = 0;
         this.isAttacking = false;
@@ -93,7 +93,7 @@ public class Player extends Entity implements Damageable{
         if (potions > 0 && hp < maxHp) {
             heal(maxHp); // Ripristina tutti i cuori
             potions--;
-            audioManager.getInstance().play(/**/);
+            //audioManager.getInstance().play(/**/);
         }
     }
 

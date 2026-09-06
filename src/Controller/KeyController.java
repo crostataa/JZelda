@@ -24,7 +24,7 @@ public class KeyController implements KeyListener {
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) right = true;
         // per le azioni
         if (code == KeyEvent.VK_SPACE) attack = true;
-        if (code == KeyEvent.VK_P) pause = true;
+        //if (code == KeyEvent.VK_P) pause = true;
         if (code == KeyEvent.VK_B) keyBomb = true;
         if (code == KeyEvent.VK_P) keyPotion = true;
         if (code == KeyEvent.VK_X) keyBow = true;

@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.image.BufferedImage;
+import java.nio.Buffer;
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
@@ -29,6 +30,8 @@ public class GamePanel extends JPanel implements Observer {
 
     //oggetti
     private final String PATH_BOMB = "/assets/bombaHUDNew.png";
+    //bomba negativa x animazione
+    private BufferedImage negativeBombSprite = null;
     private final String PATH_ARROW = "/assets/arma_vs_verticaleNew.png";
     private final String PATH_POTION = "/assets/pozioneHUDNew.png";
 
@@ -67,6 +70,22 @@ public class GamePanel extends JPanel implements Observer {
 
     }
 
+    private BufferedImage createNegativeImage(BufferedImage original) {
+
+
+        BufferedImage negative = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+        for (int y=0; y < original.getHeight(); y++) {
+            for (int x=0; x< original.getWidth(); x++) {
+                int rgba = original.getRGB(x, y);
+                Color color = new Color(rgba, true);
+                Color invertedColor = new Color (255- color.getRed(), 255 - color.getGreen(), 255 - color.getBlue(), color.getAlpha());
+
+                negative. setRGB(x, y, invertedColor.getRGB());
+            }
+        }
+        return negative;
+    }
     public void setModel(GameModel model) {
 
         this.model = model;
@@ -115,11 +134,13 @@ public class GamePanel extends JPanel implements Observer {
         //ordine di disegno per strati
         drawLevel(g2d);
         drawRupees(g2d);
+        drawBombs(g2d);
         drawEnemies(g2d);
         drawDeathAnimations(g2d);
         drawShop(g2d);
         drawPlayer(g2d);
         drawProjectiles(g2d);
+
 
         //x debug again
         drawHitboxes(g2d);
@@ -144,7 +165,7 @@ public class GamePanel extends JPanel implements Observer {
         if (model.getCurrentLevel() != 10 || model.getShop() == null) return;
 
         g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 14));
+        g.setFont(FontManager.getFont(24f));
 
         for (ShopEntry entry : model.getShop().getItemsForSale()) {
             if (!entry.isAvailable()) continue;
@@ -425,16 +446,41 @@ public class GamePanel extends JPanel implements Observer {
 
 
     private void drawBombs(Graphics2D g) {
+        if (model.getActiveBombs() == null) return;
 
-        BufferedImage bombImg = SpriteManager.getInstance().getSprite(PATH_BOMB);
+        BufferedImage bombSprite = SpriteManager.getInstance().getSprite("/assets/bombaHUDNew.png");
+
+        // Creiamo la versione in negativo SOLO LA PRIMA VOLTA che ci serve e poi la teniamo in memoria
+        if (bombSprite != null && negativeBombSprite == null) {
+            negativeBombSprite = createNegativeImage(bombSprite);
+        }
 
         for (BombEntity bomb : model.getActiveBombs()) {
-            if (!bomb.hasExploded()) {
-                g.drawImage(bombImg, (int)bomb.getX(), (int)bomb.getY(), 32, 32, null);
+            if (!bomb.isExploding()) {
+                if (bombSprite != null) {
+
+                    // CHICCA ARCADE: La velocità del lampeggio (flash) aumenta quando il timer scende sotto i 30!
+                    int flashRate = (bomb.getTimer() < 30) ? 4 : 8;
+
+                    // Alterniamo i due sprite basandoci sul timer della bomba
+                    if ((bomb.getTimer() / flashRate) % 2 == 0 && negativeBombSprite != null) {
+                        // Disegna la bomba in NEGATIVO
+                        g.drawImage(negativeBombSprite, (int)bomb.getX() - 8, (int)bomb.getY() - 8, 24, 24, null);
+                    } else {
+                        // Disegna la bomba NORMALE
+                        g.drawImage(bombSprite, (int)bomb.getX() - 8, (int)bomb.getY() - 8, 16, 32, null);
+                    }
+                } else {
+                    g.setColor(Color.BLUE);
+                    g.fillOval((int)bomb.getX(), (int)bomb.getY(), 16, 16);
+                }
             } else {
-                // Qui in futuro disegnerai il frame dell'esplosione da "Enemy Death Animation.png"
+                // LA BOMBA ESPLODE
                 g.setColor(Color.ORANGE);
-                g.fillOval((int)bomb.getX() - 16, (int)bomb.getY() - 16, 64, 64);
+                g.fillOval((int)bomb.getX() - 32, (int)bomb.getY() - 32, 64, 64);
+
+                g.setColor(Color.RED);
+                g.fillOval((int)bomb.getX() - 16, (int)bomb.getY() - 16, 32, 32);
             }
         }
     }
