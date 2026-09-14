@@ -140,6 +140,7 @@ public class GamePanel extends JPanel implements Observer {
         drawShop(g2d);
         drawPlayer(g2d);
         drawProjectiles(g2d);
+        drawGroundPotions(g2d);
 
 
         //x debug again
@@ -149,8 +150,20 @@ public class GamePanel extends JPanel implements Observer {
 
     private void drawLevel(Graphics2D g) {
         int currentId = model.getCurrentLevel();
+
         // Se siamo nello shop carica "shop.png", altrimenti il classico "level X.png"
-        String bgPath = (currentId == 10) ? "/assets/shop.png" : "/assets/level " + currentId + ".png";
+        //String bgPath = (currentId == 10) ? "/assets/shop.png" : "/assets/level " + currentId + ".png";
+        String bgPath;
+        if (currentId == 9) {
+            bgPath = "/assets/SecretDungeon.png";
+        } else if (currentId == 10) {
+            bgPath = "/assets/shop.png";
+        } else if (currentId == 11) {
+            bgPath = "/assets/dungeon.png";
+        } else {
+            bgPath = "/assets/level " + currentId + ".png";
+        }
+
 
         BufferedImage bg = SpriteManager.getInstance().getSprite(bgPath);
         if (bg != null) {
@@ -448,7 +461,7 @@ public class GamePanel extends JPanel implements Observer {
     private void drawBombs(Graphics2D g) {
         if (model.getActiveBombs() == null) return;
 
-        BufferedImage bombSprite = SpriteManager.getInstance().getSprite("/assets/bombaHUDNew.png");
+        BufferedImage bombSprite = SpriteManager.getInstance().getSprite(PATH_BOMB);
 
         // Creiamo la versione in negativo SOLO LA PRIMA VOLTA che ci serve e poi la teniamo in memoria
         if (bombSprite != null && negativeBombSprite == null) {
@@ -482,6 +495,16 @@ public class GamePanel extends JPanel implements Observer {
                 g.setColor(Color.RED);
                 g.fillOval((int)bomb.getX() - 16, (int)bomb.getY() - 16, 32, 32);
             }
+        }
+    }
+
+    private void drawGroundPotions( Graphics2D g) {
+        if (model.getGroundPotion() == null) return;
+
+        BufferedImage potionSprite = SpriteManager.getInstance().getSprite(PATH_POTION);
+
+        for (HealthPotionEntity potion :  model.getGroundPotion()) {
+            g.drawImage(potionSprite, 375, 276, 16, 32, null);
         }
     }
 }

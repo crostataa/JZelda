@@ -21,9 +21,7 @@ public class LevelFactory {
                 return getLevel7();
             case 8:
                 return getLevel8();
-            case 9:
-            case 10:
-            case 11:
+            case 9, 10, 11:
                 return getDungeonTemplate(); //base per stanze interne
             default:
                 return getDefaultLevel();
@@ -188,7 +186,7 @@ public class LevelFactory {
     private static String[] getLevel8() {
         return new String[]{
                 "########################",
-                "################DD######",
+                "########DD##############",
                 "##....................##",
                 "##....................##",
                 "##......................",
@@ -245,7 +243,7 @@ public class LevelFactory {
                 "##....................##",
                 "##....................##",
                 "##########....##########",
-                "##########CCCC##########"
+                "##########DDDD##########"
         };
     }
 

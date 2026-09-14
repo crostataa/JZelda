@@ -20,7 +20,6 @@ public class JZelda {
 
         viewManager.getHUDPanel().setModel(model);
         model.addObserver(viewManager.getHUDPanel());
-//        model.addObserver(viewManager.getShopanel());
 
 
         //inizializziamo controller

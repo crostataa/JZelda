@@ -55,10 +55,6 @@ public class SpriteManager {
         return image;
     }
 
-    //gli sprite sono in formato SpriteSheet, quindi invece di salvare i singoli ritagli in memoria
-    // (pesantissimi), ogni volta ritagliamo il pezzo che ci interessa, visto che sono tutti della stessa dimensione
-    // e anche perché l'operazione di ritaglio è istantanea
-
 
     public BufferedImage getSubSprite(String sheetPath, int col, int row, int width, int height) {
 

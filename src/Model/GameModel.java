@@ -21,6 +21,8 @@ public class GameModel extends Observable {
     List<Rupee> rupees;
     private List<BombEntity> activeBombs;
 
+    private List <HealthPotionEntity> groundPotion;
+
     //animazione eliminazione entitò
     private List<DeathAnimation> deathAnimations = new ArrayList<>();
     public List<DeathAnimation> getDeathAnimations() { return deathAnimations; }
@@ -55,6 +57,7 @@ public class GameModel extends Observable {
         this.currentLevel = 1;
         this.currentLevelMap = new Level(currentLevel);
         this.score = 0;
+        this.groundPotion = new ArrayList<>();
         deathAnimations.clear();
 
 
@@ -204,17 +207,13 @@ public class GameModel extends Observable {
         //spawna nemici
         if (levelId <= 8) {
             //coordinate da modificare*
-            enemies.add(new MoblinEnemy(300,400));
-            enemies.add(new OctorokEnemy(400,200));
-
+            enemies.add(new MoblinEnemy(300, 400));
+            enemies.add(new OctorokEnemy(400, 200));
             rupees.add(new Rupee(150, 150, 1));
-
         } else if (levelId == 9) {
-            currentState = GameState.SHOP;
-        } else if (levelId == 10) {
-            //moblin pacifico
-        } else if (levelId == 11) {
-            //cassa con spada dell'eroe
+            groundPotion.add(new HealthPotionEntity(384, 256)); //coordinate spawn pozione
+
+
         }
     }
 
@@ -256,7 +255,7 @@ public class GameModel extends Observable {
 
         if(!playerHitWall) {
             player.update(); // Muove Link
-            checkLevelTransitions(); // <--- AGGIUNGI QUESTO QUI! Controlla se è uscito dalla mappa o ha toccato una porta
+            checkLevelTransitions();
         } else {
             player.setDirection(0,0);
         }
@@ -332,6 +331,14 @@ public class GameModel extends Observable {
                     r.setAlive(false); //la rupia viene raccolta e rimossa
                     //AudioManager.getInstance().play(suono rupia)
                 });
+
+        groundPotion.stream()
+                .filter( p -> p.getHitbox().intersects(player.getHitbox()))
+                        .forEach( p -> {
+                            player.addPotions(1);
+                            p.setAlive(false);
+                        });
+        groundPotion.removeIf(potion -> !potion.isAlive());
 
 
 
@@ -476,9 +483,9 @@ public class GameModel extends Observable {
                     else if (currentLevel == 8) changeLevel(11, 368, 400);
 
                         // Dungeon -> Overworld (esce in punti specifici a Y = 40)
-                    else if (currentLevel == 9) changeLevel(1, 512, 60); // La porta nella mappa 1 è a destra
-                    else if (currentLevel == 10) changeLevel(2, 256, 60); // La porta nella mappa 2 è a sinistra
-                    else if (currentLevel == 11) changeLevel(8, 512, 60); // La porta nella mappa 8 è a destra
+                    else if (currentLevel == 9) changeLevel(1, 512, 60); // in ogni mappa la porta è in alto
+                    else if (currentLevel == 10) changeLevel(2, 256, 60);
+                    else if (currentLevel == 11) changeLevel(8, 512, 60);
                 });
     }
 
@@ -533,6 +540,7 @@ public class GameModel extends Observable {
     public Level getCurrentLevelMap() { return currentLevelMap; }
     public ShopModel getShop() { return shop; }
     public List<BombEntity> getActiveBombs() { return activeBombs; }
+    public List<HealthPotionEntity> getGroundPotion() { return groundPotion; }
 
     public void setCurrentState(GameState gameState) {
         currentState = gameState;
