@@ -23,9 +23,10 @@ public class GameModel extends Observable {
 
     private List <HealthPotionEntity> groundPotion;
 
-    //animazione eliminazione entitò
+    //animazione eliminazione entità
     private List<DeathAnimation> deathAnimations = new ArrayList<>();
-    public List<DeathAnimation> getDeathAnimations() { return deathAnimations; }
+    private int playerDeathTimer;
+
 
     //shop
     private ShopModel shop;
@@ -120,27 +121,6 @@ public class GameModel extends Observable {
 
 
 
-
-
-    //metodo per acquistare da shop
-    public void attemptPurchase(String itemName) {
-        if (currentState == GameState.SHOP) {
-            boolean success = shop.buyItem(player, itemName);
-
-            if (success) {
-                //notifica la view
-                setChanged();
-                notifyObservers("SHOP_PURCHASE_SUCCESS");
-            }
-            else {
-                setChanged();
-                notifyObservers("SHOP_PURCHASE_FAILED");
-            }
-        }
-    }
-
-
-
     // metodo x sparare
 
     public void addProjectile(Projectile p) {
@@ -224,6 +204,20 @@ public class GameModel extends Observable {
 
     // -- metodi x controller --
     public void update() {
+
+        if (currentState == GameState.PLAYER_DEATH) {
+            playerDeathTimer--;
+            setChanged();
+            notifyObservers("GAME_UPDATE"); // notiifca view per disegnare animazione
+
+            if (playerDeathTimer <= 0) {
+                currentState = GameState.GAME_OVER;
+                setChanged();
+                notifyObservers("GAME_OVER");
+            }
+            return;
+        }
+
         if (currentState != GameState.PLAYING) return;
 
         // aggiorna timer bombe
@@ -381,9 +375,8 @@ public class GameModel extends Observable {
 
         //6. controllo gameover
         if (player != null && player.getHp() <= 0) {
-            currentState = GameState.GAME_OVER;
-            setChanged();
-            notifyObservers("GAME_OVER");
+            currentState = GameState.PLAYER_DEATH;
+            playerDeathTimer = 120;
         }
 
         //5. notifica la view
@@ -538,9 +531,11 @@ public class GameModel extends Observable {
     public int getScore() { return score; }
     public int getCurrentLevel() { return currentLevel;}
     public Level getCurrentLevelMap() { return currentLevelMap; }
+    public List<DeathAnimation> getDeathAnimations() { return deathAnimations; }
     public ShopModel getShop() { return shop; }
     public List<BombEntity> getActiveBombs() { return activeBombs; }
     public List<HealthPotionEntity> getGroundPotion() { return groundPotion; }
+    public int getPlayerDeathTimer() { return playerDeathTimer; }
 
     public void setCurrentState(GameState gameState) {
         currentState = gameState;

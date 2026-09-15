@@ -40,13 +40,16 @@ public class GameController {
                 model.update();
 
                 //controllo gameover
-                if (model.getPlayer() != null && model.getPlayer().getHp() <= 0) {
-                    model.setCurrentState(GameState.GAME_OVER);
+//                if (model.getPlayer() != null && model.getPlayer().getHp() <= 0) {
+//                    model.setCurrentState(GameState.GAME_OVER);
+//                    stopGame();
+//                    view.switchScreen(Window.GAMEOVER);
+//                }
+                //la view si aggiorna in automatico con observer/observable, non c'è bisogno di usare setChanged() etc.
+                if (model.getCurrentState() == GameState.GAME_OVER) {
                     stopGame();
                     view.switchScreen(Window.GAMEOVER);
                 }
-                //la view si aggiorna in automatico con observer/observable, non c'è bisogno di usare setChanged() etc.
-
             }
         });
     }

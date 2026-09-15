@@ -5,6 +5,7 @@ import java.nio.Buffer;
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
+import java.awt.geom.AffineTransform;
 
 import Model.*;
 
@@ -37,6 +38,7 @@ public class GamePanel extends JPanel implements Observer {
 
     //animazione eliminazione
     private final String PATH_DEATH_ANIM = "/assets/Enemy Death Animation.png";
+    private BufferedImage negativeLinkSprite = null;
 
     //octorok
     private final String PATH_OCTOROK_1 = "/assets/octorok1New.png"; // Guarda in basso / base
@@ -59,6 +61,10 @@ public class GamePanel extends JPanel implements Observer {
     private final String PATH_RUPEE_1 = "/assets/rupia1.png"; // Rupia gialla/arancio (Valore 1)
     private final String PATH_RUPEE_5 = "/assets/rupia5.png"; // Rupia blu (Valore 5)
 
+    //dungeon
+    private final String PATH_SECRET_DUNGEON = "/assets/SecretDungeon.png";
+    private final String PATH_SHOP = "/assets/shop.png";
+    private final String PATH_FINAL_DUNGEON = "/assets/dungeon.png";
 
     //nota, forse meglio singleton*
     public GamePanel() {
@@ -132,15 +138,24 @@ public class GamePanel extends JPanel implements Observer {
         Graphics2D g2d = (Graphics2D) g;
 
         //ordine di disegno per strati
+        //base
         drawLevel(g2d);
+        //collectibles
+        drawGroundPotions(g2d);
         drawRupees(g2d);
+        drawShop(g2d);
         drawBombs(g2d);
+        //entità
         drawEnemies(g2d);
         drawDeathAnimations(g2d);
-        drawShop(g2d);
-        drawPlayer(g2d);
+        if (model.getCurrentState() == GameState.PLAYER_DEATH) {
+            drawPlayerDeath(g2d);
+        } else if (model.getCurrentState() == GameState.PLAYING) {
+            drawPlayer(g2d);
+
+        }
+        //proiettili
         drawProjectiles(g2d);
-        drawGroundPotions(g2d);
 
 
         //x debug again
@@ -155,11 +170,11 @@ public class GamePanel extends JPanel implements Observer {
         //String bgPath = (currentId == 10) ? "/assets/shop.png" : "/assets/level " + currentId + ".png";
         String bgPath;
         if (currentId == 9) {
-            bgPath = "/assets/SecretDungeon.png";
+            bgPath = PATH_SECRET_DUNGEON;
         } else if (currentId == 10) {
-            bgPath = "/assets/shop.png";
+            bgPath = PATH_SHOP;
         } else if (currentId == 11) {
-            bgPath = "/assets/dungeon.png";
+            bgPath = PATH_FINAL_DUNGEON;
         } else {
             bgPath = "/assets/level " + currentId + ".png";
         }
@@ -376,6 +391,35 @@ public class GamePanel extends JPanel implements Observer {
             g.setColor(Color.GREEN);
             g.fillRect((int)p.getX(), (int)p.getY(), 32, 32);
         }
+    }
+
+    private void drawPlayerDeath(Graphics2D g) {
+        if (model.getPlayer() == null) return;
+
+        Player p = model.getPlayer();
+
+        BufferedImage linkSprite = SpriteManager.getInstance().getSprite(PATH_LINK_DOWN_1);
+        if (linkSprite == null) return;
+
+        if (negativeLinkSprite == null) {
+            negativeLinkSprite = createNegativeImage(linkSprite);
+        }
+
+        int elapsedFrames = 120 - model.getPlayerDeathTimer();
+
+        //alternanza colori
+        BufferedImage spriteToDraw = ((elapsedFrames / 4) % 2 == 0 && negativeLinkSprite  != null) ? negativeLinkSprite : linkSprite;
+        //rotazione
+        double angle = Math.toRadians(elapsedFrames * 15);
+
+        //link ruoterà a partire dal suo centro (di gravità permanente)
+        int centerX = (int) p.getX() + 16;
+        int centerY = (int) p.getY() + 16;
+
+        AffineTransform oldTransform = g.getTransform();
+        g.rotate(angle, centerX, centerY);
+        g.drawImage(spriteToDraw, (int)p.getX(), (int)p.getY(), 32,32, null);
+        g.setTransform(oldTransform);
     }
 
     private void drawProjectiles(Graphics2D g) {
