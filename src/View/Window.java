@@ -7,6 +7,6 @@ public enum Window {
     SHOP,
     STATISTICHE,
     GAMEOVER,
-    OPZIONI
+    VITTORIA
 
 }

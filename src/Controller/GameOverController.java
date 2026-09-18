@@ -16,11 +16,11 @@ public class GameOverController {
     private GameController gameController;
 
 
-    public GameOverController(GameModel model, LayoutManager viewManager) {
+    public GameOverController(GameModel model, LayoutManager viewManager, GameController gameController) {
 
         this.model = model;
         this.viewManager = viewManager;
-        this.gameController = new GameController(model, viewManager);
+        this.gameController = gameController;
 
 
         //listener per bottone retry
@@ -30,7 +30,6 @@ public class GameOverController {
                 //metodo per salvare statistiche su file
                 model.initGame();
                 gameController.startGame();
-                //non funziona keyListener però, risolvere*
                 viewManager.switchScreen(Window.GIOCO);
             }
         });

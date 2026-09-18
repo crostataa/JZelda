@@ -66,6 +66,10 @@ public class GamePanel extends JPanel implements Observer {
     private final String PATH_SHOP = "/assets/shop.png";
     private final String PATH_FINAL_DUNGEON = "/assets/dungeon.png";
 
+    // VITTORIA
+    private final String GMAIL_ITEM = "/assets/gmail_def.png";
+    private final String LINK_LIFTING = "/assets/LinkPickingUpNew.png";
+
     //nota, forse meglio singleton*
     public GamePanel() {
 
@@ -138,13 +142,19 @@ public class GamePanel extends JPanel implements Observer {
         Graphics2D g2d = (Graphics2D) g;
 
         //ordine di disegno per strati
+
         //base
         drawLevel(g2d);
+
         //collectibles
         drawGroundPotions(g2d);
         drawRupees(g2d);
         drawShop(g2d);
         drawBombs(g2d);
+
+        //vittoria
+        drawVictorySequence(g2d);
+
         //entità
         drawEnemies(g2d);
         drawDeathAnimations(g2d);
@@ -152,7 +162,6 @@ public class GamePanel extends JPanel implements Observer {
             drawPlayerDeath(g2d);
         } else if (model.getCurrentState() == GameState.PLAYING) {
             drawPlayer(g2d);
-
         }
         //proiettili
         drawProjectiles(g2d);
@@ -541,7 +550,7 @@ public class GamePanel extends JPanel implements Observer {
             }
         }
     }
-
+    // disegna pozione primo dungeon
     private void drawGroundPotions( Graphics2D g) {
         if (model.getGroundPotion() == null) return;
 
@@ -549,6 +558,29 @@ public class GamePanel extends JPanel implements Observer {
 
         for (HealthPotionEntity potion :  model.getGroundPotion()) {
             g.drawImage(potionSprite, 375, 276, 16, 32, null);
+        }
+    }
+
+    // disegna oggetto di vittoria terzo dungeon
+    private void drawVictorySequence(Graphics2D g) {
+        BufferedImage gmailItem = SpriteManager.getInstance().getSprite(GMAIL_ITEM);
+
+        if (model.getCurrentLevel() == 11 && model.getGmailEntity() != null && model.getGmailEntity().isAlive()) {
+            if (gmailItem != null) {
+                g.drawImage(gmailItem, (int)model.getGmailEntity().getX(), (int)model.getGmailEntity().getY(),44, 38, null);
+            }
+        }
+
+        if (model.getCurrentState() == GameState.VICTORY_ANIMATION) {
+            Player p = model.getPlayer();
+            BufferedImage linkLifting = SpriteManager.getInstance().getSprite(LINK_LIFTING);
+
+            if (linkLifting != null) {
+                g.drawImage(linkLifting, (int)p.getX(), (int)p.getY(), 32, 32, null);
+            }
+            if (gmailItem != null) {
+                g.drawImage(gmailItem, (int)p.getX(), (int)p.getY() -32, 44, 38, null);
+            }
         }
     }
 }

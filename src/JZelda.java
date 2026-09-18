@@ -25,9 +25,9 @@ public class JZelda {
         //inizializziamo controller
         GameController gameController = new GameController(model, viewManager);
 
-        MenuController menuController = new MenuController(model, viewManager);
+        MenuController menuController = new MenuController(model, viewManager, gameController);
 
-        GameOverController gameOverController = new GameOverController(model, viewManager);
+        GameOverController gameOverController = new GameOverController(model, viewManager, gameController);
 
         //uniamo keyListener a gamePanel
         viewManager.getGamePanel().addKeyListener(gameController.getKeyController());

@@ -15,7 +15,7 @@ public class ShopModel {
         // Le coordinate (X, Y) li posizionano sotto i fuochi del tuo background "shop.png"
         itemsForSale.add(new ShopEntry(new HealthPotionItem(), 30, 468, 250)); // Destra
         itemsForSale.add(new ShopEntry(new BombItem(), 20, 368, 250));         // Centro
-        itemsForSale.add(new ShopEntry(new BowItem(), 10, 268, 250));          // Sinistra
+        itemsForSale.add(new ShopEntry(new ArrowItem(), 10, 268, 250));          // Sinistra
     }
 
 

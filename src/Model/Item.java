@@ -4,9 +4,6 @@ public abstract class Item {
 
     private String name;
 
-
-
-
     public Item (String nome) {
         this.name = nome;
 

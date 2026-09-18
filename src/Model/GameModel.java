@@ -20,13 +20,13 @@ public class GameModel extends Observable {
     List<Projectile> projectiles;
     List<Rupee> rupees;
     private List<BombEntity> activeBombs;
-
     private List <HealthPotionEntity> groundPotion;
+    private GmailEntity gmailEntity;
+
 
     //animazione eliminazione entità
     private List<DeathAnimation> deathAnimations = new ArrayList<>();
     private int playerDeathTimer;
-
 
     //shop
     private ShopModel shop;
@@ -37,11 +37,15 @@ public class GameModel extends Observable {
     //mappa
     private Level currentLevelMap;
 
+    //timer vittoria
+    private int victoryTimer;
+
 
 
     public GameModel() {
 
         initGame();
+        this.currentState = GameState.MENU;
 
     }
 
@@ -192,7 +196,8 @@ public class GameModel extends Observable {
             rupees.add(new Rupee(150, 150, 1));
         } else if (levelId == 9) {
             groundPotion.add(new HealthPotionEntity(384, 256)); //coordinate spawn pozione
-
+        } else if (levelId == 11) {
+            gmailEntity = new GmailEntity(368, 240);
 
         }
     }
@@ -204,6 +209,19 @@ public class GameModel extends Observable {
 
     // -- metodi x controller --
     public void update() {
+
+        if (currentState == GameState.VICTORY_ANIMATION) {
+            victoryTimer--;
+            setChanged();
+            notifyObservers("GAME_UPDATE");
+
+            if (victoryTimer <= 0) {
+                currentState = GameState.VICTORY;
+                setChanged();
+                notifyObservers("VICTORY");
+            }
+            return;
+        }
 
         if (currentState == GameState.PLAYER_DEATH) {
             playerDeathTimer--;
@@ -326,6 +344,7 @@ public class GameModel extends Observable {
                     //AudioManager.getInstance().play(suono rupia)
                 });
 
+        // pozione primo dungeon
         groundPotion.stream()
                 .filter( p -> p.getHitbox().intersects(player.getHitbox()))
                         .forEach( p -> {
@@ -334,6 +353,17 @@ public class GameModel extends Observable {
                         });
         groundPotion.removeIf(potion -> !potion.isAlive());
 
+        // oggetto vittoria (gmail)
+        if (currentLevel == 11 && gmailEntity != null && gmailEntity.isAlive()) {
+            if (player.getHitbox().intersects(gmailEntity.getHitbox())) {
+                gmailEntity.setAlive(false);
+                currentState = GameState.VICTORY_ANIMATION;
+                //modificare in base alla lunghezza della traccia audio
+                victoryTimer = 300;
+                player.setX(gmailEntity.getX());
+                player.setY(gmailEntity.getY());
+            }
+        }
 
 
         // 7. pulizia entità morte e drop rupie
@@ -536,9 +566,9 @@ public class GameModel extends Observable {
     public List<BombEntity> getActiveBombs() { return activeBombs; }
     public List<HealthPotionEntity> getGroundPotion() { return groundPotion; }
     public int getPlayerDeathTimer() { return playerDeathTimer; }
-
     public void setCurrentState(GameState gameState) {
         currentState = gameState;
     }
+    public GmailEntity getGmailEntity() { return gmailEntity; }
 }
 

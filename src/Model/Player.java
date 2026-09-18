@@ -79,14 +79,6 @@ public class Player extends Entity implements Damageable{
         }
     }
 
-    public void attack() {
-        if (!isAttacking) {
-            isAttacking = true;
-            attackTimer = 15; // L'attacco dura 15 frame (1/4 di secondo a 60 FPS)
-            // Qui andrà anche la logica per generare la Hitbox dell'arma e colpire i nemici*
-        }
-    }
-
     // --- LOGICA POZIONE ---
     // La pozione si usa istantaneamente, ripristina la vita e si consuma.
     public void usePotion() {
@@ -190,20 +182,6 @@ public class Player extends Entity implements Damageable{
             return true;
         }
         return false;
-    }
-
-    public boolean hasItem(String itemName) {
-        return inventory.stream().anyMatch(i -> i.getName().equals(itemName));
-    }
-
-    public void useItem(String itemName) {
-        Optional<Item> itemToUse = inventory.stream()
-                                            .filter(i -> i.getName().equals(itemName))
-                                            .findFirst();
-        itemToUse.ifPresent(item -> {
-            item.usa(this);
-            inventory.remove(item); //solo se oggetto consumabile, analizzare oggetti*
-        });
     }
 
     // -- getter e setter --

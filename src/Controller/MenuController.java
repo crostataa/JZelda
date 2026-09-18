@@ -11,10 +11,12 @@ public class MenuController {
 
     private GameModel model;
     private LayoutManager viewManager;
+    private GameController gameController;
 
-    public MenuController(GameModel model, LayoutManager viewManager) {
+    public MenuController(GameModel model, LayoutManager viewManager, GameController gameController) {
         this.model = model;
         this.viewManager = viewManager;
+        this.gameController = gameController;
 
         // Listener per il bottone Start
         this.viewManager.getMenuPanel().getStartButton().addActionListener(new ActionListener() {
@@ -32,6 +34,7 @@ public class MenuController {
 
                 // 2. Inizializziamo il gioco
                 model.initGame();
+                gameController.startGame();
 
                 // 3. Cambiamo schermata usando il tuo Enum
                 viewManager.switchScreen(Window.GIOCO);
