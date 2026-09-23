@@ -44,7 +44,6 @@ public class GamePanel extends JPanel implements Observer {
     private final String PATH_OCTOROK_1 = "/assets/octorok1New.png"; // Guarda in basso / base
     private final String PATH_OCTOROK_2 = "/assets/octorok2New.png"; // Animazione
     private final String PATH_OCTOROK_3 = "/assets/octorok3New.png"; // Guarda di lato
-    //private final String PATH_OCTOROK_4 = "/assets/octorok4New.png"; // Guarda di lato
     private final String PATH_OCTO_ROCK = "/assets/octorok_proiettileNew.png"; // Proiettile
 
     //moblin
@@ -168,7 +167,7 @@ public class GamePanel extends JPanel implements Observer {
 
 
         //x debug again
-        drawHitboxes(g2d);
+        //drawHitboxes(g2d);
 
     }
 

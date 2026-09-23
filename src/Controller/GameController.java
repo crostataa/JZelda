@@ -48,6 +48,7 @@ public class GameController {
 
                 if (model.getCurrentState() == GameState.VICTORY) {
                     stopGame();
+                    view.getVictoryPanel().startAnimation();
                     view.switchScreen(Window.VITTORIA);
                 }
             }
