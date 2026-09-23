@@ -2,6 +2,7 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class MenuPanel extends JPanel {
 
@@ -14,27 +15,21 @@ public class MenuPanel extends JPanel {
         this.setBackground(Color.BLACK);
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.CENTER;
 
-
-        // Titolo
-        JLabel titleLabel = new JLabel("THE LEGEND OF ZELDA");
-        titleLabel.setForeground(Color.RED);
-        titleLabel.setFont(FontManager.getFont(24f));
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        this.add(titleLabel, gbc);
+        gbc.insets = new Insets(320, 10, 10, 10);
 
         // Label Nome Utente
-        gbc.gridy++;
         JLabel nameLabel = new JLabel("Inserisci il tuo nome:");
-        nameLabel.setForeground(Color.WHITE);
+        nameLabel.setForeground(new Color(1, 1, 2));
         nameLabel.setFont(FontManager.getFont(24f));
         nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.add(nameLabel, gbc);
+
+        gbc.insets = new Insets(10, 10, 10, 10);
 
         // Campo di testo per il nome
         gbc.gridy++;
@@ -47,8 +42,8 @@ public class MenuPanel extends JPanel {
         gbc.gridy++;
         startButton = new JButton("START GAME");
         startButton.setFont(FontManager.getFont(24f));
-        startButton.setBackground(Color.DARK_GRAY);
-        startButton.setForeground(Color.WHITE);
+        startButton.setBackground(new Color(1, 1, 2));
+        startButton.setForeground(new Color(149, 83, 2));
         startButton.setFocusPainted(false);
         this.add(startButton, gbc);
 
@@ -56,10 +51,22 @@ public class MenuPanel extends JPanel {
         gbc.gridy++;
         leaderboardButton = new JButton("LEADERBOARD");
         leaderboardButton.setFont(FontManager.getFont(24f));
-        leaderboardButton.setBackground(Color.DARK_GRAY);
-        leaderboardButton.setForeground(Color.WHITE);
+        leaderboardButton.setBackground(new Color(1, 1, 2));
+        leaderboardButton.setForeground(new Color(149, 83, 2));
         leaderboardButton.setFocusPainted(false);
         this.add(leaderboardButton, gbc);
+
+    }
+        // sfondo
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g;
+
+            BufferedImage bg = SpriteManager.getInstance().getSprite("/assets/menuDef.png");
+            if (bg != null) {
+                g2d.drawImage(bg, 0,0, getWidth(), getHeight(), null);
+            }
     }
 
     // Getter per permettere al Controller di leggere i dati e aggiungere i Listener
