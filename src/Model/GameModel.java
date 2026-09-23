@@ -59,7 +59,7 @@ public class GameModel extends Observable {
         this.shop = new ShopModel();
         activeBombs = new ArrayList<>();
         this.currentState = GameState.PLAYING;
-        this.currentLevel = 1;
+        this.currentLevel = 8;
         this.currentLevelMap = new Level(currentLevel);
         this.score = 0;
         this.groundPotion = new ArrayList<>();
@@ -68,10 +68,7 @@ public class GameModel extends Observable {
 
         //posizione iniziale del giocatore, al centro dello schermo *
         this.player = new Player(100, 100);
-
-        //il primo livello NON HA NEMICI
         enemies.clear();
-
 
         // Posiziona il giocatore in base alla mappa
         this.player = new Player(currentLevelMap.getPlayerStartX(), currentLevelMap.getPlayerStartY());

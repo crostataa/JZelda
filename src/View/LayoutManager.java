@@ -15,6 +15,7 @@ public class LayoutManager extends JFrame{
   MenuPanel menu;
   HUDPanel hudPanel;
   GameOverPanel gameover;
+  VictoryPanel victoryPanel;
   /*
 
 
@@ -35,11 +36,12 @@ public class LayoutManager extends JFrame{
       this.game = new GamePanel();
       this.menu = new MenuPanel();
       this.gameover = new GameOverPanel();
+      this.victoryPanel = new VictoryPanel();
 
       // 2. Imposto le dimensioni corrette
       this.hudPanel.setPreferredSize(new Dimension(768, 192));
       this.game.setPreferredSize(new Dimension(768, 512));
-
+    //totale: 768 x 704
       // 3. CREO IL WRAPPER PER IL GIOCO (Unisce HUD e MAPPA)
       JPanel gameContainer = new JPanel();
       gameContainer.setLayout(new BorderLayout());
@@ -49,9 +51,8 @@ public class LayoutManager extends JFrame{
       // 4. Aggiungo le "Carte" al mainPanel
       mainPanel.add(menu, Window.MENU.name());
       mainPanel.add(gameContainer, Window.GIOCO.name());
-
-      gameover = new GameOverPanel();
       mainPanel.add(gameover, Window.GAMEOVER.name());
+      mainPanel.add(victoryPanel, Window.VITTORIA.name());
 
       /*
         statistiche = new StatistichePanel();
@@ -65,7 +66,7 @@ public class LayoutManager extends JFrame{
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       this.setContentPane(mainPanel);
       this.setResizable(false);
-      this.pack(); // Ora calcolerà (768 x (192+512)) = 768x704 pixel esatti!
+      this.pack(); // Ora calcolerà (768 x (192+512)) = 768x704 pixel
 
       this.setLocationRelativeTo(null); // Centra la finestra
       this.getContentPane().setBackground(Color.BLACK);
@@ -104,4 +105,5 @@ public class LayoutManager extends JFrame{
     public MenuPanel getMenuPanel() { return menu; }
     public HUDPanel getHUDPanel() { return hudPanel; }
     public GameOverPanel getGameOverPanel() { return gameover; }
+    public VictoryPanel getVictoryPanel() { return victoryPanel; }
 }

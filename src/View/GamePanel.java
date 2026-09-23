@@ -175,8 +175,7 @@ public class GamePanel extends JPanel implements Observer {
     private void drawLevel(Graphics2D g) {
         int currentId = model.getCurrentLevel();
 
-        // Se siamo nello shop carica "shop.png", altrimenti il classico "level X.png"
-        //String bgPath = (currentId == 10) ? "/assets/shop.png" : "/assets/level " + currentId + ".png";
+        // Se siamo nello shop carica "shop.png", altrimenti il classico "level X.png"8
         String bgPath;
         if (currentId == 9) {
             bgPath = PATH_SECRET_DUNGEON;
