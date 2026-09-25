@@ -6,7 +6,6 @@ import Model.Player;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -43,7 +42,7 @@ public class HUDPanel extends JPanel implements Observer {
         Graphics2D g2d = (Graphics2D) g;
 
         // 1. Carica e disegna lo sfondo dell'HUD
-        BufferedImage hudBg = SpriteManager.getInstance().getSprite("/assets/HUDNew.png");
+        BufferedImage hudBg = SpriteManager.getInstance().getSprite("/assets/HUDDef.png");
 
         if (hudBg != null) {
             g2d.drawImage(hudBg, 0, 0, getWidth(), getHeight(), null);
@@ -65,13 +64,16 @@ public class HUDPanel extends JPanel implements Observer {
         g.setFont(FontManager.getFont(24f));
 
         // Quantità Rupie
-        g.drawString("X " + player.getRupees(), 180, 82);
+        g.drawString("X" + player.getRupees(), 90, 72);
 
         // Quantità Pozioni
-        g.drawString("X " + player.getPotions(), 180, 132);
+        g.drawString("X" + player.getPotions(), 90, 162);
 
         // Quantità Bombe
-        g.drawString("X " + player.getBombs(), 180, 162);
+        g.drawString("X" + player.getBombs(), 210, 162);
+
+        //quantità freccie
+        g.drawString("X" + player.getArrows(), 205, 72);
 
 
     }
