@@ -1,6 +1,7 @@
 package Model;
 
 import View.AudioManager;
+import com.sun.jdi.ObjectCollectedException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,18 +41,21 @@ public class GameModel extends Observable {
     //timer vittoria
     private int victoryTimer;
 
+    //statistiche
+    private PlayerStats currentStats;
+
 
 
     public GameModel() {
 
-        initGame();
+        initGame("Ospite");
         this.currentState = GameState.MENU;
 
     }
 
     //inizializza o resetta una partita
 
-    public void initGame() {
+    public void initGame(String username) {
 
         this.enemies = new ArrayList<>();
         this.projectiles = new ArrayList<>();
@@ -64,29 +68,12 @@ public class GameModel extends Observable {
         this.score = 0;
         this.groundPotion = new ArrayList<>();
         deathAnimations.clear();
+        this.currentStats = StatsManager.getInstance().statsPlayer(username);
 
 
         //posizione iniziale del giocatore, al centro dello schermo *
-        this.player = new Player(100, 100);
-        enemies.clear();
-
-        // Posiziona il giocatore in base alla mappa
         this.player = new Player(currentLevelMap.getPlayerStartX(), currentLevelMap.getPlayerStartY());
-
-        // Carica i nemici previsti dal livello
-        this.enemies = currentLevelMap.getInitialEnemies();
-
-        projectiles.clear();
-        rupees.clear();
-
-        //li mettiamo come test
-        enemies.add(new MoblinEnemy(300, 400));
-        enemies.add(new OctorokEnemy(400,100));
-        rupees.add(new Rupee(200, 300,1)); //rupia verde
-        rupees.add(new Rupee(250, 350, 5)); //rupia blu
-
-
-
+        loadLevelEntities(currentLevel);
 
         //notifica alla View in ascolto che il gioco è stato resettato
         setChanged();
@@ -112,6 +99,7 @@ public class GameModel extends Observable {
 
         if (player.getBombs() > 0) {
             player.consumeBomb();
+            currentStats.addBomb();
             // Piazza la bomba esattamente al centro del giocatore
             activeBombs.add(new BombEntity(player.getX() + 8, player.getY() + 8));
 
@@ -133,7 +121,9 @@ public class GameModel extends Observable {
         if (currentState != GameState.PLAYING) return;
 
         if (player.hasBow() && player.getArrows() > 0) {
+
             player.consumeArrow();
+            currentStats.addArrow();
 
             double arrowSpeed = 5.0;
             double projDx = 0;
@@ -180,23 +170,89 @@ public class GameModel extends Observable {
 
     //nemici nascono in posizioni diverse in base al livello
     private void loadLevelEntities(int levelId) {
-        //cancella entità livello precedente
+
         enemies.clear();
         rupees.clear();
         projectiles.clear();
+        groundPotion.clear();
 
-        //spawna nemici
-        if (levelId <= 8) {
-            //coordinate da modificare*
-            enemies.add(new MoblinEnemy(300, 400));
-            enemies.add(new OctorokEnemy(400, 200));
-            rupees.add(new Rupee(150, 150, 1));
-        } else if (levelId == 9) {
-            groundPotion.add(new HealthPotionEntity(384, 256)); //coordinate spawn pozione
-        } else if (levelId == 11) {
-            gmailEntity = new GmailEntity(368, 240);
+        //spawn dei nemici x ogni livello
 
+        switch (levelId) {
+            case 1:
+                enemies.add(new MoblinEnemy(300, 200));;
+                break;
+
+            case 2:
+                enemies.add(new MoblinEnemy(600, 110));
+                enemies.add(new MoblinEnemy(600, 210));
+                enemies.add(new MoblinEnemy(600, 310));
+                break;
+
+            case 3:
+                enemies.add(new OctorokEnemy(600, 380));
+                enemies.add(new OctorokEnemy(500,380));
+                break;
+            case 4:
+                enemies.add(new MoblinEnemy(350, 50));
+                enemies.add(new MoblinEnemy(440, 50));
+                enemies.add(new MoblinEnemy(100, 90));
+                enemies.add(new OctorokEnemy(600, 200));
+                enemies.add(new OctorokEnemy(600, 250));
+                break;
+            case 5:
+                enemies.add(new MoblinEnemy(673, 260));
+                enemies.add(new MoblinEnemy(550, 75));
+                enemies.add(new OctorokEnemy(200, 65));
+                enemies.add(new OctorokEnemy(250, 65));
+                enemies.add(new MoblinEnemy(630 , 420));
+                break;
+            case 6:
+                enemies.add(new OctorokEnemy(300, 430));
+                enemies.add(new OctorokEnemy(340, 430));
+                enemies.add(new MoblinEnemy(25, 190));
+                enemies.add(new MoblinEnemy(25, 240));
+                enemies.add(new MoblinEnemy(25, 290));
+                enemies.add(new OctorokEnemy(245, 60));
+                break;
+            case 7:
+                enemies.add(new OctorokEnemy(500, 50));
+                enemies.add(new OctorokEnemy(530, 50));
+                enemies.add(new OctorokEnemy(500, 430));
+                enemies.add(new OctorokEnemy(530, 430));
+                enemies.add(new OctorokEnemy(25, 200));
+                enemies.add(new OctorokEnemy(25, 240));
+                enemies.add(new OctorokEnemy(25, 280));
+                break;
+            case 8:
+                enemies.add(new MoblinEnemy(215, 125));
+                enemies.add(new MoblinEnemy(245, 125));
+                enemies.add(new MoblinEnemy(295, 125));
+                enemies.add(new MoblinEnemy(325, 125));
+                enemies.add(new OctorokEnemy(550, 60));
+                enemies.add(new OctorokEnemy(590, 60));
+                enemies.add(new OctorokEnemy(550, 380));
+                enemies.add(new OctorokEnemy(590, 380));
+                enemies.add(new OctorokEnemy(120, 220));
+                enemies.add(new OctorokEnemy(120, 260));
+                enemies.add(new OctorokEnemy(120, 300));
+                break;
+            case 9:
+                groundPotion.add(new HealthPotionEntity(384, 256));
+                break;
+            case 10:
+                break;
+            case 11:
+                gmailEntity = new GmailEntity(368, 240);
+
+            default:
+                break;
         }
+
+
+
+
+
     }
 
 
@@ -207,6 +263,7 @@ public class GameModel extends Observable {
     // -- metodi x controller --
     public void update() {
 
+        //controllo vittoria
         if (currentState == GameState.VICTORY_ANIMATION) {
             victoryTimer--;
             setChanged();
@@ -214,14 +271,18 @@ public class GameModel extends Observable {
 
             if (victoryTimer <= 0) {
                 currentState = GameState.VICTORY;
+                currentStats.addWin();
+                StatsManager.getInstance().saveStats();
                 setChanged();
                 notifyObservers("VICTORY");
             }
             return;
         }
 
+        //controllo gameover
         if (currentState == GameState.PLAYER_DEATH) {
             playerDeathTimer--;
+            StatsManager.getInstance().saveStats();
             setChanged();
             notifyObservers("GAME_UPDATE"); // notiifca view per disegnare animazione
 
@@ -233,6 +294,7 @@ public class GameModel extends Observable {
             return;
         }
 
+        //controllo gioco normale
         if (currentState != GameState.PLAYING) return;
 
         // aggiorna timer bombe
@@ -269,7 +331,7 @@ public class GameModel extends Observable {
             player.setDirection(0,0);
         }
 
-        //2. aggiorna i nemici usando gli stream
+        //aggiorna i nemici
         enemies.forEach(enemy -> {
             enemy.updateBehavior(this);
             boolean enemyHitWall = currentLevelMap.getSolidTiles()
@@ -279,7 +341,7 @@ public class GameModel extends Observable {
             }
         });
 
-
+        //controllo collissione proiettili
         projectiles.forEach(p -> {
             boolean projHitWall = currentLevelMap.getSolidTiles()
                     .anyMatch(tile -> tile.getHitbox().intersects(p.getPredictedHitbox()));
@@ -290,14 +352,14 @@ public class GameModel extends Observable {
             }
         });
 
-        //3. controllo collisioni (player vs nemici) usando gli stream
+        //controllo collisioni (player vs nemici)
         enemies.stream()
                 .filter(enemy -> enemy.getHitbox().intersects(player.getHitbox()))
                 .forEach(enemy -> player.takeDamage(enemy.getDamage()));
 
 
 
-        //4. logica dei proiettili nemici vs player
+        //logica dei proiettili nemici vs player
         projectiles.stream()
                         .filter(p -> !p.isPlayerProjectile()) //prendi in riferimento solo proiettili dai nemici
                         .filter(p -> p.getHitbox().intersects(player.getHitbox()))
@@ -307,7 +369,7 @@ public class GameModel extends Observable {
                         });
 
 
-        //5. logica dei proiettili player vs nemici
+        //logica dei proiettili player vs nemici
         projectiles.stream()
                 .filter(Projectile::isPlayerProjectile)
                 .forEach(p -> {
@@ -331,12 +393,12 @@ public class GameModel extends Observable {
         deathAnimations.removeIf(DeathAnimation::isFinished);
 
 
-        //6. raccolta rupie
-
+        //raccolta rupie
         rupees.stream()
                 .filter(r -> r.getHitbox().intersects(player.getHitbox()))
                 .forEach(r-> {
                     player.addRupees(r.getValue());
+                    currentStats.addRupees(r.getValue());
                     r.setAlive(false); //la rupia viene raccolta e rimossa
                     //AudioManager.getInstance().play(suono rupia)
                 });
@@ -363,11 +425,14 @@ public class GameModel extends Observable {
         }
 
 
-        // 7. pulizia entità morte e drop rupie
+        //pulizia entità morte e drop rupie
         enemies.removeIf(enemy -> {
             if (!enemy.isAlive()) {
                 // SPAWNA L'ANIMAZIONE DI MORTE ALLE COORDINATE DEL NEMICO
                 deathAnimations.add(new DeathAnimation(enemy.getX(), enemy.getY()));
+
+                if (enemy instanceof MoblinEnemy) currentStats.addMoblin();
+                else if (enemy instanceof OctorokEnemy) currentStats.addOctorok();
 
                 // 80% di probabilità di droppare una rupia... (il tuo codice esistente)
                 if (Math.random() < 0.80) {
@@ -378,11 +443,10 @@ public class GameModel extends Observable {
             }
             return false;
         });
-
         rupees.removeIf(rupee -> !rupee.isAlive());
         projectiles.removeIf(p -> !p.isAlive() || !screenBounds.intersects(p.getHitbox()));
 
-        // 8. LOGICA SHOPPING FISICO (Livello 10)
+        //logica shop (Livello 10)
         if (currentLevel == 10 && shop != null) {
             shop.getItemsForSale().stream()
                     .filter(ShopEntry::isAvailable)
@@ -400,7 +464,7 @@ public class GameModel extends Observable {
                     });
         }
 
-        //6. controllo gameover
+        //controllo che innesca gameover
         if (player != null && player.getHp() <= 0) {
             currentState = GameState.PLAYER_DEATH;
             playerDeathTimer = 120;
@@ -567,5 +631,6 @@ public class GameModel extends Observable {
         currentState = gameState;
     }
     public GmailEntity getGmailEntity() { return gmailEntity; }
+    public PlayerStats getCurrentStats() { return currentStats; }
 }
 

@@ -13,6 +13,8 @@ public class MenuController {
     private LayoutManager viewManager;
     private GameController gameController;
 
+    public String playerName;
+
     public MenuController(GameModel model, LayoutManager viewManager, GameController gameController) {
         this.model = model;
         this.viewManager = viewManager;
@@ -22,29 +24,38 @@ public class MenuController {
         this.viewManager.getMenuPanel().getStartButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String playerName = viewManager.getMenuPanel().getPlayerName().trim();
+                playerName = viewManager.getMenuPanel().getPlayerName().trim();
 
                 if (playerName.isEmpty()) {
                     JOptionPane.showMessageDialog(viewManager, "Inserisci un nome per iniziare!", "Errore", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                // 1. Qui salveremo il nome nel Profilo Utente del Model
-                System.out.println("Benvenuto, " + playerName);
-
-                // 2. Inizializziamo il gioco
-                model.initGame();
+                //inizializziamo il gioco
+                model.initGame(playerName);
                 gameController.startGame();
 
-                // 3. Cambiamo schermata usando il tuo Enum
+                //cambio schermata - passiamo al gioco
                 viewManager.switchScreen(Window.GIOCO);
             }
         });
 
         // Listener per il bottone Leaderboard (da implementare in seguito)
         this.viewManager.getMenuPanel().getLeaderboardButton().addActionListener(e -> {
-            System.out.println("Apertura classifica...");
-            // viewManager.switchScreen(Window.STATISTICHE);
+            //leggi dati aggiornati da file
+            viewManager.getStatistichePanel().updateStats();
+            //cambia schermata
+            viewManager.switchScreen(Window.STATISTICHE);
+        });
+
+        viewManager.getStatistichePanel().getBackButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                viewManager.switchScreen(Window.MENU);
+            }
         });
     }
+
+    //getter
+    public String getPlayerName() { return playerName ;}
 }

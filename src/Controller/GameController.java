@@ -102,6 +102,7 @@ public class GameController {
 
         if (keyController.keyPotion) {
             model.getPlayer().usePotion();
+            model.getCurrentStats().addPotion();
             keyController.keyPotion = false;
         }
 

@@ -16,16 +16,12 @@ public class LayoutManager extends JFrame{
   HUDPanel hudPanel;
   GameOverPanel gameover;
   VictoryPanel victoryPanel;
-  /*
-
-
   StatistichePanel statistiche;
-  OpzioniPanel opzioni;
+
 
 
   //la finestra è 756 x 528
 
-   */
   private LayoutManager() {
       // 1. Inizializzo i pannelli principali
       this.mainPanel = new JPanel();
@@ -54,12 +50,10 @@ public class LayoutManager extends JFrame{
       mainPanel.add(gameover, Window.GAMEOVER.name());
       mainPanel.add(victoryPanel, Window.VITTORIA.name());
 
-      /*
-        statistiche = new StatistichePanel();
-        mainPanel.add(statistiche, Window.STATISTICHE.name());
-        opzioni = new OpzioniPanel();
-        mainPanel.add(opzioni, Window.OPZIONI.name());
-       */
+     statistiche = new StatistichePanel();
+     mainPanel.add(statistiche, Window.STATISTICHE.name());
+
+
 
       // 5. Configuro la Finestra (JFrame)
       this.setTitle("The Legend of Zelda");
@@ -106,4 +100,5 @@ public class LayoutManager extends JFrame{
     public HUDPanel getHUDPanel() { return hudPanel; }
     public GameOverPanel getGameOverPanel() { return gameover; }
     public VictoryPanel getVictoryPanel() { return victoryPanel; }
+    public StatistichePanel getStatistichePanel() { return statistiche; }
 }
