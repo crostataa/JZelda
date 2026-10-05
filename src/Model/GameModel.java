@@ -1,9 +1,9 @@
 package Model;
 
 import View.AudioManager;
-import com.sun.jdi.ObjectCollectedException;
 
-import javax.swing.*;
+
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -53,8 +53,10 @@ public class GameModel extends Observable {
 
     }
 
-    //inizializza o resetta una partita
-
+    /**
+     * Inizializza o resetta una partita, impostando lo stato iniziale,
+     * il livello e le entità associate al giocatore specificato.
+     */
     public void initGame(String username) {
 
         this.enemies = new ArrayList<>();
@@ -81,6 +83,7 @@ public class GameModel extends Observable {
 
     }
 
+    /** Cambia mappa aggiornando la posizione del giocatore e ricaricando le entità. */
     public void changeLevel(int newLevelId, int startX, int startY) {
         this.currentLevel = newLevelId;
         this.currentLevelMap = new Level(currentLevel);
@@ -93,7 +96,10 @@ public class GameModel extends Observable {
         loadLevelEntities(newLevelId);
     }
 
-    // Metodo chiamato dal Controller quando il giocatore preme il tasto della bomba
+    /**
+     * Viene invocato dal Controller quando il giocatore preme il tasto per
+     * piazzare una bomba, aggiornando contatori e coordinate.
+     */
     public void placeBomb() {
         if (currentState != GameState.PLAYING) return;
 
@@ -109,13 +115,12 @@ public class GameModel extends Observable {
     }
 
 
-
-    // metodo x sparare
-
+    /** Aggiunge un proiettile alla scena per la simulazione fisica. */
     public void addProjectile(Projectile p) {
         projectiles.add(p);
     }
 
+    /** Fa sparare una freccia al giocatore calcolando direzione e velocità. */
     public void shootArrow() {
 
         if (currentState != GameState.PLAYING) return;
@@ -152,23 +157,17 @@ public class GameModel extends Observable {
                     true
             );
             projectiles.add(arrow);
-            System.out.println("Freccia scoccata! Frecce rimanenti: " + player.getArrows());
 
             setChanged();
             notifyObservers("ARROW_SHOT");
-        } else if (!player.hasBow()) {
-            System.out.println("Non hai ancora un arco!");
-        } else {
-            System.out.println("Frecce esaurite!");
+
+
         }
-
-
-
 
 
     }
 
-    //nemici nascono in posizioni diverse in base al livello
+    /** Carica nemici e oggetti specifici in base all'id del livello. */
     private void loadLevelEntities(int levelId) {
 
         enemies.clear();
@@ -261,6 +260,7 @@ public class GameModel extends Observable {
 
 
     // -- metodi x controller --
+    /** Motore principale: aggiorna logiche, movimenti, timer e risolve tutte le collisioni. */
     public void update() {
 
         //controllo vittoria
@@ -368,21 +368,19 @@ public class GameModel extends Observable {
 
 
 
-        //logica dei proiettili nemici vs player
         projectiles.stream()
-                        .filter(p -> !p.isPlayerProjectile()) //prendi in riferimento solo proiettili dai nemici
+                        .filter(p -> !p.isPlayerProjectile())
                         .filter(p -> p.getHitbox().intersects(player.getHitbox()))
                         .forEach(p->{
                             int oldHp = player.getHp();
                             player.takeDamage(p.getDamage());
                             if (player.getHp() < oldHp) {
-                                AudioManager.getInstance().playSE(11); // Link Hurt
+                                AudioManager.getInstance().playSE(11);
                             }
                             p.setAlive(false);
                         });
 
 
-        //logica dei proiettili player vs nemici
         projectiles.stream()
                 .filter(Projectile::isPlayerProjectile)
                 .forEach(p -> {
@@ -392,32 +390,26 @@ public class GameModel extends Observable {
                                 enemy.takeDamage(p.getDamage());
                                 p.setAlive(false);
 
-                                // Logica del punteggio: se il nemico muore, aumenta lo score
                                 if (!enemy.isAlive()) {
                                     score += 100;
-                                    // In futuro: probabilità di spawnare una rupia alla morte
                                 }
                             });
                 });
 
 
-        // gestione animazione morti
         deathAnimations.forEach(DeathAnimation::update);
         deathAnimations.removeIf(DeathAnimation::isFinished);
 
 
-        //raccolta rupie
         rupees.stream()
                 .filter(r -> r.getHitbox().intersects(player.getHitbox()))
                 .forEach(r-> {
                     AudioManager.getInstance().playSE(3);
                     player.addRupees(r.getValue());
                     currentStats.addRupees(r.getValue());
-                    r.setAlive(false); //la rupia viene raccolta e rimossa
-                    //AudioManager.getInstance().play(suono rupia)
+                    r.setAlive(false);
                 });
 
-        // pozione primo dungeon
         groundPotion.stream()
                 .filter( p -> p.getHitbox().intersects(player.getHitbox()))
                         .forEach( p -> {
@@ -427,14 +419,12 @@ public class GameModel extends Observable {
                         });
         groundPotion.removeIf(potion -> !potion.isAlive());
 
-        // oggetto vittoria (gmail)
         if (currentLevel == 11 && gmailEntity != null && gmailEntity.isAlive()) {
             if (player.getHitbox().intersects(gmailEntity.getHitbox())) {
                 AudioManager.getInstance().stopMusic();
                 AudioManager.getInstance().playSE(9);
                 gmailEntity.setAlive(false);
                 currentState = GameState.VICTORY_ANIMATION;
-                //modificare in base alla lunghezza della traccia audio
                 victoryTimer = 300;
                 player.setX(gmailEntity.getX());
                 player.setY(gmailEntity.getY());
@@ -442,17 +432,14 @@ public class GameModel extends Observable {
         }
 
 
-        //pulizia entità morte e drop rupie
         enemies.removeIf(enemy -> {
             if (!enemy.isAlive()) {
                 AudioManager.getInstance().playSE(4);
-                // SPAWNA L'ANIMAZIONE DI MORTE ALLE COORDINATE DEL NEMICO
                 deathAnimations.add(new DeathAnimation(enemy.getX(), enemy.getY()));
 
                 if (enemy instanceof MoblinEnemy) currentStats.addMoblin();
                 else if (enemy instanceof OctorokEnemy) currentStats.addOctorok();
 
-                // 80% di probabilità di droppare una rupia... (il tuo codice esistente)
                 if (Math.random() < 0.80) {
                     int rupeeValue = Math.random() < 0.40 ? 5 : 1;
                     rupees.add(new Rupee(enemy.getX() + 8, enemy.getY() + 8, rupeeValue));
@@ -464,26 +451,22 @@ public class GameModel extends Observable {
         rupees.removeIf(rupee -> !rupee.isAlive());
         projectiles.removeIf(p -> !p.isAlive() || !screenBounds.intersects(p.getHitbox()));
 
-        //logica shop (Livello 10)
         if (currentLevel == 10 && shop != null) {
             shop.getItemsForSale().stream()
                     .filter(ShopEntry::isAvailable)
                     .filter(entry -> entry.getHitbox().intersects(player.getHitbox()))
                     .forEach(entry -> {
-                        // Tenta di acquistare usando la TUA logica (scala rupie, mette in inventario se c'è spazio)
                         boolean success = shop.buyItem(player, entry.getItem().getName());
                         if (success) {
                             AudioManager.getInstance().playSE(3);
-                            entry.setAvailable(false); // Nasconde l'oggetto dal bancone
+                            entry.setAvailable(false);
                             System.out.println("Hai comprato: " + entry.getItem().getName());
                         } else {
-                            // Se inventario pieno o mancano rupie, Link viene "respinto" leggermente per non incastrarsi
                             player.setY(player.getY() + 10);
                         }
                     });
         }
 
-        //controllo che innesca gameover
         if (player != null && player.getHp() <= 0) {
             AudioManager.getInstance().stopMusic();
             AudioManager.getInstance().playSE(5);
@@ -497,6 +480,7 @@ public class GameModel extends Observable {
         notifyObservers("GAME_UPDATE");
     }
 
+    /** Esegue un attacco corpo a corpo calcolando l'hitbox della spada e danneggiando i nemici colpiti. */
     public void playerAttack() {
 
         if (currentState != GameState.PLAYING) return;
@@ -552,7 +536,7 @@ public class GameModel extends Observable {
                 notifyObservers("PLAYER_ATTACK");
             }
 
-    // Metodo per controllare se Link ha calpestato una porta o superato i bordi
+    /** Controlla se il giocatore ha attraversato una porta o i confini della mappa per cambiare livello. */
     private void checkLevelTransitions() {
         int mapWidth = 768;
         int mapHeight = 512;
@@ -594,7 +578,7 @@ public class GameModel extends Observable {
                 });
     }
 
-    // Navigatore esplicito della griglia del mondo (SOLO OVERWORLD)
+    /** Restituisce l'id del livello adiacente in base all'attuale e alla direzione (solo Overworld). */
     private int getAdjacentLevel(int current, String direction) {
         switch (current) {
             case 1:

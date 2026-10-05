@@ -32,7 +32,6 @@ public class GameOverController {
         this.viewManager.getGameOverPanel().getContinueButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //metodo per salvare statistiche su file
                 model.initGame(menuController.getPlayerName());
                 gameController.startGame();
 

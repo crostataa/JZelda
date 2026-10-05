@@ -28,16 +28,11 @@ public class Player extends Entity implements Damageable{
     private int arrows;
     private boolean hasBow;
 
-    //movimento ereditato dalla classe entity
-
-    //frame di invulnerabilità dopo aver subito un danno
     private int invulnerabilityTimer;
 
-    //variabili per memorizzare dove guarda link in un certo momento
     private double lastDx, lastDy;
 
     public AudioManager audioManager;
-
 
     public Player(double x, double y) {
         super(400, 300, 32, 32, 4.0);
@@ -54,12 +49,12 @@ public class Player extends Entity implements Damageable{
         this.bombs = 1;
         this.potions = 1;
         this.arrows = 10;
-        this.hasBow = true; //test, da levare*
+        this.hasBow = false; 
         audioManager = AudioManager.getInstance();
 
     }
 
-    // Metodo per avviare l'animazione
+    /** Inizia l'animazione di attacco del giocatore. */
     public void startAttack() {
         if (!isAttacking) {
             isAttacking = true;
@@ -67,28 +62,29 @@ public class Player extends Entity implements Damageable{
         }
     }
 
-    // sovrascriviamo il metodo di Entity
+    /**
+     * Imposta la direzione di movimento.
+     * Memorizza anche l'ultima direzione valida per gli attacchi.
+     */
     @Override
     public void setDirection(double dx, double dy) {
         super.setDirection(dx, dy);
 
-        // Se si sta muovendo, memorizza la direzione
         if (dx != 0 || dy != 0) {
             this.lastDx = dx;
             this.lastDy = dy;
         }
     }
 
-    // --- LOGICA POZIONE ---
-    // La pozione si usa istantaneamente, ripristina la vita e si consuma.
+    /** Usa una pozione curativa se disponibile e necessaria. */
     public void usePotion() {
         if (potions > 0 && hp < maxHp) {
             heal(maxHp); // Ripristina tutti i cuori
             potions--;
-            //audioManager.getInstance().play(/**/);
         }
     }
 
+    /** Aggiorna logica di movimento, attacchi e frame di invulnerabilità. */
     @Override
     public void update() {
         if (!isAlive()) return;
@@ -127,35 +123,31 @@ public class Player extends Entity implements Damageable{
         }
     }
 
-
-    // -- gestione salute e danni --
+    /** Applica danni al giocatore se non è attualmente invulnerabile. */
     @Override
     public void takeDamage(int damage) {
-        //subisce danni solo se non è temporaneamente vulnerabile
         if (invulnerabilityTimer <= 0) {
             this.hp -= damage;
             if (this.hp <= 0) {
                 this.hp = 0;
                 this.setAlive(false);
             }
-            //altrimenti diventa invulnerabile per circa un secondo
             invulnerabilityTimer = 60;
 
         }
     }
 
+    /** Ripristina la salute del giocatore fino al massimo consentito. */
     public void heal(int amount) {
         this.hp = Math.min(this.hp + amount, this.maxHp);
     }
 
-
-    // -- gestione rupie --
-
+    /** Aggiunge un quantitativo di rupie al portafoglio. */
     public void addRupees(int amount) {
         this.rupees += amount;
     }
 
-
+    /** Tenta di spendere rupie, restituendo true se i fondi sono sufficienti. */
     public boolean spendRupees(int amount) {
         if (this.rupees >= amount) {
             this.rupees -= amount;
@@ -164,19 +156,17 @@ public class Player extends Entity implements Damageable{
         return false;
     }
 
-    // -- gestione inventario --
-
+    /** Aggiunge un oggetto all'inventario se non è pieno. */
     public boolean addItem(Item item) {
         if (inventory.size() < MAX_ITEMS) {
             inventory.add(item);
 
-            // AGGIORNA I CONTATORI PER L'HUD IN BASE AL TIPO DI OGGETTO ACQUISTATO
             if (item instanceof BombItem) {
-                addBombs(5);  // Aggiunge 5 bombe (come definito nella logica del BombItem)
+                addBombs(5);
             } else if (item instanceof HealthPotionItem) {
-                addPotions(1); // Aggiunge 1 pozione
+                addPotions(1);
             } else if (item instanceof ArrowItem) {
-                addArrows(10); // Aggiunge 10 frecce (come definito in ArrowItem)
+                addArrows(10);
             }
 
             return true;
@@ -194,11 +184,8 @@ public class Player extends Entity implements Damageable{
     public int getMaxHp() { return maxHp; }
     public int getRupees() { return rupees; }
     public boolean isAttacking() { return isAttacking; }
-    public List<Item> getInventory() { return inventory; }
     public double getLastDx() { return lastDx; }
     public double getLastDy() { return lastDy; }
-    public double setX(double coordX) { return this.x = coordX;}
-    public double setY(double coordY) { return this.y = coordY;}
 
     public int getBombs() { return bombs; }
     public void addBombs(int amount) { this.bombs += amount; }

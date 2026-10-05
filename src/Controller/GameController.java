@@ -31,14 +31,13 @@ public class GameController {
     }
 
 
+    /** Inizializza il timer principale che gestisce gli update a 60 FPS (circa 16ms). */
     private void initGameloop() {
 
         gameloop = new Timer(16, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 processInput();
-
-                //aggiorna la logica e calcola le collisioni
                 model.update();
 
 //                }
@@ -58,14 +57,17 @@ public class GameController {
         });
     }
 
+    /** Avvia l'esecuzione continua del game loop. */
     public void startGame() {
         gameloop.start();
     }
 
+    /** Ferma l'esecuzione del game loop. */
     public void stopGame() {
         gameloop.stop();
     }
 
+    /** Traduce l'input utente intercettato in azioni nel GameModel. */
     private void processInput() {
         if (model.getCurrentState() != GameState.PLAYING) return;
 
@@ -88,9 +90,6 @@ public class GameController {
         // impostazione direzione (niente diagonali, quindi niente normalizzazione)
         player.setDirection(dx, dy);
 
-
-        // -- gestione attacchi --
-
         if (keyController.keyBow) {
             AudioManager.getInstance().playSE(7);
             model.shootArrow();
@@ -102,8 +101,6 @@ public class GameController {
             model.playerAttack();
             keyController.attack = false; // si resetta in automatico per evitare spam
         }
-
-        // -- gestione oggetti --
 
         if (keyController.keyPotion) {
             AudioManager.getInstance().playSE(12);

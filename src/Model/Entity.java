@@ -1,5 +1,5 @@
 package Model;
-import org.w3c.dom.css.Rect;
+
 
 import java.awt.Rectangle;
 
@@ -34,15 +34,15 @@ public abstract class Entity {
 
 
 
-    // Metodo astratto che ogni entità dovrà implementare (es. per muoversi)
+    /** Viene chiamato dal Model a ogni frame per aggiornare logiche specifiche (es. animazioni o posizioni). */
     public abstract void update();
 
-    // Utile per gestire le collisioni nel Model usando gli Stream
+    /** Restituisce l'area di collisione attuale dell'entità per i calcoli fisici. */
     public Rectangle getHitbox() {
         return new Rectangle((int)x, (int)y, width, height);
     }
 
-    //prediciamo dove si troverà l'entità dopo il suo spostamento, in modo da non incastrarsi nei muri
+    /** Calcola la posizione futura in base a velocità e direzione per prevenire compenetrazioni (muri). */
     public Rectangle getPredictedHitbox() {
         int nextX = (int) (x + dx * speed);
         int nextY = (int) (y + dy * speed);
@@ -50,7 +50,7 @@ public abstract class Entity {
 
     }
 
-    // tutte le entità possono cambiare direzione
+    /** Cambia i vettori di direzione corrente. */
     public void setDirection(double dx, double dy) {
         this.dx = dx;
         this.dy = dy;
@@ -62,6 +62,8 @@ public abstract class Entity {
     public abstract int getHp();
     public double getX() { return x; }
     public double getY() { return y; }
+    public void setX(double x) { this.x = x; }
+    public void setY(double y) { this.y = y; }
     public boolean isAlive() { return isAlive; }
     public void setAlive(boolean alive) { this.isAlive = alive; }
     public double getDx() { return dx; }

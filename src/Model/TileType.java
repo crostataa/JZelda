@@ -8,7 +8,6 @@ public enum TileType {
 
     GROUND(false),
     WALL(true),
-    WATER(true),
     DOOR(false);
 
     private final boolean solid;

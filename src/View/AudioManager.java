@@ -42,7 +42,6 @@ public class AudioManager {
         }
     }
 
-    //gestione musica di sottofondo
     public void playMusic(int i) {
         setFile(i);
         clip.start();
@@ -55,7 +54,6 @@ public class AudioManager {
         }
     }
 
-    //gestione effetti sonori
     public void playSE(int i) {
         try {
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
