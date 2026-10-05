@@ -412,7 +412,7 @@ public class GamePanel extends JPanel implements Observer {
             negativeLinkSprite = createNegativeImage(linkSprite);
         }
 
-        int elapsedFrames = 120 - model.getPlayerDeathTimer();
+        int elapsedFrames = 180 - model.getPlayerDeathTimer();
 
         //alternanza colori
         BufferedImage spriteToDraw = ((elapsedFrames / 4) % 2 == 0 && negativeLinkSprite  != null) ? negativeLinkSprite : linkSprite;

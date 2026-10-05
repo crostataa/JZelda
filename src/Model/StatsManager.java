@@ -25,7 +25,7 @@ public class StatsManager {
 
     public PlayerStats statsPlayer(String username) {
         if (username == null || username.trim().isEmpty()) {
-            username = "Ospite";
+            username = "Stefano";
         }
         if (!database.containsKey(username)) {
             database.put(username, new PlayerStats(username));

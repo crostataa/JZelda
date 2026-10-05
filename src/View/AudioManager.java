@@ -9,17 +9,25 @@ public class AudioManager {
 
     static Clip clip;
     static URL[] soundURL = new URL[30];
-    float previousVolume = 0;
-    float currentVolume = 0;
     static FloatControl fc;
-    boolean mute = false;
     static AudioManager instance;
 
 
     private AudioManager() {
 
-        soundURL[0] = getClass().getResource("");
-        soundURL[1] = getClass().getResource("");
+        soundURL[0] = getClass().getResource("/assets/titleScreen.wav");
+        soundURL[1] = getClass().getResource("/assets/overworld.wav");
+        soundURL[2] = getClass().getResource("/assets/linkAttack.wav");
+        soundURL[3] = getClass().getResource("/assets/getItem.wav");
+        soundURL[4] = getClass().getResource("/assets/enemyDeath.wav");
+        soundURL[5] = getClass().getResource("/assets/linkDie.wav");
+        soundURL[6] = getClass().getResource("/assets/gameOver.wav");
+        soundURL[7] = getClass().getResource("/assets/arrow 2.wav");
+        soundURL[8] = getClass().getResource("/assets/bomb explode.wav");
+        soundURL[9] = getClass().getResource("/assets/ending.wav");
+        soundURL[10] = getClass().getResource("/assets/fighter sword 1.wav");
+        soundURL[11] = getClass().getResource("/assets/link hurt.wav");
+        soundURL[12] = getClass().getResource("/assets/life refill.wav");
     }
 
     public static void setFile(int i) {
@@ -29,54 +37,36 @@ public class AudioManager {
             clip.open(ais);
             fc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 
-        } catch(Exception e) {}
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void play() {
-        clip.setFramePosition(0);
+    //gestione musica di sottofondo
+    public void playMusic(int i) {
+        setFile(i);
         clip.start();
-
-    }
-
-    public void loop() {
         clip.loop(Clip.LOOP_CONTINUOUSLY);
-
     }
 
-    public void stop() {
-        clip.stop();
-    }
-
-    public void volumeUp() {
-        currentVolume += 1.0f;
-        if (currentVolume > 6.0f) {
-            currentVolume = 6.0f;
+    public void stopMusic() {
+        if (clip != null) {
+            clip.stop();
         }
-        fc.setValue(currentVolume);
     }
 
-    public void volumeDown() {
-        currentVolume -= 1.0f;
-        if (currentVolume < -80.0f) {
-            currentVolume = -80.0f;
+    //gestione effetti sonori
+    public void playSE(int i) {
+        try {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
+            Clip seClip = AudioSystem.getClip();
+            seClip.open(ais);
+            seClip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        fc.setValue(currentVolume);
     }
 
-    public void volumeMute() {
-        if (!mute) {
-            previousVolume = currentVolume;
-            currentVolume = -80.0f;
-            fc.setValue(currentVolume);
-            mute = true;
-        }
-        else if(mute) {
-            currentVolume = previousVolume;
-            fc.setValue(currentVolume);
-            mute = false;
-        }
-
-    }
 
     public static AudioManager getInstance() {
 

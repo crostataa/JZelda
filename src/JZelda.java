@@ -27,13 +27,15 @@ public class JZelda {
 
         MenuController menuController = new MenuController(model, viewManager, gameController);
 
-        GameOverController gameOverController = new GameOverController(model, viewManager, gameController);
+        GameOverController gameOverController = new GameOverController(model, viewManager, gameController, menuController);
 
         //uniamo keyListener a gamePanel
         viewManager.getGamePanel().addKeyListener(gameController.getKeyController());
 
         //avvio gameloop
         gameController.startGame();
+
+        View.AudioManager.getInstance().playMusic(0);
 
     }
 

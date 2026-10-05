@@ -48,7 +48,7 @@ public class GameModel extends Observable {
 
     public GameModel() {
 
-        initGame("Ospite");
+        initGame("Stefano");
         this.currentState = GameState.MENU;
 
     }
@@ -304,17 +304,20 @@ public class GameModel extends Observable {
         activeBombs.stream()
                         .filter(BombEntity::hasExploded)
                                 .forEach(bomb -> {
+                                    AudioManager.getInstance().playSE(8);
                                     Rectangle blastRadius = bomb.getExplosionHitbox();
-
                                     //nemici coinvolti nell'esplosione
                                     enemies.stream()
                                             .filter(enemy -> enemy.getHitbox().intersects(blastRadius))
                                             .forEach(enemy -> enemy.takeDamage(bomb.getDamage()));
                                     //le bombe danneggiano anche link
                                     if (player.getHitbox().intersects(blastRadius)) {
+                                        int oldHp = player.getHp();
                                         player.takeDamage(1);
+                                        if (player.getHp() < oldHp) {
+                                            AudioManager.getInstance().playSE(11); // Suono Link Ferito
+                                        }
                                     }
-                                    //AudioManager.getInstance().play(/**/);
                                 });
         activeBombs.removeIf(bomb -> !bomb.isAlive());
 
@@ -355,7 +358,13 @@ public class GameModel extends Observable {
         //controllo collisioni (player vs nemici)
         enemies.stream()
                 .filter(enemy -> enemy.getHitbox().intersects(player.getHitbox()))
-                .forEach(enemy -> player.takeDamage(enemy.getDamage()));
+                .forEach(enemy -> {
+                    int oldHp = player.getHp();
+                    player.takeDamage(enemy.getDamage());
+                    if (player.getHp() < oldHp) {
+                        AudioManager.getInstance().playSE(11); // Link Hurt
+                    }
+                });
 
 
 
@@ -364,8 +373,12 @@ public class GameModel extends Observable {
                         .filter(p -> !p.isPlayerProjectile()) //prendi in riferimento solo proiettili dai nemici
                         .filter(p -> p.getHitbox().intersects(player.getHitbox()))
                         .forEach(p->{
+                            int oldHp = player.getHp();
                             player.takeDamage(p.getDamage());
-                            p.setAlive(false); //il proiettile si elimina dopo aver colpito
+                            if (player.getHp() < oldHp) {
+                                AudioManager.getInstance().playSE(11); // Link Hurt
+                            }
+                            p.setAlive(false);
                         });
 
 
@@ -397,6 +410,7 @@ public class GameModel extends Observable {
         rupees.stream()
                 .filter(r -> r.getHitbox().intersects(player.getHitbox()))
                 .forEach(r-> {
+                    AudioManager.getInstance().playSE(3);
                     player.addRupees(r.getValue());
                     currentStats.addRupees(r.getValue());
                     r.setAlive(false); //la rupia viene raccolta e rimossa
@@ -407,6 +421,7 @@ public class GameModel extends Observable {
         groundPotion.stream()
                 .filter( p -> p.getHitbox().intersects(player.getHitbox()))
                         .forEach( p -> {
+                            AudioManager.getInstance().playSE(3);
                             player.addPotions(1);
                             p.setAlive(false);
                         });
@@ -415,6 +430,8 @@ public class GameModel extends Observable {
         // oggetto vittoria (gmail)
         if (currentLevel == 11 && gmailEntity != null && gmailEntity.isAlive()) {
             if (player.getHitbox().intersects(gmailEntity.getHitbox())) {
+                AudioManager.getInstance().stopMusic();
+                AudioManager.getInstance().playSE(9);
                 gmailEntity.setAlive(false);
                 currentState = GameState.VICTORY_ANIMATION;
                 //modificare in base alla lunghezza della traccia audio
@@ -428,6 +445,7 @@ public class GameModel extends Observable {
         //pulizia entità morte e drop rupie
         enemies.removeIf(enemy -> {
             if (!enemy.isAlive()) {
+                AudioManager.getInstance().playSE(4);
                 // SPAWNA L'ANIMAZIONE DI MORTE ALLE COORDINATE DEL NEMICO
                 deathAnimations.add(new DeathAnimation(enemy.getX(), enemy.getY()));
 
@@ -455,6 +473,7 @@ public class GameModel extends Observable {
                         // Tenta di acquistare usando la TUA logica (scala rupie, mette in inventario se c'è spazio)
                         boolean success = shop.buyItem(player, entry.getItem().getName());
                         if (success) {
+                            AudioManager.getInstance().playSE(3);
                             entry.setAvailable(false); // Nasconde l'oggetto dal bancone
                             System.out.println("Hai comprato: " + entry.getItem().getName());
                         } else {
@@ -466,8 +485,10 @@ public class GameModel extends Observable {
 
         //controllo che innesca gameover
         if (player != null && player.getHp() <= 0) {
+            AudioManager.getInstance().stopMusic();
+            AudioManager.getInstance().playSE(5);
             currentState = GameState.PLAYER_DEATH;
-            playerDeathTimer = 120;
+            playerDeathTimer = 180;
         }
 
         //5. notifica la view

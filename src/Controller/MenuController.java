@@ -1,9 +1,11 @@
 package Controller;
 
 import Model.GameModel;
+import View.AudioManager;
 import View.LayoutManager;
 import View.Window;
 import javax.swing.JOptionPane;
+import javax.swing.text.View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,6 +22,7 @@ public class MenuController {
         this.viewManager = viewManager;
         this.gameController = gameController;
 
+
         // Listener per il bottone Start
         this.viewManager.getMenuPanel().getStartButton().addActionListener(new ActionListener() {
             @Override
@@ -34,6 +37,10 @@ public class MenuController {
                 //inizializziamo il gioco
                 model.initGame(playerName);
                 gameController.startGame();
+
+                //stop audio menu e start audio gioco
+                AudioManager.getInstance().stopMusic();
+                AudioManager.getInstance().playMusic(1);
 
                 //cambio schermata - passiamo al gioco
                 viewManager.switchScreen(Window.GIOCO);

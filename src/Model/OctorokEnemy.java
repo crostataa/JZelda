@@ -1,5 +1,7 @@
 package Model;
 
+import View.AudioManager;
+
 public class OctorokEnemy extends Enemy{
 
     private int shootCooldown;
@@ -29,8 +31,8 @@ public class OctorokEnemy extends Enemy{
             this.speed = 1.0; // Torna a muoversi per fuggire
             this.setDirection(-(diffX / distance), -(diffY / distance));
         } else {
-            this.speed = 0; // Si ferma fisicamente per mirare...
-            // ...ma imposta la direzione verso Link per girare lo sprite!
+            this.speed = 0; // Si ferma fisicamente per mirare
+            // imposta la direzione verso Link per girare lo sprite
             if (Math.abs(diffX) > Math.abs(diffY)) {
                 this.setDirection(Math.signum(diffX), 0);
             } else {
@@ -68,6 +70,7 @@ public class OctorokEnemy extends Enemy{
                 this.damage,
                 false // È un proiettile nemico
         );
+        AudioManager.getInstance().playSE(7);
 
         model.addProjectile(p);
     }

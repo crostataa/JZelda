@@ -38,7 +38,7 @@ public class LayoutManager extends JFrame{
       this.hudPanel.setPreferredSize(new Dimension(768, 192));
       this.game.setPreferredSize(new Dimension(768, 512));
     //totale: 768 x 704
-      // 3. CREO IL WRAPPER PER IL GIOCO (Unisce HUD e MAPPA)
+      // 3. WRAPPER PER IL GIOCO (Unisce HUD e MAPPA)
       JPanel gameContainer = new JPanel();
       gameContainer.setLayout(new BorderLayout());
       gameContainer.add(hudPanel, BorderLayout.NORTH);

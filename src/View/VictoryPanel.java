@@ -20,10 +20,21 @@ public class VictoryPanel extends JPanel {
 
     private Timer timerAnimazione;
 
+    private JButton menuButton;
+
     public VictoryPanel() {
 
         this.setBackground(Color.BLACK);
         this.setLayout(null);
+
+        menuButton = new JButton("MENU");
+        menuButton.setFont(FontManager.getFont(20f));
+        menuButton.setBackground(Color.DARK_GRAY);
+        menuButton.setForeground(Color.WHITE);
+        menuButton.setFocusPainted(false);
+        menuButton.setBounds(20, 20, 120, 40); // (X, Y, larghezza, altezza) -> In alto a sinistra
+        menuButton.setVisible(false); // Inizialmente invisibile
+        this.add(menuButton);
 
         //timer da 50ms per effetto typewriter
         timerAnimazione = new Timer(100, new ActionListener() {
@@ -38,6 +49,10 @@ public class VictoryPanel extends JPanel {
                 } else {
                     if (tickRitardo < 20) {
                         tickRitardo++;
+                    } else {
+                        if (!menuButton.isVisible()) {
+                            menuButton.setVisible(true);
+                        }
                     }
                 }
                 repaint();
@@ -86,5 +101,8 @@ public class VictoryPanel extends JPanel {
 
 
     }
+
+    //getter
+    public JButton getMenuButton() { return menuButton; }
 
 }

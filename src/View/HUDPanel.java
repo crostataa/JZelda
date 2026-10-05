@@ -42,7 +42,7 @@ public class HUDPanel extends JPanel implements Observer {
         Graphics2D g2d = (Graphics2D) g;
 
         // 1. Carica e disegna lo sfondo dell'HUD
-        BufferedImage hudBg = SpriteManager.getInstance().getSprite("/assets/HUDDef.png");
+        BufferedImage hudBg = SpriteManager.getInstance().getSprite("/assets/HUDdefdef.png");
 
         if (hudBg != null) {
             g2d.drawImage(hudBg, 0, 0, getWidth(), getHeight(), null);

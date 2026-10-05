@@ -3,11 +3,13 @@ package Controller;
 import Model.GameModel;
 import Model.GameState;
 import Model.Player;
+import View.AudioManager;
 import View.GamePanel;
 import View.LayoutManager;
 import View.Window;
 
 import javax.swing.*;
+import javax.swing.text.View;
 import java.awt.event.*;
 
 public class GameController {
@@ -42,6 +44,7 @@ public class GameController {
 //                }
                 //la view si aggiorna in automatico con observer/observable, non c'è bisogno di usare setChanged() etc.
                 if (model.getCurrentState() == GameState.GAME_OVER) {
+                    AudioManager.getInstance().playMusic(6);
                     stopGame();
                     view.switchScreen(Window.GAMEOVER);
                 }
@@ -89,11 +92,13 @@ public class GameController {
         // -- gestione attacchi --
 
         if (keyController.keyBow) {
+            AudioManager.getInstance().playSE(7);
             model.shootArrow();
             keyController.keyBow = false; // Forza il rilascio (no mitragliatrice)
         }
 
         if (keyController.attack) {
+            AudioManager.getInstance().playSE(10);
             model.playerAttack();
             keyController.attack = false; // si resetta in automatico per evitare spam
         }
@@ -101,6 +106,7 @@ public class GameController {
         // -- gestione oggetti --
 
         if (keyController.keyPotion) {
+            AudioManager.getInstance().playSE(12);
             model.getPlayer().usePotion();
             model.getCurrentStats().addPotion();
             keyController.keyPotion = false;
