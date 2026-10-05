@@ -31,7 +31,7 @@ public class GameController {
     }
 
 
-    /** Inizializza il timer principale che gestisce gli update a 60 FPS (circa 16ms). */
+    //Inizializza il timer principale che gestisce gli update a 60 FPS (circa 16ms).
     private void initGameloop() {
 
         gameloop = new Timer(16, new ActionListener() {
@@ -57,17 +57,17 @@ public class GameController {
         });
     }
 
-    /** Avvia l'esecuzione continua del game loop. */
+    // Avvia l'esecuzione continua del game loop.
     public void startGame() {
         gameloop.start();
     }
 
-    /** Ferma l'esecuzione del game loop. */
+    // Ferma l'esecuzione del game loop.
     public void stopGame() {
         gameloop.stop();
     }
 
-    /** Traduce l'input utente intercettato in azioni nel GameModel. */
+    // Traduce l'input utente intercettato in azioni nel GameModel.
     private void processInput() {
         if (model.getCurrentState() != GameState.PLAYING) return;
 

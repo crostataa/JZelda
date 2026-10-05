@@ -34,15 +34,15 @@ public abstract class Entity {
 
 
 
-    /** Viene chiamato dal Model a ogni frame per aggiornare logiche specifiche (es. animazioni o posizioni). */
+    // Viene chiamato dal Model a ogni frame per aggiornare logiche specifiche (es. animazioni o posizioni).
     public abstract void update();
 
-    /** Restituisce l'area di collisione attuale dell'entità per i calcoli fisici. */
+    // Restituisce l'area di collisione attuale dell'entità per i calcoli fisici.
     public Rectangle getHitbox() {
         return new Rectangle((int)x, (int)y, width, height);
     }
 
-    /** Calcola la posizione futura in base a velocità e direzione per prevenire compenetrazioni (muri). */
+    // Calcola la posizione futura in base a velocità e direzione per prevenire compenetrazioni (muri).
     public Rectangle getPredictedHitbox() {
         int nextX = (int) (x + dx * speed);
         int nextY = (int) (y + dy * speed);
@@ -50,7 +50,7 @@ public abstract class Entity {
 
     }
 
-    /** Cambia i vettori di direzione corrente. */
+    // Cambia i vettori di direzione corrente.
     public void setDirection(double dx, double dy) {
         this.dx = dx;
         this.dy = dy;

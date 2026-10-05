@@ -11,7 +11,7 @@ public class ShopModel {
         loadShop();
     }
 
-    /** Popola lo shop con gli oggetti di base e le rispettive posizioni grafiche. */
+    // Popola lo shop con gli oggetti di base e le rispettive posizioni grafiche.
     private void loadShop() {
         // Le coordinate (X, Y) li posizionano sotto i fuochi del tuo background "shop.png"
         itemsForSale.add(new ShopEntry(new HealthPotionItem(), 30, 468, 250)); // Destra
@@ -24,7 +24,7 @@ public class ShopModel {
         return itemsForSale;
     }
 
-    /** Permette l'acquisto di un oggetto se il giocatore ha rupie sufficienti e spazio in inventario. */
+    // Permette l'acquisto di un oggetto se il giocatore ha rupie sufficienti e spazio in inventario.
     public boolean buyItem(Player player, String itemName) {
 
         //1. verifichiamo che l'oggetto richiesto sia in vendita

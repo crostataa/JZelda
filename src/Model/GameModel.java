@@ -53,10 +53,10 @@ public class GameModel extends Observable {
 
     }
 
-    /**
-     * Inizializza o resetta una partita, impostando lo stato iniziale,
-     * il livello e le entità associate al giocatore specificato.
-     */
+
+     //Inizializza o resetta una partita, impostando lo stato iniziale,
+     //il livello e le entità associate al giocatore specificato.
+
     public void initGame(String username) {
 
         this.enemies = new ArrayList<>();
@@ -83,7 +83,7 @@ public class GameModel extends Observable {
 
     }
 
-    /** Cambia mappa aggiornando la posizione del giocatore e ricaricando le entità. */
+    // Cambia mappa aggiornando la posizione del giocatore e ricaricando le entità.
     public void changeLevel(int newLevelId, int startX, int startY) {
         this.currentLevel = newLevelId;
         this.currentLevelMap = new Level(currentLevel);
@@ -96,10 +96,10 @@ public class GameModel extends Observable {
         loadLevelEntities(newLevelId);
     }
 
-    /**
-     * Viene invocato dal Controller quando il giocatore preme il tasto per
-     * piazzare una bomba, aggiornando contatori e coordinate.
-     */
+
+     //Viene invocato dal Controller quando il giocatore preme il tasto per
+     //piazzare una bomba, aggiornando contatori e coordinate.
+
     public void placeBomb() {
         if (currentState != GameState.PLAYING) return;
 
@@ -115,12 +115,12 @@ public class GameModel extends Observable {
     }
 
 
-    /** Aggiunge un proiettile alla scena per la simulazione fisica. */
+    // Aggiunge un proiettile alla scena per la simulazione fisica.
     public void addProjectile(Projectile p) {
         projectiles.add(p);
     }
 
-    /** Fa sparare una freccia al giocatore calcolando direzione e velocità. */
+    // Fa sparare una freccia al giocatore calcolando direzione e velocità.
     public void shootArrow() {
 
         if (currentState != GameState.PLAYING) return;
@@ -133,7 +133,7 @@ public class GameModel extends Observable {
             double arrowSpeed = 5.0;
             double projDx = 0;
             double projDy = 0;
-            int arrowDamage = 3; /**/
+            int arrowDamage = 3; ///
 
             // Se sta guardando a destra o sinistra
             if (player.getLastDx() > 0) projDx = arrowSpeed;
@@ -167,7 +167,7 @@ public class GameModel extends Observable {
 
     }
 
-    /** Carica nemici e oggetti specifici in base all'id del livello. */
+    // Carica nemici e oggetti specifici in base all'id del livello.
     private void loadLevelEntities(int levelId) {
 
         enemies.clear();
@@ -260,7 +260,7 @@ public class GameModel extends Observable {
 
 
     // -- metodi x controller --
-    /** Motore principale: aggiorna logiche, movimenti, timer e risolve tutte le collisioni. */
+    // Motore principale: aggiorna logiche, movimenti, timer e risolve tutte le collisioni.
     public void update() {
 
         //controllo vittoria
@@ -480,7 +480,7 @@ public class GameModel extends Observable {
         notifyObservers("GAME_UPDATE");
     }
 
-    /** Esegue un attacco corpo a corpo calcolando l'hitbox della spada e danneggiando i nemici colpiti. */
+    // Esegue un attacco corpo a corpo calcolando l'hitbox della spada e danneggiando i nemici colpiti.
     public void playerAttack() {
 
         if (currentState != GameState.PLAYING) return;
@@ -536,13 +536,13 @@ public class GameModel extends Observable {
                 notifyObservers("PLAYER_ATTACK");
             }
 
-    /** Controlla se il giocatore ha attraversato una porta o i confini della mappa per cambiare livello. */
+    // Controlla se il giocatore ha attraversato una porta o i confini della mappa per cambiare livello.
     private void checkLevelTransitions() {
         int mapWidth = 768;
         int mapHeight = 512;
         int playerSize = 32;
 
-        // 1. TRANSIZIONI OVERWORLD (Tutte e 4 le direzioni)
+        // 1. TRANSIZIONI MAPPA (Tutte e 4 le direzioni)
         if (player.getX() < 0) {
             int nextLevel = getAdjacentLevel(currentLevel, "LEFT");
             if (nextLevel != -1) changeLevel(nextLevel, mapWidth - playerSize, (int)player.getY());
@@ -578,7 +578,7 @@ public class GameModel extends Observable {
                 });
     }
 
-    /** Restituisce l'id del livello adiacente in base all'attuale e alla direzione (solo Overworld). */
+    // Restituisce l'id del livello adiacente in base all'attuale e alla direzione
     private int getAdjacentLevel(int current, String direction) {
         switch (current) {
             case 1:

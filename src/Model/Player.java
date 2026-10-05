@@ -54,7 +54,7 @@ public class Player extends Entity implements Damageable{
 
     }
 
-    /** Inizia l'animazione di attacco del giocatore. */
+    // Inizia l'animazione di attacco del giocatore.
     public void startAttack() {
         if (!isAttacking) {
             isAttacking = true;
@@ -62,10 +62,10 @@ public class Player extends Entity implements Damageable{
         }
     }
 
-    /**
-     * Imposta la direzione di movimento.
-     * Memorizza anche l'ultima direzione valida per gli attacchi.
-     */
+    //
+     //Imposta la direzione di movimento.
+     //Memorizza anche l'ultima direzione valida per gli attacchi.
+
     @Override
     public void setDirection(double dx, double dy) {
         super.setDirection(dx, dy);
@@ -76,7 +76,7 @@ public class Player extends Entity implements Damageable{
         }
     }
 
-    /** Usa una pozione curativa se disponibile e necessaria. */
+    // Usa una pozione curativa se disponibile e necessaria.
     public void usePotion() {
         if (potions > 0 && hp < maxHp) {
             heal(maxHp); // Ripristina tutti i cuori
@@ -84,7 +84,7 @@ public class Player extends Entity implements Damageable{
         }
     }
 
-    /** Aggiorna logica di movimento, attacchi e frame di invulnerabilità. */
+    // Aggiorna logica di movimento, attacchi e frame di invulnerabilità.
     @Override
     public void update() {
         if (!isAlive()) return;
@@ -123,7 +123,7 @@ public class Player extends Entity implements Damageable{
         }
     }
 
-    /** Applica danni al giocatore se non è attualmente invulnerabile. */
+    // Applica danni al giocatore se non è attualmente invulnerabile.
     @Override
     public void takeDamage(int damage) {
         if (invulnerabilityTimer <= 0) {
@@ -137,17 +137,17 @@ public class Player extends Entity implements Damageable{
         }
     }
 
-    /** Ripristina la salute del giocatore fino al massimo consentito. */
+    // Ripristina la salute del giocatore fino al massimo consentito.
     public void heal(int amount) {
         this.hp = Math.min(this.hp + amount, this.maxHp);
     }
 
-    /** Aggiunge un quantitativo di rupie al portafoglio. */
+    // Aggiunge un quantitativo di rupie al portafoglio.
     public void addRupees(int amount) {
         this.rupees += amount;
     }
 
-    /** Tenta di spendere rupie, restituendo true se i fondi sono sufficienti. */
+    // Tenta di spendere rupie, restituendo true se i fondi sono sufficienti.
     public boolean spendRupees(int amount) {
         if (this.rupees >= amount) {
             this.rupees -= amount;
@@ -156,7 +156,7 @@ public class Player extends Entity implements Damageable{
         return false;
     }
 
-    /** Aggiunge un oggetto all'inventario se non è pieno. */
+    // Aggiunge un oggetto all'inventario se non è pieno.
     public boolean addItem(Item item) {
         if (inventory.size() < MAX_ITEMS) {
             inventory.add(item);
