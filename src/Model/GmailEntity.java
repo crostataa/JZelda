@@ -23,10 +23,6 @@ public class GmailEntity extends Entity{
 
     // ----getter e setter -----
     public Rectangle getHitbox() {return new Rectangle((int) x, (int) y, 22, 19);}
-    @Override
-    public int getHp() {
-        return 0;
-    }
     public boolean isAlive() { return alive; }
     public void setAlive(boolean alive) { this.alive = alive; }
     public double getY() {return y;}

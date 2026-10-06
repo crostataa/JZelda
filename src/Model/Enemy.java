@@ -1,6 +1,6 @@
 package Model;
 
-public abstract class Enemy extends Entity {
+public abstract class Enemy extends Entity implements Damageable {
     protected int hp;
     protected int damage;
 

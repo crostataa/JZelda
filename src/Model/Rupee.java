@@ -10,12 +10,6 @@ public class Rupee extends Entity{
     }
 
     @Override
-    public int getHp() {
-        return 0;
-    }
-
-
-    @Override
     public void update() {
 
     }

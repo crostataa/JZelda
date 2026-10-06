@@ -37,9 +37,4 @@ public class HealthPotionEntity extends Entity{
     public Rectangle getHitbox() {
         return new Rectangle((int) x, (int) y, 8, 16);
     }
-
-    @Override
-    public int getHp() {
-        return 0;
-    }
 }

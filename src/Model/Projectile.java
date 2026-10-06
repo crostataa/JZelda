@@ -23,11 +23,6 @@ public class Projectile extends Entity {
 
 
     @Override
-    public int getHp() {
-        return 0;
-    }
-
-    @Override
     public void update() {
     //il proiettile viaggia in linea retta
         this.x += dx * speed;

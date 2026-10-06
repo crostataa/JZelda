@@ -59,7 +59,6 @@ public abstract class Entity {
 
 
     // -- getter e setter --
-    public abstract int getHp();
     public double getX() { return x; }
     public double getY() { return y; }
     public void setX(double x) { this.x = x; }
@@ -68,8 +67,6 @@ public abstract class Entity {
     public void setAlive(boolean alive) { this.isAlive = alive; }
     public double getDx() { return dx; }
     public double getDy() { return dy; }
-
-    public void takeDamage(int damage) {}
 
     public int getSpriteNum() {return spriteNum;}
 }

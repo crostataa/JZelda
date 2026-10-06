@@ -10,6 +10,5 @@ public class ArrowItem extends Item {
     @Override
     public void usa(Player player) {
         player.addArrows(10);
-        System.out.println("Hai comprato 10 frecce! Totale: " + player.getArrows());
     }
 }

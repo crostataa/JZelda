@@ -9,6 +9,5 @@ public class BombItem extends Item {
     @Override
     public void usa(Player player) {
         player.addBombs(5);
-        System.out.println("Hai trovato delle bombe! Totale: " + player.getBombs());
     }
 }

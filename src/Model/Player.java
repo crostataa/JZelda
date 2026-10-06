@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class Player extends Entity implements Damageable{
+public class Player extends Entity implements Damageable {
 
     //attributi di gioco
     private int hp;

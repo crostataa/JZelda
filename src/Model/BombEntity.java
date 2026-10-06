@@ -59,9 +59,5 @@ public class BombEntity extends Entity {
 
     // -- getter --
     public int getTimer() { return timer; }
-    @Override
-    public int getHp() {
-        return 0;
-    }
     public int getDamage() { return damage; }
 }
