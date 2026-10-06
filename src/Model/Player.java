@@ -49,7 +49,7 @@ public class Player extends Entity implements Damageable {
         this.bombs = 1;
         this.potions = 1;
         this.arrows = 10;
-        this.hasBow = false; 
+        this.hasBow = true;
         audioManager = AudioManager.getInstance();
 
     }

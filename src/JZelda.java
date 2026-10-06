@@ -1,5 +1,6 @@
 import Controller.GameOverController;
 import Controller.MenuController;
+import Controller.VictoryController;
 import Model.GameModel;
 import View.LayoutManager;
 import Controller.GameController;
@@ -28,6 +29,8 @@ public class JZelda {
         MenuController menuController = new MenuController(model, viewManager, gameController);
 
         GameOverController gameOverController = new GameOverController(model, viewManager, gameController, menuController);
+
+        VictoryController victoryController = new VictoryController(model, viewManager);
 
         //uniamo keyListener a gamePanel
         viewManager.getGamePanel().addKeyListener(gameController.getKeyController());

@@ -260,10 +260,12 @@ public class GameModel extends Observable {
 
 
     // -- metodi x controller --
-    // Motore principale: aggiorna logiche, movimenti, timer e risolve tutte le collisioni.
+    /** Motore principale: aggiorna logiche, movimenti, timer e risolve tutte le collisioni. */
     public void update() {
 
-        //controllo vittoria
+        // --- 1. GESTIONE STATI SPECIALI ---
+        // Se il gioco è in fase di vittoria, scala il timer dell'animazione finale
+        // e notifica il termine salvando le statistiche.
         if (currentState == GameState.VICTORY_ANIMATION) {
             victoryTimer--;
             setChanged();
@@ -279,7 +281,8 @@ public class GameModel extends Observable {
             return;
         }
 
-        //controllo gameover
+        // Se il giocatore è morto, scala il timer dell'animazione di morte
+        // prima di passare alla schermata effettiva di Game Over.
         if (currentState == GameState.PLAYER_DEATH) {
             playerDeathTimer--;
             StatsManager.getInstance().saveStats();
@@ -294,13 +297,16 @@ public class GameModel extends Observable {
             return;
         }
 
-        //controllo gioco normale
+        // Interrompi l'aggiornamento se non siamo nella schermata di gioco
         if (currentState != GameState.PLAYING) return;
 
-        // aggiorna timer bombe
+
+        // --- 2. AGGIORNAMENTO BOMBE E ESPLOSIONI ---
+        // Scala il timer di accensione di ogni bomba a terra.
         activeBombs.forEach(BombEntity::update);
 
-        //calcola danni bombe appena esplose
+        // Identifica le bombe appena esplose, calcola i danni ad area per i nemici (e per il giocatore)
+        // e infine riproduce l'effetto sonoro dell'esplosione.
         activeBombs.stream()
                         .filter(BombEntity::hasExploded)
                                 .forEach(bomb -> {
@@ -319,11 +325,14 @@ public class GameModel extends Observable {
                                         }
                                     }
                                 });
+        // Rimuove le bombe dalla memoria una volta esaurita l'animazione dell'esplosione.
         activeBombs.removeIf(bomb -> !bomb.isAlive());
 
 
 
-        //controllo collisioni player vs muri
+        // --- 3. GESTIONE MOVIMENTO E COLLISIONI MURI ---
+        // Controlla preventivamente se la posizione futura di Link si sovrappone a un muro solido.
+        // Se la via è libera, muove Link e verifica eventuali cambi mappa (porte/bordi).
         boolean playerHitWall = currentLevelMap.getSolidTiles()
                 .anyMatch(tile -> tile.getHitbox().intersects(player.getPredictedHitbox()));
 
@@ -334,7 +343,7 @@ public class GameModel extends Observable {
             player.setDirection(0,0);
         }
 
-        //aggiorna i nemici
+        // Fa eseguire le routine di IA ai nemici e li fa avanzare solo se non sbattono sui muri.
         enemies.forEach(enemy -> {
             enemy.updateBehavior(this);
             boolean enemyHitWall = currentLevelMap.getSolidTiles()
@@ -344,7 +353,7 @@ public class GameModel extends Observable {
             }
         });
 
-        //controllo collissione proiettili
+        // Muove i proiettili (frecce o sassi). Se colpiscono un muro, vengono distrutti.
         projectiles.forEach(p -> {
             boolean projHitWall = currentLevelMap.getSolidTiles()
                     .anyMatch(tile -> tile.getHitbox().intersects(p.getPredictedHitbox()));
@@ -355,7 +364,9 @@ public class GameModel extends Observable {
             }
         });
 
-        //controllo collisioni (player vs nemici)
+
+        // --- 4. GESTIONE COLLISIONI DI COMBATTIMENTO ---
+        // Verifica se un nemico tocca fisicamente Link infliggendogli danno da impatto.
         enemies.stream()
                 .filter(enemy -> enemy.getHitbox().intersects(player.getHitbox()))
                 .forEach(enemy -> {
@@ -367,7 +378,7 @@ public class GameModel extends Observable {
                 });
 
 
-
+        // Verifica se i proiettili sparati dai nemici (es. sassi degli Octorok) colpiscono Link.
         projectiles.stream()
                         .filter(p -> !p.isPlayerProjectile())
                         .filter(p -> p.getHitbox().intersects(player.getHitbox()))
@@ -381,6 +392,7 @@ public class GameModel extends Observable {
                         });
 
 
+        // Verifica se i proiettili sparati da Link (frecce) colpiscono i nemici, infliggendo danni e aumentando lo score in caso di uccisione.
         projectiles.stream()
                 .filter(Projectile::isPlayerProjectile)
                 .forEach(p -> {
@@ -397,10 +409,12 @@ public class GameModel extends Observable {
                 });
 
 
+        // --- 5. ANIMAZIONI, COLLEZIONABILI E TRIGGER SPECIALI ---
+        // Fa avanzare le animazioni di morte dei nemici e le elimina quando concluse.
         deathAnimations.forEach(DeathAnimation::update);
         deathAnimations.removeIf(DeathAnimation::isFinished);
 
-
+        // Permette a Link di raccogliere rupie passandoci sopra (aggiornando soldi e statistiche).
         rupees.stream()
                 .filter(r -> r.getHitbox().intersects(player.getHitbox()))
                 .forEach(r-> {
@@ -410,6 +424,7 @@ public class GameModel extends Observable {
                     r.setAlive(false);
                 });
 
+        // Permette a Link di raccogliere pozioni curative sparse a terra.
         groundPotion.stream()
                 .filter( p -> p.getHitbox().intersects(player.getHitbox()))
                         .forEach( p -> {
@@ -419,10 +434,11 @@ public class GameModel extends Observable {
                         });
         groundPotion.removeIf(potion -> !potion.isAlive());
 
+        // Controlla la condizione di Vittoria Suprema: Link tocca l'icona finale (Gmail) nel livello 11.
         if (currentLevel == 11 && gmailEntity != null && gmailEntity.isAlive()) {
             if (player.getHitbox().intersects(gmailEntity.getHitbox())) {
                 AudioManager.getInstance().stopMusic();
-                AudioManager.getInstance().playSE(9);
+                AudioManager.getInstance().playMusic(9);
                 gmailEntity.setAlive(false);
                 currentState = GameState.VICTORY_ANIMATION;
                 victoryTimer = 300;
@@ -432,6 +448,7 @@ public class GameModel extends Observable {
         }
 
 
+        // Rimuove i nemici morti dalla lista, facendo spawnare rupie come loot occasionale.
         enemies.removeIf(enemy -> {
             if (!enemy.isAlive()) {
                 AudioManager.getInstance().playSE(4);
@@ -448,9 +465,12 @@ public class GameModel extends Observable {
             }
             return false;
         });
+        
+        // Rimuove rupie raccolte e proiettili esauriti o usciti fuori dallo schermo.
         rupees.removeIf(rupee -> !rupee.isAlive());
         projectiles.removeIf(p -> !p.isAlive() || !screenBounds.intersects(p.getHitbox()));
 
+        // Gestisce gli acquisti nello shop (Livello 10): tocca l'oggetto per provare a comprarlo.
         if (currentLevel == 10 && shop != null) {
             shop.getItemsForSale().stream()
                     .filter(ShopEntry::isAvailable)
@@ -462,11 +482,12 @@ public class GameModel extends Observable {
                             entry.setAvailable(false);
                             System.out.println("Hai comprato: " + entry.getItem().getName());
                         } else {
-                            player.setY(player.getY() + 10);
+                            player.setY(player.getY() + 10); // Respinge indietro se non hai rupie/spazio
                         }
                     });
         }
 
+        // Verifica finale: se dopo tutte le collisioni Link ha 0 HP, avvia la sequenza di morte.
         if (player != null && player.getHp() <= 0) {
             AudioManager.getInstance().stopMusic();
             AudioManager.getInstance().playSE(5);
@@ -474,8 +495,9 @@ public class GameModel extends Observable {
             playerDeathTimer = 180;
         }
 
-        //5. notifica la view
-        //setChanged() imposta il flag interno a true, così notifyObservers sa che deve agire
+        // --- 6. NOTIFICA ALLA VIEW ---
+        // Avverte gli observer (GamePanel/HUDPanel) che tutti i calcoli fisici sono conclusi
+        // e che possono procedere a disegnare il nuovo frame.
         setChanged();
         notifyObservers("GAME_UPDATE");
     }
