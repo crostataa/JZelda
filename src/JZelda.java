@@ -25,6 +25,10 @@ public class JZelda {
 
         //inizializziamo controller
         GameController gameController = new GameController(model, viewManager);
+        
+        //aggiungiamo i nuovi observer
+        model.addObserver(gameController);
+        model.addObserver(View.AudioManager.getInstance());
 
         MenuController menuController = new MenuController(model, viewManager, gameController);
 

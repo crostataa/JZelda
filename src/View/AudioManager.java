@@ -4,8 +4,10 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Observable;
+import java.util.Observer;
 
-public class AudioManager {
+public class AudioManager implements Observer {
 
     static Clip clip;
     static URL[] soundURL = new URL[30];
@@ -74,6 +76,17 @@ public class AudioManager {
         return instance;
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg instanceof String) {
+            String message = (String) arg;
+            if (message.equals("ARROW_SHOT")) {
+                playSE(7);
+            } else if (message.equals("PLAYER_ATTACK")) {
+                playSE(10);
+            }
+        }
+    }
 }
 
 

@@ -8,6 +8,13 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+*Gestisce la logica del gioco, contiene tutti i metodi che permettono il funzionamento
+ *di ogni partita, specialmente grazie al metodo update che contiene al suo interno tutti
+ *i controlli da fare ad ogni frame.
+ *Segue il design pattern MVC.
+*/
+
 public class GameModel extends Observable {
 
     //stato del gioco
@@ -54,8 +61,11 @@ public class GameModel extends Observable {
     }
 
 
-     //Inizializza o resetta una partita, impostando lo stato iniziale,
-     //il livello e le entità associate al giocatore specificato.
+     /**
+      *Inizializza o resetta una partita, impostando lo stato iniziale,
+      *il livello e le entità associate al giocatore specificato.
+      * @param username
+      */
 
     public void initGame(String username) {
 
@@ -83,7 +93,12 @@ public class GameModel extends Observable {
 
     }
 
-    // Cambia mappa aggiornando la posizione del giocatore e ricaricando le entità.
+    /**Cambia mappa aggiornando la posizione del giocatore e ricaricando le entità.
+     *
+     * @param newLevelId
+     * @param startX
+     * @param startY
+     */
     public void changeLevel(int newLevelId, int startX, int startY) {
         this.currentLevel = newLevelId;
         this.currentLevelMap = new Level(currentLevel);
@@ -97,8 +112,9 @@ public class GameModel extends Observable {
     }
 
 
-     //Viene invocato dal Controller quando il giocatore preme il tasto per
-     //piazzare una bomba, aggiornando contatori e coordinate.
+     /**Viene invocato dal Controller quando il giocatore preme il tasto per
+      * piazzare una bomba, aggiornando contatori e coordinate.
+      */
 
     public void placeBomb() {
         if (currentState != GameState.PLAYING) return;
@@ -115,12 +131,17 @@ public class GameModel extends Observable {
     }
 
 
-    // Aggiunge un proiettile alla scena per la simulazione fisica.
+    /** Aggiunge un proiettile alla scena per la simulazione fisica.
+     *
+     * @param p
+     */
     public void addProjectile(Projectile p) {
         projectiles.add(p);
     }
 
-    // Fa sparare una freccia al giocatore calcolando direzione e velocità.
+    /** Fa sparare una freccia al giocatore calcolando direzione e velocità.
+     *
+     */
     public void shootArrow() {
 
         if (currentState != GameState.PLAYING) return;
@@ -248,19 +269,15 @@ public class GameModel extends Observable {
                 break;
         }
 
-
-
-
-
     }
 
 
 
 
-
-
     // -- metodi x controller --
-    /** Motore principale: aggiorna logiche, movimenti, timer e risolve tutte le collisioni. */
+    /**
+     * Motore principale: aggiorna logiche, movimenti, timer e risolve tutte le collisioni.
+     */
     public void update() {
 
         // --- 1. GESTIONE STATI SPECIALI ---
@@ -502,7 +519,9 @@ public class GameModel extends Observable {
         notifyObservers("GAME_UPDATE");
     }
 
-    // Esegue un attacco corpo a corpo calcolando l'hitbox della spada e danneggiando i nemici colpiti.
+    /**
+     * esegue un attacco corpo a corpo calcolando l'hitbox della spada e danneggiando i nemici colpiti.
+     */
     public void playerAttack() {
 
         if (currentState != GameState.PLAYING) return;

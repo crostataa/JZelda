@@ -11,8 +11,10 @@ import View.Window;
 import javax.swing.*;
 import javax.swing.text.View;
 import java.awt.event.*;
+import java.util.Observable;
+import java.util.Observer;
 
-public class GameController {
+public class GameController implements Observer {
 
     private GameModel model;
     private LayoutManager view;
@@ -39,20 +41,6 @@ public class GameController {
             public void actionPerformed(ActionEvent e) {
                 processInput();
                 model.update();
-
-//                }
-                //la view si aggiorna in automatico con observer/observable, non c'è bisogno di usare setChanged() etc.
-                if (model.getCurrentState() == GameState.GAME_OVER) {
-                    AudioManager.getInstance().playMusic(6);
-                    stopGame();
-                    view.switchScreen(Window.GAMEOVER);
-                }
-
-                if (model.getCurrentState() == GameState.VICTORY) {
-                    stopGame();
-                    view.getVictoryPanel().startAnimation();
-                    view.switchScreen(Window.VITTORIA);
-                }
             }
         });
     }
@@ -91,13 +79,11 @@ public class GameController {
         player.setDirection(dx, dy);
 
         if (keyController.keyBow) {
-            AudioManager.getInstance().playSE(7);
             model.shootArrow();
             keyController.keyBow = false; // Forza il rilascio (no mitragliatrice)
         }
 
         if (keyController.attack) {
-            AudioManager.getInstance().playSE(10);
             model.playerAttack();
             keyController.attack = false; // si resetta in automatico per evitare spam
         }
@@ -120,5 +106,21 @@ public class GameController {
 
     public KeyController getKeyController() {
         return keyController;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg instanceof String) {
+            String message = (String) arg;
+            if (message.equals("GAME_OVER")) {
+                AudioManager.getInstance().playMusic(6);
+                stopGame();
+                view.switchScreen(Window.GAMEOVER);
+            } else if (message.equals("VICTORY")) {
+                stopGame();
+                view.getVictoryPanel().startAnimation();
+                view.switchScreen(Window.VITTORIA);
+            }
+        }
     }
 }
