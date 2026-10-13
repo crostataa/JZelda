@@ -9,6 +9,7 @@ public class MenuPanel extends JPanel {
     private JTextField nameField;
     private JButton startButton;
     private JButton leaderboardButton;
+    private JButton skinButton;
 
     public MenuPanel() {
         this.setLayout(new GridBagLayout());
@@ -56,6 +57,15 @@ public class MenuPanel extends JPanel {
         leaderboardButton.setFocusPainted(false);
         this.add(leaderboardButton, gbc);
 
+        //bottone per cambiare avatar
+        gbc.gridy++;
+        skinButton = new JButton("AVATAR");
+        skinButton.setFont(FontManager.getFont(24f));
+        skinButton.setBackground(new Color(1, 1, 2));
+        skinButton.setForeground(new Color(149, 83, 2));
+        skinButton.setFocusPainted(false);
+        this.add(skinButton, gbc);
+
     }
         // sfondo
         @Override
@@ -73,4 +83,5 @@ public class MenuPanel extends JPanel {
     public String getPlayerName() { return nameField.getText(); }
     public JButton getStartButton() { return startButton; }
     public JButton getLeaderboardButton() { return leaderboardButton; }
+    public AbstractButton getSkinButton() {return skinButton;}
 }

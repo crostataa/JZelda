@@ -42,7 +42,7 @@ public class StatsManager {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length == 8) {
+                if (parts.length == 9) {
                     PlayerStats stats = new PlayerStats(parts[0]);
                     stats.setArrowsShot(Integer.parseInt(parts[1]));
                     stats.setMoblinsKilled(Integer.parseInt(parts[2]));
@@ -51,6 +51,7 @@ public class StatsManager {
                     stats.setPotionsUsed(Integer.parseInt(parts[5]));
                     stats.setBombsUsed(Integer.parseInt(parts[6]));
                     stats.setGamesWon(Integer.parseInt(parts[7]));
+                    stats.setAvatar(parts[8]);
 
                     database.put(stats.getUsername(), stats);
                 }
@@ -70,7 +71,8 @@ public class StatsManager {
                              stats.getTotalRupees() + "," +
                              stats.getPotionsUsed() + "," +
                              stats.getBombsUsed() + "," +
-                             stats.getGamesWon());
+                             stats.getGamesWon() + "," +
+                             stats.getAvatar());
                 bw.newLine();
             }
         } catch (IOException e) {

@@ -15,15 +15,15 @@ public class GamePanel extends JPanel implements Observer {
     private GameModel model;
 
 
-    //link che cammina
+    //link verde che cammina
     private final String PATH_LINK_DOWN_1 = "/assets/basicLink1New.png"; // Guarda in basso
     private final String PATH_LINK_DOWN_2 = "/assets/basicLink2New.png"; // Guarda in basso (animazione)
     private final String PATH_LINK_SIDE_1 = "/assets/basicLink3New.png"; // Guarda di lato
     private final String PATH_LINK_SIDE_2 = "/assets/basicLink4New.png"; // Guarda di lato (animazione)
     private final String PATH_LINK_UP_1   = "/assets/basicLink5New.png"; // Guarda in alto
-    private final String PATH_LINK_UP_2   = "/assets/basicLink6New.png";
+    private final String PATH_LINK_UP_2   = "/assets/basicLink6New.png"; // guarda in alto (animazione)
 
-    //link che attacca
+    //link verde che attacca
     // Percorsi immagini Link (Attacco Spada)
     private final String PATH_ATTACK_UP   = "/assets/spadaLink3New.png";
     private final String PATH_ATTACK_DOWN = "/assets/spadaLink2New.png";
@@ -327,10 +327,14 @@ public class GamePanel extends JPanel implements Observer {
         int drawY = (int) p.getY();
         boolean flipHorizontal = false;
 
+        // RECUPERO LA SKIN E IL FRAME CORRENTE
+        Model.LinkSkin skin = p.getSkin();
+        int frame = p.getSpriteNum(); // Assumendo che ritorni 1 o 2
+
         // 1. STATO DI ATTACCO
         if (p.isAttacking()) {
             if (Math.abs(p.getLastDx()) > Math.abs(p.getLastDy())) {
-                linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_SIDE);
+                linkImg = SpriteManager.getInstance().getSprite(skin.getAttackSide());
                 if (p.getLastDx() < 0) {
                     flipHorizontal = true; // Attacca a sinistra
                     if (linkImg != null) {
@@ -340,13 +344,13 @@ public class GamePanel extends JPanel implements Observer {
                 }
             } else {
                 if (p.getLastDy() < 0) {
-                    linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_UP);
+                    linkImg = SpriteManager.getInstance().getSprite(skin.getAttackUp());
                     if (linkImg != null) {
                         // Offset: Sposta l'origine in alto per compensare la lama
                         drawY = (int) p.getY() - (linkImg.getHeight() * 2 - 32);
                     }
                 } else {
-                    linkImg = SpriteManager.getInstance().getSprite(PATH_ATTACK_DOWN);
+                    linkImg = SpriteManager.getInstance().getSprite(skin.getAttackDown());
                     // Verso il basso non serve offset perché Link è in alto nell'immagine
                 }
             }
@@ -354,29 +358,16 @@ public class GamePanel extends JPanel implements Observer {
         // 2. STATO NORMALE (Movimento o Fermo)
         else {
             if (Math.abs(p.getLastDx()) > Math.abs(p.getLastDy())) {
-                // Guarda a Destra / Sinistra
-                if (p.getSpriteNum() == 1) {
-                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_SIDE_1);
-                } else {
-                    linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_SIDE_2);
-                }
-
+                // Guarda a Destra / Sinistra (il frammento 'frame' viene passato dinamicamente)
+                linkImg = SpriteManager.getInstance().getSprite(skin.getSpriteSide(frame));
                 if (p.getLastDx() < 0) flipHorizontal = true;
             } else {
                 if (p.getLastDy() < 0) {
                     // Guarda in Alto
-                    if (p.getSpriteNum() == 1) {
-                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_UP_1);
-                    } else {
-                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_UP_2);
-                    }
+                    linkImg = SpriteManager.getInstance().getSprite(skin.getSpriteUp(frame));
                 } else {
                     // Guarda in Basso
-                    if (p.getSpriteNum() == 1) {
-                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_DOWN_1);
-                    } else {
-                        linkImg = SpriteManager.getInstance().getSprite(PATH_LINK_DOWN_2);
-                    }
+                    linkImg = SpriteManager.getInstance().getSprite(skin.getSpriteDown(frame));
                 }
             }
         }

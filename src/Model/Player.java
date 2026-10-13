@@ -31,6 +31,7 @@ public class Player extends Entity implements Damageable {
     private int invulnerabilityTimer;
 
     private double lastDx, lastDy;
+    private LinkSkin skin = LinkSkin.VERDE;
 
     public AudioManager audioManager;
 
@@ -201,5 +202,6 @@ public class Player extends Entity implements Damageable {
     public boolean hasBow() { return hasBow; }
     public void unlockBow() { this.hasBow = true; }
 
-
+    public LinkSkin getSkin() { return skin; }
+    public void setSkin(LinkSkin skin) { this.skin = skin; }
 }

@@ -10,7 +10,7 @@ public class PlayerStats {
     private int potionsUsed;
     private int bombsUsed;
     private int gamesWon;
-
+    private String avatar = "VERDE";
 
     public PlayerStats(String username) {
         this.username = username;
@@ -51,4 +51,7 @@ public class PlayerStats {
 
     public int getGamesWon() { return gamesWon; }
     public void setGamesWon(int gamesWon) { this.gamesWon = gamesWon; }
+
+    public String getAvatar() { return avatar; }
+    public void setAvatar(String avatar) { this.avatar = avatar; }
 }

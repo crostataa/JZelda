@@ -7,6 +7,7 @@ public enum Window {
     SHOP,
     STATISTICHE,
     GAMEOVER,
-    VITTORIA
+    VITTORIA,
+    SKIN
 
 }

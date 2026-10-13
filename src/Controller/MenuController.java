@@ -47,7 +47,7 @@ public class MenuController {
             }
         });
 
-        // Listener per il bottone Leaderboard (da implementare in seguito)
+        // Listener per il bottone Leaderboard
         this.viewManager.getMenuPanel().getLeaderboardButton().addActionListener(e -> {
             //leggi dati aggiornati da file
             viewManager.getStatistichePanel().updateStats();
@@ -60,6 +60,12 @@ public class MenuController {
             public void actionPerformed(ActionEvent e) {
                 viewManager.switchScreen(Window.MENU);
             }
+        });
+
+        //listener per bottone skin
+        this.viewManager.getMenuPanel().getSkinButton().addActionListener(e -> {
+            // Cambia schermata passando al pannello delle skin
+            viewManager.switchScreen(Window.SKIN);
         });
     }
 

@@ -17,6 +17,7 @@ public class LayoutManager extends JFrame{
   GameOverPanel gameover;
   VictoryPanel victoryPanel;
   StatistichePanel statistiche;
+  SkinPanel skin;
 
 
 
@@ -33,6 +34,7 @@ public class LayoutManager extends JFrame{
       this.menu = new MenuPanel();
       this.gameover = new GameOverPanel();
       this.victoryPanel = new VictoryPanel();
+      this.skin = new SkinPanel();
 
       // 2. Imposto le dimensioni corrette
       this.hudPanel.setPreferredSize(new Dimension(768, 192));
@@ -49,6 +51,7 @@ public class LayoutManager extends JFrame{
       mainPanel.add(gameContainer, Window.GIOCO.name());
       mainPanel.add(gameover, Window.GAMEOVER.name());
       mainPanel.add(victoryPanel, Window.VITTORIA.name());
+      mainPanel.add(skin, Window.SKIN.name());
 
      statistiche = new StatistichePanel();
      mainPanel.add(statistiche, Window.STATISTICHE.name());
@@ -101,4 +104,8 @@ public class LayoutManager extends JFrame{
     public GameOverPanel getGameOverPanel() { return gameover; }
     public VictoryPanel getVictoryPanel() { return victoryPanel; }
     public StatistichePanel getStatistichePanel() { return statistiche; }
+
+    public SkinPanel getSkinPanel() {
+      return skin;
+    }
 }

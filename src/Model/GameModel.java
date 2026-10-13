@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.GameController;
 import View.AudioManager;
 
 
@@ -30,6 +31,7 @@ public class GameModel extends Observable {
     private List<BombEntity> activeBombs;
     private List <HealthPotionEntity> groundPotion;
     private GmailEntity gmailEntity;
+    private LinkSkin selectedSkin = LinkSkin.VERDE;
 
 
     //animazione eliminazione entità
@@ -53,9 +55,10 @@ public class GameModel extends Observable {
 
 
 
+
     public GameModel() {
 
-        initGame("Stefano");
+        initGame("Stefano"); //placeholder
         this.currentState = GameState.MENU;
 
     }
@@ -85,6 +88,7 @@ public class GameModel extends Observable {
 
         //posizione iniziale del giocatore, al centro dello schermo *
         this.player = new Player(currentLevelMap.getPlayerStartX(), currentLevelMap.getPlayerStartY());
+        this.player.setSkin(selectedSkin);
         loadLevelEntities(currentLevel);
 
         //notifica alla View in ascolto che il gioco è stato resettato
@@ -678,5 +682,7 @@ public class GameModel extends Observable {
     }
     public GmailEntity getGmailEntity() { return gmailEntity; }
     public PlayerStats getCurrentStats() { return currentStats; }
+    public LinkSkin getSelectedSkin() { return selectedSkin; }
+    public void setSelectedSkin(LinkSkin selectedSkin) { this.selectedSkin = selectedSkin; }
 }
 
