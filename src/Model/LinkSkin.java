@@ -1,8 +1,16 @@
 package Model;
 
+/**
+ * Enumerazione per le skin grafiche di Link (Verde, Blu, Rosa).
+ * Fornisce i percorsi delle risorse grafiche (.png) corrispondenti a ciascuna direzione
+ * e animazione di attacco per la skin attiva.
+ */
 public enum LinkSkin {
+    /** Skin classica Verde (predefinita). */
     VERDE(""),     // Basic, senza suffisso
+    /** Skin Blu. */
     BLU("Blue"),   // basicLinkBlue...
+    /** Skin Rosa. */
     ROSA("Pink");  // basicLinkPink...
 
     private final String suffix;
@@ -11,9 +19,17 @@ public enum LinkSkin {
         this.suffix = suffix;
     }
 
+    /**
+     * Restituisce il suffisso utilizzato nei nomi dei file degli asset grafici.
+     * @return la stringa di suffisso (es. "Blue", "Pink" o vuota).
+     */
     public String getSuffix() { return suffix; }
 
-    // basicLink 1 e 2 (Guarda in Basso)
+    /**
+     * Restituisce il percorso dello sprite rivolto verso il basso.
+     * @param frame numero di frame dell'animazione (1 o 2).
+     * @return percorso dell'immagine di risorsa.
+     */
     public String getSpriteDown(int frame) {
         return "/assets/basicLink" + suffix + frame + "New.png";
     }

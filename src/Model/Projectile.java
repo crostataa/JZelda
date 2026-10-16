@@ -1,5 +1,9 @@
 package Model;
 
+/**
+ * Rappresenta un proiettile a traiettoria rettilinea.
+ * Può essere generato dal giocatore (frecce con l'arco) o dai nemici (sassi degli Octorok).
+ */
 public class Projectile extends Entity {
 
     private double dx; // positivo -> destra; negativo; sinistra
@@ -9,6 +13,16 @@ public class Projectile extends Entity {
 
     private boolean isPlayerProjectile; // true = sparato da link; false = sparato dai nemici
 
+    /**
+     * Costruisce un proiettile con posizione, direzione, velocità, danno e fazione di appartenenza.
+     * @param x coordinata X iniziale.
+     * @param y coordinata Y iniziale.
+     * @param dx direzione orizzontale.
+     * @param dy direzione verticale.
+     * @param speed velocità di volo.
+     * @param damage danno inflitto all'impatto.
+     * @param isPlayerProjectile true se sparato da Link, false se nemico.
+     */
     public Projectile(double x, double y, double dx, double dy, double speed, int damage, boolean isPlayerProjectile) {
         super(x, y, 10, 10, speed);
         this.dx = dx;

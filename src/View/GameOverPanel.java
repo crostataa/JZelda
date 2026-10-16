@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.*;
 
+/**
+ * Pannello grafico mostrato in caso di sconfitta (Game Over).
+ * Offre i pulsanti RETRY (per ricominciare una partita con lo stesso profilo) ed EXIT (per tornare al menu).
+ */
 public class GameOverPanel extends JPanel {
 
     private JTextField gameOverfield;
@@ -12,6 +16,9 @@ public class GameOverPanel extends JPanel {
 
 
 
+    /**
+     * Costruisce il pannello di Game Over inizializzando i componenti e i relativi pulsanti.
+     */
     public GameOverPanel() {
 
         this.setLayout(new GridBagLayout());

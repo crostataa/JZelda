@@ -4,6 +4,10 @@ package Model;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Gestore Singleton per la persistenza e il tracciamento delle statistiche dei giocatori.
+ * Salva e carica i dati degli utenti da un file di testo (stats.txt) e genera la classifica.
+ */
 public class StatsManager {
 
     private static StatsManager instance;
@@ -16,6 +20,10 @@ public class StatsManager {
         loadStats();
     }
 
+    /**
+     * Restituisce l'istanza unica del gestore delle statistiche (Singleton).
+     * @return l'istanza di StatsManager.
+     */
     public static StatsManager getInstance() {
         if (instance == null)  {
                 instance = new StatsManager();
@@ -23,6 +31,11 @@ public class StatsManager {
         return instance;
         }
 
+    /**
+     * Recupera o crea le statistiche associate al nickname specificato.
+     * @param username il nome del giocatore.
+     * @return l'oggetto PlayerStats corrispondente.
+     */
     public PlayerStats statsPlayer(String username) {
         if (username == null || username.trim().isEmpty()) {
             username = "Stefano";
@@ -61,6 +74,9 @@ public class StatsManager {
         }
     }
 
+    /**
+     * Salva tutte le statistiche registrate nel database sul file persistente stats.txt in formato CSV.
+     */
     public void saveStats() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (PlayerStats stats : database.values()) {
@@ -80,6 +96,11 @@ public class StatsManager {
         }
     }
 
+    /**
+     * Genera la classifica ordinata dei giocatori, prioritizzando il numero di partite vinte
+     * e, a parità, il totale di rupie accumulate.
+     * @return lista ordinata di PlayerStats.
+     */
     public List<PlayerStats> getLeaderboard() {
         List<PlayerStats> list = new ArrayList<>(database.values());
 

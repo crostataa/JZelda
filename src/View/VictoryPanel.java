@@ -6,6 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
+/**
+ * Pannello per la schermata finale di vittoria.
+ * Visualizza l'immagine di epilogo, un testo con animazione progressiva stile macchina da scrivere
+ * ("typewriter") e il pulsante per ritornare al menu principale.
+ */
 public class VictoryPanel extends JPanel {
 
     private String line1 = "Link non può salvare la principessa,";
@@ -22,6 +27,9 @@ public class VictoryPanel extends JPanel {
 
     private JButton menuButton;
 
+    /**
+     * Costruisce il pannello di vittoria impostando lo sfondo e il timer dell'effetto testo.
+     */
     public VictoryPanel() {
 
         this.setBackground(Color.BLACK);
@@ -60,6 +68,9 @@ public class VictoryPanel extends JPanel {
         });
     }
 
+    /**
+     * Resetta gli indici dei caratteri e avvia l'animazione di digitazione progressiva del testo finale.
+     */
     public void startAnimation() {
         indiceCarattere1 = 0;
         indiceCarattere2 = 0;

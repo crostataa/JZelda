@@ -3,6 +3,9 @@ package View;
 import java.awt.*;
 import java.io.*;
 
+/**
+ * Gestore centralizzato per il caricamento e il caching del font retrò ("joystix monospace").
+ */
 public class FontManager {
 
     private static Font zeldaFont;
@@ -11,6 +14,11 @@ public class FontManager {
 
     }
 
+    /**
+     * Restituisce il font personalizzato alla dimensione specificata, con fallback su Monospaced.
+     * @param size la dimensione del font (in punti).
+     * @return l'oggetto {@link Font} scalato alla dimensione richiesta.
+     */
     public static Font getFont(float size) {
         if (zeldaFont == null) {
             try {

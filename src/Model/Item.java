@@ -1,9 +1,16 @@
 package Model;
 
+/**
+ * Classe astratta che rappresenta un oggetto equipaggiabile o utilizzabile dal giocatore.
+ */
 public abstract class Item {
 
     private String name;
 
+    /**
+     * Costruisce un oggetto con il nome specificato.
+     * @param nome identificatore testuale dell'oggetto.
+     */
     public Item (String nome) {
         this.name = nome;
 
@@ -11,10 +18,16 @@ public abstract class Item {
 
     // -- metodi getter --
 
+    /**
+     * Restituisce il nome dell'oggetto.
+     * @return il nome dell'oggetto.
+     */
     public String getName() {return name;}
-    // METODO ASTRATTO:
-    // Ogni tipo di oggetto dovrà implementare COSA succede quando lo usi.
-    // Passiamo il 'Player' come parametro così l'oggetto può interagire con le sue statistiche.
+
+    /**
+     * Definisce l'effetto dell'oggetto applicato allo stato del giocatore.
+     * @param player il giocatore che utilizza l'oggetto.
+     */
     public abstract void usa(Player player);
 
 }

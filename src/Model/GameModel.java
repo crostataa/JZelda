@@ -56,6 +56,9 @@ public class GameModel extends Observable {
 
 
 
+    /**
+     * Costruisce il modello logico del gioco impostando lo stato iniziale su MENU.
+     */
     public GameModel() {
 
         initGame("Stefano"); //placeholder
@@ -65,18 +68,17 @@ public class GameModel extends Observable {
 
 
      /**
-      *Inizializza o resetta una partita, impostando lo stato iniziale,
-      *il livello e le entità associate al giocatore specificato.
-      * @param username
+      * Inizializza o resetta una partita, impostando lo stato iniziale,
+      * il livello e le entità associate al giocatore specificato.
+      * @param username il nickname dell'utente corrente.
       */
-
     public void initGame(String username) {
 
         this.enemies = new ArrayList<>();
         this.projectiles = new ArrayList<>();
         this.rupees = new ArrayList<>();
         this.shop = new ShopModel();
-        activeBombs = new ArrayList<>();
+        this.activeBombs = new ArrayList<>();
         this.currentState = GameState.PLAYING;
         this.currentLevel = 1;
         this.currentLevelMap = new Level(currentLevel);
@@ -97,11 +99,11 @@ public class GameModel extends Observable {
 
     }
 
-    /**Cambia mappa aggiornando la posizione del giocatore e ricaricando le entità.
-     *
-     * @param newLevelId
-     * @param startX
-     * @param startY
+    /**
+     * Cambia mappa aggiornando la posizione del giocatore e ricaricando le entità.
+     * @param newLevelId identificativo numerico della nuova stanza o livello.
+     * @param startX coordinata X di riposizionamento del giocatore.
+     * @param startY coordinata Y di riposizionamento del giocatore.
      */
     public void changeLevel(int newLevelId, int startX, int startY) {
         this.currentLevel = newLevelId;
@@ -116,10 +118,10 @@ public class GameModel extends Observable {
     }
 
 
-     /**Viene invocato dal Controller quando il giocatore preme il tasto per
+     /**
+      * Viene invocato dal Controller quando il giocatore preme il tasto per
       * piazzare una bomba, aggiornando contatori e coordinate.
       */
-
     public void placeBomb() {
         if (currentState != GameState.PLAYING) return;
 
@@ -135,16 +137,16 @@ public class GameModel extends Observable {
     }
 
 
-    /** Aggiunge un proiettile alla scena per la simulazione fisica.
-     *
-     * @param p
+    /**
+     * Aggiunge un proiettile alla scena per la simulazione fisica.
+     * @param p il proiettile da inserire.
      */
     public void addProjectile(Projectile p) {
         projectiles.add(p);
     }
 
-    /** Fa sparare una freccia al giocatore calcolando direzione e velocità.
-     *
+    /**
+     * Fa sparare una freccia al giocatore calcolando direzione e velocità.
      */
     public void shootArrow() {
 
@@ -413,7 +415,7 @@ public class GameModel extends Observable {
                         });
 
 
-        // Verifica se i proiettili sparati da Link (frecce) colpiscono i nemici, infliggendo danni e aumentando lo score in caso di uccisione.
+        // Verifica se i proiettili sparati da Link (frecce) colpiscono i nemici, infliggendo danni.
         projectiles.stream()
                 .filter(Projectile::isPlayerProjectile)
                 .forEach(p -> {
@@ -455,7 +457,7 @@ public class GameModel extends Observable {
                         });
         groundPotion.removeIf(potion -> !potion.isAlive());
 
-        // Controlla la condizione di Vittoria Suprema: Link tocca l'icona finale (Gmail) nel livello 11.
+        // Controlla la condizione di Vittoria: Link tocca l'icona finale (Gmail) nel livello 11.
         if (currentLevel == 11 && gmailEntity != null && gmailEntity.isAlive()) {
             if (player.getHitbox().intersects(gmailEntity.getHitbox())) {
                 AudioManager.getInstance().stopMusic();
@@ -677,12 +679,19 @@ public class GameModel extends Observable {
     public List<BombEntity> getActiveBombs() { return activeBombs; }
     public List<HealthPotionEntity> getGroundPotion() { return groundPotion; }
     public int getPlayerDeathTimer() { return playerDeathTimer; }
-    public void setCurrentState(GameState gameState) {
-        currentState = gameState;
-    }
+    public void setCurrentState(GameState gameState) {currentState = gameState;}
     public GmailEntity getGmailEntity() { return gmailEntity; }
     public PlayerStats getCurrentStats() { return currentStats; }
+    /**
+     * Restituisce la skin di Link attualmente selezionata.
+     * @return la LinkSkin selezionata.
+     */
     public LinkSkin getSelectedSkin() { return selectedSkin; }
+
+    /**
+     * Imposta la skin attiva per Link.
+     * @param selectedSkin la nuova LinkSkin da utilizzare.
+     */
     public void setSelectedSkin(LinkSkin selectedSkin) { this.selectedSkin = selectedSkin; }
 }
 

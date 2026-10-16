@@ -9,11 +9,20 @@ import View.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Controller per la schermata di selezione delle skin (avatar).
+ * Associa i listener ai pulsanti di anteprima delle skin e gestisce il ritorno al menu.
+ */
 public class SkinController {
 
     private GameModel model;
     private LayoutManager viewManager;
 
+    /**
+     * Costruisce lo SkinController collegando i listener per le skin Verde, Blu, Rosa e per il pulsante indietro.
+     * @param model il modello logico del gioco in cui impostare la skin attiva.
+     * @param viewManager il gestore delle schermate della vista.
+     */
     public SkinController(GameModel model, LayoutManager viewManager) {
         this.model = model;
         this.viewManager = viewManager;

@@ -5,12 +5,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-    public class StatistichePanel extends JPanel {
+/**
+ * Pannello per la consultazione della classifica e delle statistiche storiche dei giocatori.
+ * Visualizza in una tabella formattata i dati letti dal file persistente e include il pulsante di ritorno.
+ */
+public class StatistichePanel extends JPanel {
 
-        private JTextArea statsArea;
-        private JButton backButton;
+    private JTextArea statsArea;
+    private JButton backButton;
 
-        public StatistichePanel() {
+    /**
+     * Costruisce il pannello delle statistiche configurando area di testo e pulsante di ritorno.
+     */
+    public StatistichePanel() {
             this.setLayout(new BorderLayout());
             this.setBackground(Color.BLACK);
 
@@ -52,7 +59,9 @@ import java.util.List;
             this.add(bottomPanel, BorderLayout.SOUTH);
         }
 
-        // Metodo fondamentale: legge il file e scrive la classifica a schermo!
+        /**
+         * Ricarica e formatta a schermo la classifica dei giocatori leggendo i dati aggiornati tramite {@link StatsManager}.
+         */
         public void updateStats() {
             statsArea.setText(""); // Pulisce il testo precedente
             List<PlayerStats> leaderboard = StatsManager.getInstance().getLeaderboard();

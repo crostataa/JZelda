@@ -1,7 +1,16 @@
 package Model;
 
+/**
+ * Fabbrica (Factory) per la generazione dei livelli di gioco.
+ * Mantiene le matrici testuali ASCII delle 8 schermate del mondo esterno e dei dungeon interni/shop.
+ */
 public class LevelFactory {
 
+    /**
+     * Restituisce la matrice testuale della mappa corrispondente all'ID del livello specificato.
+     * @param levelId numero identificativo del livello (1-8 per i livelli principali, 9 per lo shop/dungeon).
+     * @return array di stringhe che rappresenta le righe della mappa.
+     */
     public static String[] getLevelData(int levelId) {
 
         switch (levelId) {

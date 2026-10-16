@@ -2,10 +2,20 @@ package Model;
 
 import View.AudioManager;
 
+/**
+ * Rappresenta il nemico Octorok.
+ * Nemico a distanza con 1 HP che mantiene le distanze da Link,
+ * si orienta verso di lui e spara proiettili rocciosi a intervalli regolari.
+ */
 public class OctorokEnemy extends Enemy{
 
     private int shootCooldown;
 
+    /**
+     * Costruisce un nemico Octorok alle coordinate specificate.
+     * @param x coordinata X iniziale.
+     * @param y coordinata Y iniziale.
+     */
     public OctorokEnemy(double x, double y) {
 
         //è più fragile e lento del Moblin, ma fa danni a distanza
@@ -13,10 +23,19 @@ public class OctorokEnemy extends Enemy{
         this.shootCooldown = 0;
     }
 
+    /**
+     * Indica se l'Octorok si trova attualmente nella fase di animazione di sparo.
+     * @return true se sta sparando, false altrimenti.
+     */
     public boolean isShooting() {
         return shootCooldown > 100;
     }
 
+    /**
+     * Aggiorna il comportamento dell'Octorok: arretra se Link è troppo vicino,
+     * si volta verso di lui e fa fuoco se il cooldown è terminato.
+     * @param model il modello logico del gioco.
+     */
     @Override
     public void updateBehavior(GameModel model) {
         if (!isAlive()) return;

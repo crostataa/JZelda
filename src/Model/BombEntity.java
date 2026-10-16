@@ -2,6 +2,11 @@ package Model;
 
 import java.awt.Rectangle;
 
+/**
+ * Rappresenta una bomba piazzata sul terreno dal giocatore.
+ * Possiede un timer di innesco (~1.5 secondi) al termine del quale esplode,
+ * generando un'hitbox ad area ampliata per infliggere danno ai nemici.
+ */
 public class BombEntity extends Entity {
 
     private int timer; // 90 frame = 1.5 secondi a 60 FPS
@@ -9,6 +14,11 @@ public class BombEntity extends Entity {
     private boolean alive;
     private int damage; // Danno elevato
 
+    /**
+     * Costruisce una bomba alle coordinate specificate.
+     * @param x coordinata X iniziale.
+     * @param y coordinata Y iniziale.
+     */
     public BombEntity(double x, double y) {
         // Dimensioni 16x16, velocità 0 perché sta ferma a terra
         super(x, y, 8, 16, 0);

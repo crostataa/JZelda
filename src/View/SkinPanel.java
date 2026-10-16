@@ -3,11 +3,19 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Pannello grafico dedicato alla selezione della skin (avatar) di Link.
+ * Presenta le anteprime visive per le varianti Verde, Blu e Rosa e una label
+ * con lo stato della selezione corrente.
+ */
 public class SkinPanel extends JPanel {
 
     private JButton btnVerde, btnBlu, btnRosa, backButton;
     private JLabel statusLabel;
 
+    /**
+     * Costruisce il pannello di selezione delle skin, assemblando pulsanti, anteprime e layout.
+     */
     public SkinPanel() {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.BLACK);

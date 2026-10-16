@@ -2,8 +2,17 @@ import Controller.*;
 import Model.GameModel;
 import View.LayoutManager;
 
+/**
+ * Classe principale del gioco JZelda.
+ * Funge da entry point del programma: inizializza l'architettura MVC,
+ * registra gli Observer, collega i vari Controller e avvia il game loop.
+ */
 public class JZelda {
 
+    /**
+     * Metodo di avvio dell'applicazione.
+     * @param args argomenti passati da riga di comando (non utilizzati).
+     */
     public static void main (String[] args) {
 
         //inizializziamo model

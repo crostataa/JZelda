@@ -2,11 +2,19 @@ package Model;
 
 import java.awt.*;
 
+/**
+ * Rappresenta una pozione di cura presente sul terreno, raccoglibile dal giocatore.
+ */
 public class HealthPotionEntity extends Entity{
 
     private double x, y;
     private boolean alive;
 
+    /**
+     * Costruisce un'entità pozione di cura alle coordinate specificate.
+     * @param x coordinata X iniziale.
+     * @param y coordinata Y iniziale.
+     */
     public HealthPotionEntity(double x, double y) {
         super(x, y, 8, 16, 0);
         this.x = x;

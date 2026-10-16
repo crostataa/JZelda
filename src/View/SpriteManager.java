@@ -6,6 +6,10 @@ import java.io.*;
 import java.util.*;
 import javax.imageio.*;
 
+/**
+ * Gestore Singleton per il caricamento, il caching e il ritaglio degli sprite grafici.
+ * Memorizza in una mappa le immagini già lette dal disco per evitare accessi I/O ripetuti.
+ */
 public class SpriteManager {
 
     // singleton
@@ -24,6 +28,10 @@ public class SpriteManager {
 
     // -- getter --
 
+    /**
+     * Restituisce l'istanza unica dello SpriteManager (Singleton).
+     * @return l'istanza di SpriteManager.
+     */
     public static SpriteManager getInstance() {
         if (instance == null) {
             instance = new SpriteManager();
@@ -31,6 +39,11 @@ public class SpriteManager {
         return instance;
     }
 
+    /**
+     * Carica e memorizza in cache un'immagine dal percorso delle risorse specificato.
+     * @param path percorso relativo nel classpath (es. "/assets/immagine.png").
+     * @return la {@link BufferedImage} caricata o null in caso di errore.
+     */
     public BufferedImage getSprite(String path) {
 
         //se abbiamo già caricato una volta l'immagine
@@ -56,6 +69,15 @@ public class SpriteManager {
     }
 
 
+    /**
+     * Estrae un sotto-sprite (ritaglio) da un foglio sprite (spritesheet).
+     * @param sheetPath percorso dello spritesheet.
+     * @param col indice della colonna del frame.
+     * @param row indice della riga del frame.
+     * @param width larghezza del singolo frame in pixel.
+     * @param height altezza del singolo frame in pixel.
+     * @return la sotto-immagine estratta.
+     */
     public BufferedImage getSubSprite(String sheetPath, int col, int row, int width, int height) {
 
         BufferedImage sheet = getSprite(sheetPath);

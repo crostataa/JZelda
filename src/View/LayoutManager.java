@@ -3,6 +3,11 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Finestra principale dell'applicazione (JFrame) e gestore delle schermate grafiche (CardLayout).
+ * Gestisce l'aggregazione di tutti i pannelli (Menu, Gioco, HUD, Game Over, Vittoria, Statistiche, Skin),
+ * applica il pattern Singleton e coordina la transizione tra le diverse schermate (switchScreen).
+ */
 public class LayoutManager extends JFrame{
 
   public static LayoutManager instance;
@@ -23,6 +28,9 @@ public class LayoutManager extends JFrame{
 
   //la finestra è 756 x 528
 
+  /**
+   * Costruttore privato del Singleton: inizializza il JFrame, configura i pannelli e imposta la schermata iniziale.
+   */
   private LayoutManager() {
       // 1. Inizializzo i pannelli principali
       this.mainPanel = new JPanel();
@@ -80,6 +88,10 @@ public class LayoutManager extends JFrame{
       switchScreen(Window.MENU);
   }
 
+      /**
+       * Cambia la schermata visibile visualizzando la carta associata alla costante Window indicata.
+       * @param finestra l'identificatore della schermata da visualizzare.
+       */
       public void switchScreen(Window finestra) {
 
       cardLayout.show(mainPanel, finestra.name());
@@ -89,6 +101,10 @@ public class LayoutManager extends JFrame{
       }
     }
 
+    /**
+     * Restituisce l'istanza unica di LayoutManager (Singleton).
+     * @return l'istanza del LayoutManager.
+     */
     public static LayoutManager getInstance() {
 
       if (instance == null)  {

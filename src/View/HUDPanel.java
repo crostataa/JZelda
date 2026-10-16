@@ -12,16 +12,29 @@ import java.awt.image.BufferedImage;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Pannello superiore per la visualizzazione dell'HUD (Heads-Up Display).
+ * Disegna a schermo i cuori di vita di Link, la minimappa/cornice, le rupie accumulate,
+ * le chiavi e la scorta di bombe e frecce.
+ * Implementa {@link Observer} per ridisegnarsi ad ogni frame di gioco.
+ */
 @SuppressWarnings("deprecation")
 public class HUDPanel extends JPanel implements Observer {
 
     private GameModel model;
 
+    /**
+     * Costruisce l'HUDPanel con dimensioni fisse (768x192) e sfondo nero.
+     */
     public HUDPanel() {
         this.setPreferredSize(new Dimension(768, 192));
         this.setBackground(Color.BLACK);
     }
 
+    /**
+     * Associa il modello di gioco da cui leggere i dati del giocatore.
+     * @param model il GameModel attivo.
+     */
     public void setModel(GameModel model) {
         this.model = model;
     }

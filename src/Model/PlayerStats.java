@@ -1,5 +1,10 @@
 package Model;
 
+/**
+ * Memorizza le metriche e le statistiche di carriera di un giocatore:
+ * frecce scoccate, nemici eliminati (Moblin, Octorok), rupie accumulate,
+ * pozioni e bombe consumate, partite vinte e skin preferita.
+ */
 public class PlayerStats {
 
     private String username;
@@ -12,6 +17,10 @@ public class PlayerStats {
     private int gamesWon;
     private String avatar = "VERDE";
 
+    /**
+     * Costruisce il profilo statistico per l'utente specificato.
+     * @param username il nickname del giocatore.
+     */
     public PlayerStats(String username) {
         this.username = username;
     }

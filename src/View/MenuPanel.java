@@ -4,6 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * Pannello grafico del menu principale.
+ * Visualizza lo sfondo artistico del titolo, il campo di immissione del nickname
+ * e i pulsanti START GAME, LEADERBOARD e AVATAR.
+ */
 public class MenuPanel extends JPanel {
 
     private JTextField nameField;
@@ -11,6 +16,9 @@ public class MenuPanel extends JPanel {
     private JButton leaderboardButton;
     private JButton skinButton;
 
+    /**
+     * Costruisce il pannello del menu principale configurando componenti grafici, layout e stili.
+     */
     public MenuPanel() {
         this.setLayout(new GridBagLayout());
         this.setBackground(Color.BLACK);

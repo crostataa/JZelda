@@ -3,6 +3,11 @@ package Controller;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * Gestore degli eventi della tastiera (KeyListener).
+ * Mappa i tasti fisici premuti (WASD/frecce per il movimento, barra spaziatrice per attacco,
+ * B per le bombe, P per le pozioni, X per l'arco) in flag booleani consumati dal GameController.
+ */
 public class KeyController implements KeyListener {
 
     public boolean up, down, left, right;
@@ -12,6 +17,10 @@ public class KeyController implements KeyListener {
     //public boolean useItem;
     public boolean keyBomb, keyPotion, keyBow;
 
+    /**
+     * Intercetta la pressione di un tasto e imposta a true il corrispondente stato di azione/movimento.
+     * @param e l'evento KeyEvent associato.
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
@@ -29,6 +38,10 @@ public class KeyController implements KeyListener {
         if (code == KeyEvent.VK_X) keyBow = true;
     }
 
+    /**
+     * Intercetta il rilascio di un tasto e reimposta a false il corrispondente flag.
+     * @param e l'evento KeyEvent associato.
+     */
     @Override
     public void keyReleased(KeyEvent e) {
 

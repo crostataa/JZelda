@@ -9,6 +9,12 @@ import java.awt.geom.AffineTransform;
 
 import Model.*;
 
+/**
+ * Pannello principale di rendering del mondo di gioco.
+ * Disegna la mappa del livello corrente, Link (con la skin selezionata), i nemici (Moblin, Octorok),
+ * proiettili, bombe, rupie, pozioni, animazioni di morte e sequenze speciali (vittoria, morte di Link).
+ * Implementa {@link Observer} per ridisegnare la scena ad ogni tick del model.
+ */
 public class GamePanel extends JPanel implements Observer {
 
 
@@ -69,7 +75,9 @@ public class GamePanel extends JPanel implements Observer {
     private final String GMAIL_ITEM = "/assets/gmail_def.png";
     private final String LINK_LIFTING = "/assets/LinkPickingUpNew.png";
 
-    //nota, forse meglio singleton*
+    /**
+     * Costruisce il pannello di gioco impostando il double buffering, lo sfondo e il focus per i tasti.
+     */
     public GamePanel() {
 
 
@@ -95,6 +103,11 @@ public class GamePanel extends JPanel implements Observer {
         }
         return negative;
     }
+
+    /**
+     * Collega il GameModel al pannello di rendering.
+     * @param model il GameModel da visualizzare.
+     */
     public void setModel(GameModel model) {
 
         this.model = model;

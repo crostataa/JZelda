@@ -7,6 +7,11 @@ import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Gestore Singleton per la riproduzione di musica di sottofondo ed effetti sonori (SE) in formato .wav.
+ * Implementa {@link Observer} per reagire direttamente alle azioni notificate dal GameModel
+ * (es. sparo di freccia, colpo di spada).
+ */
 public class AudioManager implements Observer {
 
     static Clip clip;
@@ -32,6 +37,10 @@ public class AudioManager implements Observer {
         soundURL[12] = getClass().getResource("/assets/life refill.wav");
     }
 
+    /**
+     * Carica il file audio corrispondente all'indice specificato nella clip principale.
+     * @param i indice del file audio.
+     */
     public static void setFile(int i) {
         try {
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
@@ -44,18 +53,29 @@ public class AudioManager implements Observer {
         }
     }
 
+    /**
+     * Avvia la riproduzione in loop continuo della traccia musicale specificata.
+     * @param i indice della traccia da riprodurre.
+     */
     public void playMusic(int i) {
         setFile(i);
         clip.start();
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
+    /**
+     * Ferma la musica di sottofondo attualmente in riproduzione.
+     */
     public void stopMusic() {
         if (clip != null) {
             clip.stop();
         }
     }
 
+    /**
+     * Riproduce una volta sola un effetto sonoro (Sound Effect).
+     * @param i indice dell'effetto sonoro da riprodurre.
+     */
     public void playSE(int i) {
         try {
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
@@ -68,6 +88,10 @@ public class AudioManager implements Observer {
     }
 
 
+    /**
+     * Restituisce l'istanza unica di AudioManager (Singleton).
+     * @return l'istanza di AudioManager.
+     */
     public static AudioManager getInstance() {
 
         if (instance == null)  {
@@ -76,6 +100,11 @@ public class AudioManager implements Observer {
         return instance;
     }
 
+    /**
+     * Riceve notifiche dal modello per la riproduzione di effetti sonori specifici.
+     * @param o l'oggetto osservabile (GameModel).
+     * @param arg il messaggio di evento (es. "ARROW_SHOT", "PLAYER_ATTACK").
+     */
     @Override
     public void update(Observable o, Object arg) {
         if (arg instanceof String) {

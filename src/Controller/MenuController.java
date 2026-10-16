@@ -9,6 +9,11 @@ import javax.swing.text.View;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Controller per il menu principale di avvio.
+ * Gestisce l'inserimento del nickname utente, l'avvio della partita,
+ * la navigazione verso il pannello delle statistiche e verso la selezione delle skin.
+ */
 public class MenuController {
 
     private GameModel model;
@@ -17,6 +22,12 @@ public class MenuController {
 
     public String playerName;
 
+    /**
+     * Costruisce il MenuController collegando i listener ai pulsanti di Start, Statistiche e Skin.
+     * @param model il modello logico del gioco.
+     * @param viewManager il gestore delle schermate della vista.
+     * @param gameController il controller del gioco.
+     */
     public MenuController(GameModel model, LayoutManager viewManager, GameController gameController) {
         this.model = model;
         this.viewManager = viewManager;
@@ -69,6 +80,9 @@ public class MenuController {
         });
     }
 
-    //getter
+    /**
+     * Restituisce il nickname inserito dal giocatore.
+     * @return il nome del giocatore.
+     */
     public String getPlayerName() { return playerName ;}
 }

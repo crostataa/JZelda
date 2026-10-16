@@ -1,17 +1,32 @@
 package Model;
 
+/**
+ * Rappresenta il nemico Moblin.
+ * Nemico da mischia che pattuglia a passi discreti e insegue Link
+ * muovendosi lungo l'asse cardinale prevalente (stile griglia 8-bit).
+ */
 public class MoblinEnemy extends Enemy{
 
 
     private int stepTimer;
     private static final int STEP_DURATION = 40; // Circa 0.6 secondi per passo
 
+    /**
+     * Costruisce un nemico Moblin alle coordinate specificate con 2 HP e 1 danno da contatto.
+     * @param x coordinata X iniziale.
+     * @param y coordinata Y iniziale.
+     */
     public MoblinEnemy(double x, double y) {
         // Dimensioni 32x32, velocità 1.5, 2 HP, 1 di danno
         super(x, y, 32, 32, 1.5, 2, 1);
         this.stepTimer = 0;
     }
 
+    /**
+     * Calcola la distanza di Manhattan da Link e aggiorna la direzione di marcia
+     * gestendo ostacoli, allineamento e durata del passo.
+     * @param model il modello logico del gioco.
+     */
     @Override
     public void updateBehavior(GameModel model) {
         if (!isAlive()) return;

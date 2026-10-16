@@ -2,10 +2,18 @@ package Model;
 
 import java.util.*;
 
+/**
+ * Modello dello shop segreto.
+ * Gestisce l'assortimento degli oggetti in vendita, i prezzi e le regole di acquisto
+ * (controllo fondi e capienza dell'inventario tramite Stream API).
+ */
 public class ShopModel {
 
     private List <ShopEntry> itemsForSale;
 
+    /**
+     * Costruisce lo ShopModel e carica gli articoli disponibili.
+     */
     public ShopModel() {
         itemsForSale = new ArrayList<>();
         loadShop();
@@ -20,11 +28,21 @@ public class ShopModel {
     }
 
 
+    /**
+     * Restituisce la lista degli articoli in vendita.
+     * @return lista di ShopEntry.
+     */
     public List<ShopEntry> getItemsForSale() {
         return itemsForSale;
     }
 
-    // Permette l'acquisto di un oggetto se il giocatore ha rupie sufficienti e spazio in inventario.
+    /**
+     * Tenta l'acquisto di un articolo per conto del giocatore.
+     * Verifica la presenza dell'articolo, la disponibilità di rupie e lo spazio nell'inventario.
+     * @param player il giocatore acquirente.
+     * @param itemName il nome dell'oggetto da acquistare.
+     * @return true se l'acquisto è andato a buon fine, false altrimenti.
+     */
     public boolean buyItem(Player player, String itemName) {
 
         //1. verifichiamo che l'oggetto richiesto sia in vendita
@@ -35,7 +53,6 @@ public class ShopModel {
         //2. verifichiamo che l'oggetto esiste
         if (entryOptional.isPresent()) {
             ShopEntry entry = entryOptional.get();
-
 
             //3. controlliamo se il giocatore ha abbastanza rupie per acquistare l'oggetto
             if (player.getRupees() >= entry.getPrice()) {

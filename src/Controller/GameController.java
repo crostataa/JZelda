@@ -14,6 +14,11 @@ import java.awt.event.*;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * Controller principale del gioco.
+ * Gestisce il game loop (Timer Swing a ~60 FPS), intercetta l'input da tastiera
+ * e coordina l'aggiornamento logico del GameModel e le transizioni di schermata (Observer).
+ */
 public class GameController implements Observer {
 
     private GameModel model;
@@ -21,8 +26,11 @@ public class GameController implements Observer {
     private KeyController keyController;
     private Timer gameloop;
 
-
-
+    /**
+     * Costruisce il controller di gioco associando modello e vista principale.
+     * @param model il modello logico del gioco.
+     * @param view il gestore del layout grafico.
+     */
     public GameController(GameModel model, LayoutManager view) {
 
         this.model = model;
@@ -33,7 +41,9 @@ public class GameController implements Observer {
     }
 
 
-    //Inizializza il timer principale che gestisce gli update a 60 FPS (circa 16ms).
+    /**
+     * Inizializza il timer principale che scandisce il game loop a 60 FPS (circa 16ms).
+     */
     private void initGameloop() {
 
         gameloop = new Timer(16, new ActionListener() {
@@ -45,17 +55,23 @@ public class GameController implements Observer {
         });
     }
 
-    // Avvia l'esecuzione continua del game loop.
+    /**
+     * Avvia l'esecuzione continua del game loop.
+     */
     public void startGame() {
         gameloop.start();
     }
 
-    // Ferma l'esecuzione del game loop.
+    /**
+     * Ferma l'esecuzione del game loop.
+     */
     public void stopGame() {
         gameloop.stop();
     }
 
-    // Traduce l'input utente intercettato in azioni nel GameModel.
+    /**
+     * Traduce l'input utente intercettato da KeyController in azioni nel GameModel.
+     */
     private void processInput() {
         if (model.getCurrentState() != GameState.PLAYING) return;
 
@@ -104,10 +120,20 @@ public class GameController implements Observer {
     // -- getter --
 
 
+    /**
+     * Restituisce il controller dei tasti associato.
+     * @return l'istanza di KeyController.
+     */
     public KeyController getKeyController() {
         return keyController;
     }
 
+    /**
+     * Riceve le notifiche dal modello (Observer).
+     * Gestisce gli eventi di Game Over e Vittoria effettuando il cambio di schermata e musica.
+     * @param o l'oggetto osservabile (GameModel).
+     * @param arg l'argomento notificato (es. "GAME_OVER" o "VICTORY").
+     */
     @Override
     public void update(Observable o, Object arg) {
         if (arg instanceof String) {

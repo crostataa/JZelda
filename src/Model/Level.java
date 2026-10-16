@@ -4,6 +4,11 @@ import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.*;
 
+/**
+ * Rappresenta la mappa di un livello di gioco.
+ * Converte lo schema testuale ASCII fornito da {@link LevelFactory} in una matrice di {@link Tile},
+ * determinando la posizione di spawn di Link e dei nemici iniziali.
+ */
 public class Level {
 
     private Tile[][] grid;
@@ -14,7 +19,10 @@ public class Level {
     private List<Enemy> initialEnemies;
     private double playerStartX, playerStartY;
 
-
+    /**
+     * Costruisce il livello caricando i dati della mappa corrispondente all'ID specificato.
+     * @param levelId identificativo del livello (1-8 o 9 per lo shop).
+     */
     public Level(int levelId) {
 
         String[] mapData = LevelFactory.getLevelData(levelId);
@@ -58,6 +66,10 @@ public class Level {
         }
     }
     // -- getter --
+    /**
+     * Restituisce tutti i tile componenti la griglia della mappa.
+     * @return lista di tutti i Tile non nulli.
+     */
     public List<Tile> getTiles() {
 
         List<Tile> allTiles = new ArrayList<>();
@@ -72,6 +84,11 @@ public class Level {
     }
 
 
+    /**
+     * Restituisce uno {@link Stream} contenente unicamente i tile solidi della mappa,
+     * utilizzato per i calcoli efficienti delle collisioni.
+     * @return stream di Tile solidi.
+     */
     public Stream<Tile> getSolidTiles() {
         return Arrays.stream(grid)
                 .flatMap(Arrays::stream)

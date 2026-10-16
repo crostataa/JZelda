@@ -6,6 +6,13 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Rappresenta il personaggio giocabile (Link).
+ * Gestisce statistiche vitali (HP, cuori massimi), inventario limitato a 3 oggetti,
+ * riserva di munizioni (bombe, frecce, pozioni), rupie, attacco con la spada,
+ * stati di invulnerabilità temporanea e la skin visiva selezionata.
+ * Implementa {@link Damageable}.
+ */
 public class Player extends Entity implements Damageable {
 
     //attributi di gioco
@@ -35,6 +42,11 @@ public class Player extends Entity implements Damageable {
 
     public AudioManager audioManager;
 
+    /**
+     * Costruisce il giocatore impostando la posizione di partenza, attributi base e dotazione iniziale.
+     * @param x coordinata X di spawn.
+     * @param y coordinata Y di spawn.
+     */
     public Player(double x, double y) {
         super(400, 300, 32, 32, 4.0);
         this.maxHp = 10;
@@ -55,7 +67,9 @@ public class Player extends Entity implements Damageable {
 
     }
 
-    // Inizia l'animazione di attacco del giocatore.
+    /**
+     * Inizia l'animazione di attacco del giocatore con la spada.
+     */
     public void startAttack() {
         if (!isAttacking) {
             isAttacking = true;
@@ -63,10 +77,11 @@ public class Player extends Entity implements Damageable {
         }
     }
 
-    //
-     //Imposta la direzione di movimento.
-     //Memorizza anche l'ultima direzione valida per gli attacchi.
-
+    /**
+     * Imposta la direzione di movimento del giocatore e memorizza l'ultimo orientamento valido per gli attacchi.
+     * @param dx componente orizzontale (-1, 0, 1).
+     * @param dy componente verticale (-1, 0, 1).
+     */
     @Override
     public void setDirection(double dx, double dy) {
         super.setDirection(dx, dy);
@@ -77,7 +92,9 @@ public class Player extends Entity implements Damageable {
         }
     }
 
-    // Usa una pozione curativa se disponibile e necessaria.
+    /**
+     * Consuma una pozione curativa ripristinando tutti i cuori se disponibili e se necessario.
+     */
     public void usePotion() {
         if (potions > 0 && hp < maxHp) {
             heal(maxHp); // Ripristina tutti i cuori
@@ -85,7 +102,10 @@ public class Player extends Entity implements Damageable {
         }
     }
 
-    // Aggiorna logica di movimento, attacchi e frame di invulnerabilità.
+    /**
+     * Aggiorna lo stato del giocatore a ogni frame: gestisce il movimento fisico,
+     * l'avanzamento degli sprite di camminata, il timer di attacco e il timer di invulnerabilità.
+     */
     @Override
     public void update() {
         if (!isAlive()) return;
@@ -124,7 +144,10 @@ public class Player extends Entity implements Damageable {
         }
     }
 
-    // Applica danni al giocatore se non è attualmente invulnerabile.
+    /**
+     * Applica danno a Link riducendo gli HP e attivando il timer di invulnerabilità temporanea.
+     * @param damage quantità di danno subito.
+     */
     @Override
     public void takeDamage(int damage) {
         if (invulnerabilityTimer <= 0) {
@@ -138,17 +161,27 @@ public class Player extends Entity implements Damageable {
         }
     }
 
-    // Ripristina la salute del giocatore fino al massimo consentito.
+    /**
+     * Ripristina la salute del giocatore fino al massimo consentito.
+     * @param amount quantità di cuori/HP da curare.
+     */
     public void heal(int amount) {
         this.hp = Math.min(this.hp + amount, this.maxHp);
     }
 
-    // Aggiunge un quantitativo di rupie al portafoglio.
+    /**
+     * Aggiunge un quantitativo di rupie al portafoglio.
+     * @param amount numero di rupie da aggiungere.
+     */
     public void addRupees(int amount) {
         this.rupees += amount;
     }
 
-    // Tenta di spendere rupie, restituendo true se i fondi sono sufficienti.
+    /**
+     * Tenta di spendere rupie, sottraendole se sufficienti.
+     * @param amount costo in rupie.
+     * @return true se la transazione ha successo, false altrimenti.
+     */
     public boolean spendRupees(int amount) {
         if (this.rupees >= amount) {
             this.rupees -= amount;
@@ -157,7 +190,11 @@ public class Player extends Entity implements Damageable {
         return false;
     }
 
-    // Aggiunge un oggetto all'inventario se non è pieno.
+    /**
+     * Aggiunge un oggetto all'inventario se lo spazio disponibile (max 3) lo consente.
+     * @param item l'oggetto da inserire nell'inventario.
+     * @return true se l'oggetto è stato aggiunto, false se l'inventario è pieno.
+     */
     public boolean addItem(Item item) {
         if (inventory.size() < MAX_ITEMS) {
             inventory.add(item);

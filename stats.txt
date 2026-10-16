@@ -1,0 +1,4 @@
+cristina,18,16,6,19,0,0,0,VERDE
+c,0,0,0,0,0,0,0,VERDE
+Stefano,0,0,0,0,0,0,0,VERDE
+cri,7,3,4,9,0,0,1,VERDE
